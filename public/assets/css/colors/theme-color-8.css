@@ -1,0 +1,119 @@
+/*========================================================
+
+[Theme Color Stylesheet]
+
+Project     : VPNet
+Version     : 1.0
+Author      : ThemeLooks
+Author URI  : https://themeforest.net/user/themelooks
+
+========================================================*/
+
+/* Main Color */
+.ColorSwitcher__control,
+a,
+.header-menu > ul > li:hover > a, 
+.header-menu > ul > li.active > a,
+.header-menu ul ul li:hover > a, 
+.header-menu ul ul li > a:hover, 
+.header-menu ul ul li.active > a,
+.client-area .dropdown a:hover,
+.banner-content li:last-child a:hover,
+.list-item li svg,
+.single-pricing-plan .time,
+.single-review-slide h4 svg,
+.image-hover-content ul li a,
+.single-step h4 span,
+.not-found span,
+.page-title span svg,
+.single-widget button[type=submit],
+.widget-categories a:hover,
+.recent-posts li a:hover,
+.tags a:hover,
+.custom-pagination .active a, .custom-pagination a:hover,
+.post-content span a:hover,
+.author-info a:hover,
+.author-info a:hover,
+.prev-next a:hover,
+.single-post a:hover,
+.single-faq-wrap h4 svg,
+.single-query:hover .query-info a,
+.custom-breadcrumb svg,
+.custom-breadcrumb a:hover,
+.single-theme-feature svg,
+.header-menu #menu-button {
+    color: #31135c;
+}
+
+.replaced-svg path,
+.single-query:hover .query-icon svg path {
+    fill: #31135c !important;
+}
+
+/* Background main color */
+.preLoader,
+.btn-primary,
+.btn-primary:focus, 
+.btn-primary.focus,
+.btn-primary.disabled, 
+.btn-primary:disabled,
+.btn-primary:not(:disabled):not(.disabled):active, 
+.btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle,
+.btn-primary:not(:disabled):not(.disabled):active:focus, 
+.btn-primary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-primary.dropdown-toggle:focus,
+.btn-primary:hover,
+.btn-secondary,
+.btn-secondary:focus, 
+.btn-secondary.focus,
+.btn-secondary.disabled,
+.btn-secondary:disabled,
+.btn-secondary:not(:disabled):not(.disabled):active, 
+.btn-secondary:not(:disabled):not(.disabled).active,
+.show > .btn-secondary.dropdown-toggle,
+.btn-secondary:not(:disabled):not(.disabled):active:focus, 
+.btn-secondary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-secondary.dropdown-toggle:focus,
+.btn-secondary:hover,
+.header-menu > ul > li > a:after, 
+.header-menu > ul > li.active > a:after, 
+.header-menu > ul > li:hover > a:after,
+.swiper-pagination-bullet-active,
+.back-to-top a,
+.image-hover-content:before,
+.play-btn,
+.post-content blockquote span {
+    background-color: #31135c;
+}
+
+.header-menu ul ul,
+.banner-content h2,
+.single-member-info span,
+.ripple:before, .ripple:after,
+.form-control:focus,
+.widget-categories li:hover:before,
+.client-links {
+    border-color: #31135c;
+}
+.preLoader:before {
+    border-bottom-color: #31135c;
+}
+
+/* Light color */
+a:hover {
+    color: #4d1998;
+}
+.header-info li span,
+.social-icons a:hover {
+    color: #c59cff;
+}
+
+.swiper-slide-active .single-pricing-plan .btn,
+.back-to-top a:hover {
+    background-color: #4d1998;
+}
+
+.swiper-slide-active .single-pricing-plan svg path {
+    fill: #4d1998 !important;
+}
