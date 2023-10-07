@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PartenaireController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategorieArticleController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\PaiementController;
@@ -43,6 +44,8 @@ Route::resources([
     'organisation'=>OrganisationController::class,
 ],['middleware' => ['auth']]);
 
+Route::post('article/{article}/featured_image', [ArticleController::class, 'featured_image'])->name('article.featured_image');
+
 Route::get('/login',[UserController::class,'loginForm'])->name('auth.loginform');
 Route::get('/register',[UserController::class,'registerForm'])->name('auth.registerform');
 
@@ -52,3 +55,5 @@ Route::post('/register',[UserController::class,'register'])->name('auth.register
 
 
 Route::get('disconnect', [UserController::class, 'disconnect'])->name('disconnect');
+
+Route::get('/dashbord', [DashboardController::class, 'index'])->name('dashboard');

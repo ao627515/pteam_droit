@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('titre');
-            $table->string('short_desc');
+            $table->string('short_desc')->nullable();
             $table->string('description');
+            $table->string('slug');
             $table->string('image')->nullable();
+            $table->longText('contenu');
             $table->foreignId('author_id')->constrained('users');
-            $table->boolean('active')->default(false);
-            $table->timestamp('approuved_at');
-            $table->foreignId('approuved_by')->constrained('users');
+            $table->boolean('active')->default(true);
+            $table->timestamp('approuved_at')->nullable();
+            $table->foreignId('approuved_by')->nullable()->constrained('users');
             $table->foreignId('categorie_article_id')->nullable();
             $table->timestamps();
         });

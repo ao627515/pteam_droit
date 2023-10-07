@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
-{   
+{
 
     public function login(Request $request)
    {
@@ -26,9 +26,14 @@ class UserController extends Controller
                 $request->session()->regenerate();
                 // if(Auth::user()->getUser()->active){
                 //     return redirect()->intended('/');
-                // } 
+                // }
+                if(Auth::user()->role == "administrateur") {
+                    return to_route('dashboard');
+                }else if(Auth::user()->role == "partenaire") {
+                    // page custom pour partenaire
+                }
+
                 return redirect()->intended('/');
-                // return redirect()->route('paiement.index');
        }
 
     //    $flasher->addError('Les informations de connexions ne sont pas valides');
@@ -132,7 +137,7 @@ class UserController extends Controller
 
    public function registerForm(Request $request)
    {
-        
+
         $t = $request->t;
         $type = TypeCompte::where('short_name',$t)->first();
         $domaines = null;
@@ -147,7 +152,7 @@ class UserController extends Controller
 
    public function loginForm(Request $request)
    {
-    
+
         return view('login');
    }
     /**
