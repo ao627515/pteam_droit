@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produit;
+use App\Models\Commande;
 use Illuminate\Http\Request;
 
-class ProduitController extends Controller
+class CommandeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $produits = Produit::orderBy('created_at', 'desc')->paginate(25);
-
-        return view('liste-produits', compact('produits'));
+        //
     }
 
     /**
@@ -23,10 +21,6 @@ class ProduitController extends Controller
     public function create()
     {
         //
-    }
-    public function detail()
-    {
-        return view('detaile-produit');
     }
 
     /**
@@ -40,7 +34,7 @@ class ProduitController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Produit $produit)
+    public function show(Commande $commande)
     {
         //
     }
@@ -48,7 +42,7 @@ class ProduitController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Produit $produit)
+    public function edit(Commande $commande)
     {
         //
     }
@@ -56,7 +50,7 @@ class ProduitController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Produit $produit)
+    public function update(Request $request, Commande $commande)
     {
         //
     }
@@ -64,7 +58,7 @@ class ProduitController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Produit $produit)
+    public function destroy(Commande $commande)
     {
         //
     }

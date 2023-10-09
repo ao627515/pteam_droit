@@ -62,10 +62,10 @@
                                             </ul>
                                         </li>
                                         <li class="{{ Request::routeIs('partenaire.index') ? 'active' : '' }}">
-                                            <a href="{{route('partenaire.index')}}">Cabinets Partenaire</a></li>
+                                            <a href="{{route('partenaire.index')}}">Partenaire</a></li>
                                         {{-- <li><a href="#">Contact</a></li> --}}
                                         <li>
-                                            <a href="#">A propos </a>
+                                            <a href="{{ route('produit.index') }}">Librairie </a>
                                         </li>
                                         <li class="d-sm-none d-md-none d-lg-none d-xl-none">
                                             <a href="{{route('auth.loginform')}}">Mon compte
@@ -77,7 +77,7 @@
                                                 {{-- <li><a href="#">Mes commandes</a></li> --}}
                                                 <li><a href="{{route('disconnect')}}">
                                                     <i class="fas fa-sign-out-alt fa-lg"></i>
-                                                    Se déconnecter 
+                                                    Se déconnecter
                                                   </a></li>
                                             </ul>
                                         </li>
@@ -88,7 +88,7 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6 d-none d-sm-block">
                             <!-- Client area -->
-                            
+
                             @if (Auth::user())
                             <div class="header-menu">
                                 <ul class="text-right m-0" data-animate="fadeInUp" data-delay=".5">
@@ -97,18 +97,18 @@
                                             <i class="fas fa-caret-down"></i>
                                         </a>
                                         <ul>
-                                            <li><a href="#">Profil</a></li>
+                                            <li><a href="{{ route('user.show', auth()->user()) }}">Profil</a></li>
                                             <li><a href="#">Mes requêtes</a></li>
                                             {{-- <li><a href="#">Mes commandes</a></li> --}}
                                             <li><a href="{{route('disconnect')}}">
                                                 <i class="fas fa-sign-out-alt fa-lg"></i>
-                                                Se déconnecter 
+                                                Se déconnecter
                                               </a></li>
                                         </ul>
                                     </li>
                                 </ul>
                             </div>
-                                
+
                             @else
                             <ul class="client-area text-right list-inline m-0" data-animate="fadeInUp" data-delay="1.1">
                                 <li>

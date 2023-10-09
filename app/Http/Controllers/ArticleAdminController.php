@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
-class ArticleController extends Controller
+class ArticleAdminController extends Controller
 {
     /**
      * Display a listing of the resource.

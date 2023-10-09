@@ -182,15 +182,15 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(r $r)
+    public function show(User $user)
     {
-        //
+        return view('includes.profile', compact('user'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(r $r)
+    public function edit(User $user)
     {
         //
     }
@@ -198,7 +198,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, r $r)
+    public function update(Request $request, User $user)
     {
         //
     }
@@ -206,7 +206,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(r $r)
+    public function destroy(User $user)
     {
         //
     }

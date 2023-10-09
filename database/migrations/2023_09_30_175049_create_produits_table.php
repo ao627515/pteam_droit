@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nom');
             $table->string('short_desc');
             $table->string('description');
+            $table->integer('stock')->default(0);
             $table->string('image')->nullable();
             $table->foreignId('author_id')->constrained('users');
             $table->boolean('active')->default(false);
