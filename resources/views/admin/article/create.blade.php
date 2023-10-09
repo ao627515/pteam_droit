@@ -14,7 +14,7 @@
                 <h1 class="text-center w-100">Créer un article</h3>
             </div>
             <div class="card-body">
-                <form action="{{ route('article.store') }}" method="post" enctype="multipart/form-data" id="formCreate">
+                <form action="{{ route('articleAdmin.store') }}" method="post" enctype="multipart/form-data" id="formCreate">
                     @csrf
                     <div class="row row-cols-1">
                         <div class="col mb-3">

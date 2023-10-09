@@ -79,20 +79,20 @@
                             <div class="card-footer">
                                 <ul class="nav nav-fill">
                                     <li class="nav-item">
-                                        <a class="nav-link active" href="{{ route('article.edit', $article) }}"
+                                        <a class="nav-link active" href="{{ route('articleAdmin.edit', $article) }}"
                                             title="Modifer">
                                             <i class="nav-icon fa-solid fa-pen"></i>
                                             {{-- Modifer --}}
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('article.show', $article) }}" title="Voir">
+                                        <a class="nav-link" href="{{ route('articleAdmin.show', $article) }}" title="Voir">
                                             <i class="nav-icon fa-solid fa-eye"></i>
                                             {{-- Voir --}}
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <form action="{{ route('article.destroy', $article) }}" method="post"
+                                        <form action="{{ route('articleAdmin.destroy', $article) }}" method="post"
                                             class="form-action nav-link" title="Supprimer">
                                             @csrf
                                             @method('delete')

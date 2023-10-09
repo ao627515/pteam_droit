@@ -39,9 +39,9 @@
                 <li class="nav-header">Articles</li>
                 {{-- Administrateur --}}
                 <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
-                        'article.')) menu-open @endif">
+                        'articleAdmin.')) menu-open @endif">
                     <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
-                            'article.')) active @endif">
+                            'articleAdmin.')) active @endif">
                         <i class="nav-icon fa-regular fa-newspaper"></i>
 
                         <p>
@@ -51,15 +51,15 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('article.create') }}"
-                                class="nav-link @if (Request::routeIs('article.create')) active @endif">
+                            <a href="{{ route('articleAdmin.create') }}"
+                                class="nav-link @if (Request::routeIs('articleAdmin.create')) active @endif">
                                 <i class="nav-icon fa-solid fa-plus"></i>
                                 <p>Créer</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('article.index') }}"
-                                class="nav-link  @if (Request::routeIs('article.index')) active @endif">
+                            <a href="{{ route('articleAdmin.index') }}"
+                                class="nav-link  @if (Request::routeIs('articleAdmin.index')) active @endif">
                                 <i class="nav-icon fa-regular fa-newspaper"></i>
                                 <p>Liste</p>
                             </a>

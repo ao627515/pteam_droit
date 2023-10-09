@@ -10,7 +10,7 @@
 @section('content')
     <div class="container">
         <div class="card p-5">
-            <form action="{{ route('article.featured_image',$article) }}" method="post" id="featuredForm" enctype="multipart/form-data">
+            <form action="{{ route('articleAdmin.featured_image',$article) }}" method="post" id="featuredForm" enctype="multipart/form-data">
                 @csrf
                 <div class="row row-cols-1">
                     <div class="col">
@@ -31,7 +31,7 @@
                 </div>
             </form>
 
-            <form action="{{ route('article.update',$article) }}" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+            <form action="{{ route('articleAdmin.update',$article) }}" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
                 @csrf
                 @method('put')
                 <div class="row row-cols-1">
