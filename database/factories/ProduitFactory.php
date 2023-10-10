@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,13 +18,18 @@ class ProduitFactory extends Factory
     public function definition(): array
     {
         return [
-            'nom' => fake()->name(),
-            'short_desc' => fake()->sentence(),
-            'description' => fake()->paragraph(),  // Exemple: "Produit 1"
-            'image' => fake()->image(),
-            'type' => fake()->randomElement(['droit public','droit prive','droit international','droit specialise','droit social']), // Type fictif // URL d'une image fictive
-            'author_id' =>fake()->numberBetween(1, 5), // Description courte fictive
-            'approuved_at' =>fake()->dateTime(),
+            'nom' => fake()->sentence,
+            'short_desc' => fake()->text(100),
+            'description' => fake()->text(200),
+            'image' => fake()->imageUrl(category: 'Produit'), // Exemple d'URL d'image générée aléatoirement
+            'author_id' => function () {
+                return User::inRandomOrder()->first()->id; // Crée un utilisateur et utilise son ID
+            },
+            'active' => fake()->boolean,
+            'approuved_by' => null, // Vous pouvez ajuster cela en fonction de vos besoins
+            'approuved_at' => null, // Vous pouvez ajuster cela en fonction de vos besoins
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

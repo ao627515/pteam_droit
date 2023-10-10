@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('logo');
             $table->string('description');
-            $table->boolean('active')->default(false);
+            $table->boolean('active')->default(true);
             $table->foreignId('categorie_partenaire_id');
             $table->foreignId('user_id');
             $table->foreignId('approuved_by')->nullable()->constrained('users');

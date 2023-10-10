@@ -16,9 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->integer('montant');
             $table->string('methode');
-            $table->string('transaction');
-            $table->boolean('active')->default(false);
-            $table->timestamp('expire_at');
+            $table->string('status');
+            $table->string('transaction')->nullable();
+            $table->boolean('active')->default(true);
+            $table->timestamp('expire_at')->nullable();
             $table->timestamps();
         });
     }

@@ -5,7 +5,12 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Database\Seeders\UserSeeder;
+use Database\Seeders\ArticleSeeder;
+use Database\Seeders\PartenaireSeeder;
+use Database\Seeders\TypeCompteSeeder;
+use Database\Seeders\OrganisationSeeder;
+use Database\Seeders\CategorieArticleSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,17 +19,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        DB::table('type_comptes')->insert([
-            'nom' => '',
-            'short_name' => '',
-            'frais' => Hash::make('password'),
+        $this->call([
+            UserSeeder::class,
+            TypeCompteSeeder::class,
+            ArticleSeeder::class,
+            CategorieArticleSeeder::class,
+            DomaineSeeder::class,
+            OrganisationSeeder::class,
+            CategoriePartenaireSeeder::class,
+            PartenaireSeeder::class,
+            ProduitSeeder::class,
+            TicketSeeder::class,
+            CommandeSeeder::class,
+            // CategorieProduitSeeder::class,
+            FaqSeeder::class,
+            PaiementSeeder::class,
         ]);
     }
 }

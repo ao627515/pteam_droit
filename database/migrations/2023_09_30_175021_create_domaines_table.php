@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('domaines', function (Blueprint $table) {
             $table->id();
             $table->string('nom',50);
+            $table->string('description');
             $table->boolean('estPartenaire')->default(false);
             $table->string('icon',100)->nullable();
             $table->timestamps();

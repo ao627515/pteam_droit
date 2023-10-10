@@ -19,8 +19,8 @@ return new class extends Migration
             $table->integer('stock')->default(0);
             $table->string('image')->nullable();
             $table->foreignId('author_id')->constrained('users');
-            $table->boolean('active')->default(false);
-            $table->timestamp('approuved_at');
+            $table->boolean('active')->default(true);
+            $table->timestamp('approuved_at')->nullable();
             $table->foreignId('approuved_by')->nullable()->constrained('users');
             $table->timestamps();
         });

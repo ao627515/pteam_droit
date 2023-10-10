@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('type_compte');
             $table->string('role')->default('administrateur')->nullable();
-            $table->boolean('active')->default(false);
+            $table->boolean('active')->default(true);
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('approuved_by')->nullable()->constrained('users');
             $table->timestamp('approuved_at')->nullable();

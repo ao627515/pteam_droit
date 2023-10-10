@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CategorieArticle>
  */
-class TypeCompteControllerFactory extends Factory
+class CategorieArticleFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +17,7 @@ class TypeCompteControllerFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'nom' => fake()->word,
         ];
     }
 }
