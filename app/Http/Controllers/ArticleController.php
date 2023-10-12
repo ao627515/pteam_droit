@@ -192,4 +192,8 @@ class ArticleController extends Controller
 
         return back();
     }
+
+    public function test(){
+        dd();
+    }
 }

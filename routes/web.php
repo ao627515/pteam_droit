@@ -13,6 +13,8 @@ use App\Http\Controllers\ArticleAdminController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\CategorieArticleController;
 use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\TestController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,30 +37,31 @@ Route::get('/', function () {
 // })->name('paiement');
 
 Route::resources([
-    'home'=>HomeController::class,
+    'home' => HomeController::class,
 ]);
 
 Route::resources([
-    'partenaire'=>PartenaireController::class,
-    'article'=>ArticleController::class,
+    'partenaire' => PartenaireController::class,
+    'article' => ArticleController::class,
     'articleAdmin'=>ArticleAdminController::class,
-    'categorie'=>CategorieArticleController::class,
-    'ticket'=>TicketController::class,
-    'paiement'=>PaiementController::class,
-    'organisation'=>OrganisationController::class,
-    'user'=>UserController::class,
-    'produit'=>ProduitController::class,
-    'commande'=>CommandeController::class,
-],['middleware' => ['auth']]);
+    'categorie' => CategorieArticleController::class,
+    'ticket' => TicketController::class,
+    'paiement' => PaiementController::class,
+    'organisation' => OrganisationController::class,
+    'user' => UserController::class,
+    'produit' => ProduitController::class,
+    'commande' => CommandeController::class,
+], ['middleware' => ['auth']]);
+
 
 Route::post('article/{article}/featured_image', [ArticleController::class, 'featured_image'])->name('articleAdmin.featured_image');
 
-Route::get('/login',[UserController::class,'loginForm'])->name('auth.loginform');
-Route::get('/register',[UserController::class,'registerForm'])->name('auth.registerform');
+Route::get('/login', [UserController::class, 'loginForm'])->name('auth.loginform');
+Route::get('/register', [UserController::class, 'registerForm'])->name('auth.registerform');
 
 
-Route::post('/login',[UserController::class,'login'])->name('auth.login');
-Route::post('/register',[UserController::class,'register'])->name('auth.register');
+Route::post('/login', [UserController::class, 'login'])->name('auth.login');
+Route::post('/register', [UserController::class, 'register'])->name('auth.register');
 
 
 Route::get('disconnect', [UserController::class, 'disconnect'])->name('disconnect');
@@ -66,3 +69,5 @@ Route::get('disconnect', [UserController::class, 'disconnect'])->name('disconnec
 Route::get('/dashbord', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('detail', [ProduitController::class, 'detail'])->name('detail');
+
+Route::get('article/{article}/admin/approuve', [ArticleAdminController::class, 'approuved'])->name('articleAdmin.approuved');

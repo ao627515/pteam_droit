@@ -20,7 +20,7 @@ class ArticleAdminController extends Controller
         return view(
             'admin.article.index',
             [
-                'articles' => Article::where('active', false)->orderBy('created_at', 'desc')->paginate(25)
+                'articles' => Article::where('active', true)->orderBy('created_at', 'desc')->paginate(25)
             ]
         );
     }
@@ -85,29 +85,33 @@ class ArticleAdminController extends Controller
         $article->image = $dataValidated['image']->store('articles/' . $article->id, 'public');
         $article->save();
 
-        return redirect()->route('article.index')->with('success', 'Article publié avec succès.');
+        return redirect()->route('articleAdmin.index')->with('success', 'Article publié avec succès.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Article $article)
+    public function show(Article $articleAdmin)
     {
-        return view('admin.article.show', compact('article'));
+        return view('admin.article.show', [
+            'article' => $articleAdmin
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Article $article)
+    public function edit(Article $articleAdmin)
     {
-        return view('admin.article.edit', compact('article'));
+        return view('admin.article.edit', [
+            'article' => $articleAdmin
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Article $article)
+    public function update(Request $request, Article $articleAdmin)
     {
         $dataValidated = $request->validate([
             'titre' => ['required', 'string'],
@@ -115,7 +119,7 @@ class ArticleAdminController extends Controller
             'contenu' => ['required', 'string'],
         ]);
 
-        $originalContent = $article->contenu; // Contenu d'origine
+        $originalContent = $articleAdmin->contenu; // Contenu d'origine
         $updatedContent = $dataValidated['contenu']; // Contenu mis à jour
 
         $originalDom = new DOMDocument();
@@ -147,7 +151,7 @@ class ArticleAdminController extends Controller
             if (strpos($img->getAttribute('src'), 'data:image/') === 0) {
 
                 $data = base64_decode(explode(',', explode(';', $img->getAttribute('src'))[1])[1]);
-                $image_name = "articles/" . $article->id . '/contenu/' . time() . $key . '.png';
+                $image_name = "articles/" . $articleAdmin->id . '/contenu/' . time() . $key . '.png';
                 Storage::disk('public')->put($image_name, $data);
 
                 $img->removeAttribute('src');
@@ -158,25 +162,25 @@ class ArticleAdminController extends Controller
 
         $dataValidated['contenu'] =  $updatedDom->saveHTML();
 
-        $article->update($dataValidated);
+        $articleAdmin->update($dataValidated);
 
-        return to_route('article.index')->with('success', 'Articles Modifier');
+        return to_route('articleAdmin.index')->with('success', 'Articles Modifier');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Article $article)
+    public function destroy(Article $articleAdmin)
     {
-        $parentDirectory = dirname($article->image);
+        $parentDirectory = dirname($articleAdmin->image);
 
         Storage::disk('public')->deleteDirectory($parentDirectory);
 
-        $article->update([
+        $articleAdmin->update([
             'active' => false
         ]);
 
-        return to_route('article.index')->with('sucess', 'Articles publié');
+        return to_route('articleAdmin.index')->with('sucess', 'Articles publié');
     }
 
     public function featured_image (Request $request, Article $article) {
@@ -192,4 +196,19 @@ class ArticleAdminController extends Controller
 
         return back();
     }
+
+    public function approuved(Article $article) {
+
+        $approuveBy = auth()->user()->id;
+
+        // dd($article);
+
+        $article->update([
+            'approuved_at' => now(),
+            'approuved_by' => $approuveBy
+        ]);
+
+        return back();
+    }
+
 }

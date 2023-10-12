@@ -25,7 +25,7 @@ class ProduitFactory extends Factory
             'author_id' => function () {
                 return User::inRandomOrder()->first()->id; // Crée un utilisateur et utilise son ID
             },
-            'active' => fake()->boolean,
+            // 'active' => fake()->boolean,
             'approuved_by' => null, // Vous pouvez ajuster cela en fonction de vos besoins
             'approuved_at' => null, // Vous pouvez ajuster cela en fonction de vos besoins
             'created_at' => now(),

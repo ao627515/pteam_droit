@@ -29,7 +29,7 @@
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}"
                         class="nav-link @if (Str::startsWith(request()->route()->getName(),
-                                'dashboard.')) active @endif ">
+                                'dashboard')) active @endif ">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Dashboard

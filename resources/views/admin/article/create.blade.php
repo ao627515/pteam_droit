@@ -41,18 +41,6 @@
                                 @enderror
                             </div>
                         </div>
-                        {{-- <div class="col mb-3">
-                            <div class="form-group">
-                                <label for="short_desc">Description Court</label>
-                                <textarea class="form-control @error('short_desc') is-invalid @enderror" id="short_desc" name="short_desc"
-                                    rows="2" required>{{ old('short_desc') }}</textarea>
-                                @error('short_desc')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div> --}}
                         <div class="col mb-3">
                             <div class="form-group">
                                 <label for="description">Description</label>

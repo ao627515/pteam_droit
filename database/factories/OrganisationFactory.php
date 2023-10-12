@@ -25,7 +25,7 @@ class OrganisationFactory extends Factory
             'logo' => fake()->imageUrl(category:'Organisation'),
             'description' => fake()->text(200),
             'short_description' => fake()->sentence,
-            'active' => fake()->boolean,
+            // 'active' => fake()->boolean,
             'user_id' => function () {
                 return User::inRandomOrder()->first()->id;
             },

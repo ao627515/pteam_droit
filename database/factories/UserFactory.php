@@ -24,7 +24,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail,
             'password' => bcrypt('1234'), // Mot de passe par défaut
             'type_compte' => fake()->randomElement(['physique', 'morale', 'partenaire']),
-            'active' => fake()->boolean,
+            // 'active' => fake()->boolean,
             'remember_token' => Str::random(10),
             'role' => fake()->randomElement(['administrateur', 'utilisateur', 'partenaire']),
         ];

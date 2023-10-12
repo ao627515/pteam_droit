@@ -24,7 +24,7 @@ class PartenaireFactory extends Factory
             'email' => fake()->unique()->safeEmail,
             'logo' => fake()->imageUrl(category: 'Logo partenaire'),
             'description' => fake()->text(),
-            'active' => fake()->boolean,
+            // 'active' => fake()->boolean,
             'categorie_partenaire_id' => function () {
                 // Assurez-vous d'avoir des catégories de partenaires existantes dans la table "categorie_partenaires"
                 return CategoriePartenaire::inRandomOrder()->first()->id;

@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Article extends Model
 {
     use HasFactory;
+
     protected $guarded = [''];
 
-    public function imageLink(){
+    public function imageLink(): string{
         return Storage::disk('public')->url($this->image);
     }
 
@@ -25,5 +27,24 @@ class Article extends Model
     }
     public function categorie () {
         return $this->belongsTo(User::class, 'categorie_article_id');
+    }
+
+    public function IsFactory(): bool{
+        return Str::startsWith($this->image, 'https');
+    }
+
+     public static function articlesAprouved(): Collection|null {
+        return Article::where('approuved_at', '!=', null, 'and', 'approuved_by', '!=', null)
+                        ->get();
+    }
+
+    public static function articlesDelete(): Collection|null {
+        return Article::where('active', false)
+                        ->get();
+    }
+
+    public static function articlesNonTraite(): Collection|null {
+        return Article::where('approuved_at', null, 'and', 'approuved_by', null)
+                        ->get();
     }
 }
