@@ -21,15 +21,12 @@ class ProduitFactory extends Factory
             'nom' => fake()->sentence,
             'short_desc' => fake()->text(100),
             'description' => fake()->text(200),
+            'stock' => fake()->numberBetween(1, 100),
             'image' => fake()->imageUrl(category: 'Produit'), // Exemple d'URL d'image générée aléatoirement
             'author_id' => function () {
                 return User::inRandomOrder()->first()->id; // Crée un utilisateur et utilise son ID
             },
             // 'active' => fake()->boolean,
-            'approuved_by' => null, // Vous pouvez ajuster cela en fonction de vos besoins
-            'approuved_at' => null, // Vous pouvez ajuster cela en fonction de vos besoins
-            'created_at' => now(),
-            'updated_at' => now(),
         ];
     }
 }

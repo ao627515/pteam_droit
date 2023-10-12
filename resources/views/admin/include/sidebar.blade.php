@@ -4,7 +4,7 @@
     <a href=" index3.html" class="brand-link">
         <img src="{{ asset('admin/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">Gestion Tontines</span>
+        <span class="brand-text font-weight-light">Mon droit</span>
     </a>
 
     <!-- Sidebar -->
@@ -61,6 +61,34 @@
                             <a href="{{ route('articleAdmin.index') }}"
                                 class="nav-link  @if (Request::routeIs('articleAdmin.index')) active @endif">
                                 <i class="nav-icon fa-regular fa-newspaper"></i>
+                                <p>Liste</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-header">Produits</li>
+                <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
+                        'produitAdmin.')) menu-open @endif">
+                    <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
+                            'produitAdmin.')) active @endif">
+                                <i class="nav-icon fa-solid fa-store"></i>
+                        <p>
+                            Produits
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('produitAdmin.create') }}"
+                                class="nav-link @if (Request::routeIs('produitAdmin.create')) active @endif">
+                                <i class="nav-icon fa-solid fa-plus"></i>
+                                <p>Créer</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('produitAdmin.index') }}"
+                                class="nav-link  @if (Request::routeIs('produitAdmin.index')) active @endif">
+                                <i class="nav-icon fa-solid fa-store"></i>
                                 <p>Liste</p>
                             </a>
                         </li>

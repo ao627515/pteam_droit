@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('produits', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
-            $table->string('short_desc');
-            $table->string('description');
-            $table->integer('stock')->default(0);
+            $table->string('short_desc')->nullable();
+            $table->text('description');
+            $table->integer('stock')->default(1);
             $table->string('image')->nullable();
             $table->foreignId('author_id')->constrained('users');
             $table->boolean('active')->default(true);
