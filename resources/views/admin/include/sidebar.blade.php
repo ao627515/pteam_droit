@@ -39,7 +39,7 @@
                         </a>
                     </li>
                 @endif
-                <li class="nav-header">Articles</li>
+                <li class="nav-header">ARTICLES</li>
                 {{-- Administrateur --}}
                 <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
                         'articleAdmin.')) menu-open @endif">
@@ -69,7 +69,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-header">Produits</li>
+                <li class="nav-header">PRODUITS</li>
                 <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
                         'produitAdmin.')) menu-open @endif">
                     <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
@@ -93,6 +93,35 @@
                                 class="nav-link  @if (Request::routeIs('produitAdmin.index')) active @endif">
                                 <i class="nav-icon fa-solid fa-store"></i>
                                 <p>Liste</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-header">UTILISATEURS</li>
+                {{-- Administrateur --}}
+                <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
+                        'user.')) menu-open @endif">
+                    <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
+                            'user.')) active @endif">
+                        <i class="nav-icon fa-solid fa-users"></i>
+                        <p>
+                            Uitilisateurs
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('user.create') }}"
+                                class="nav-link @if (Request::routeIs('user.create')) active @endif">
+                                <i class="fa-solid fa-user-plus nav-icon"></i>
+                                <p>Créer</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('user.index') }}"
+                                class="nav-link  @if (Request::routeIs('user.index')) active @endif">
+                                <i class="nav-icon fa-solid fa-user-secret"></i>
+                                <p>Listes</p>
                             </a>
                         </li>
                     </ul>

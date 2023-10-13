@@ -241,10 +241,6 @@
                     // Soumettre le formulaire
                     form.submit();
                 });
-
-                // $('input[name=filter]').on('change', function() {
-                //     $('#filter-form').submit();
-                // })
             });
         });
     </script>

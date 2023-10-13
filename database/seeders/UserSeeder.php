@@ -41,6 +41,6 @@ class UserSeeder extends Seeder
         ]);
 
         // Générez ensuite des enregistrements à l'aide de la factory
-        User::factory(10)->create();
+        User::factory(200)->create();
     }
 }
