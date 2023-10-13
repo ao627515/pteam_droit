@@ -27,30 +27,42 @@ class ProduitAdminController extends Controller
         $filter = $request['filter'];
         $search = $request['search'];
 
+        $isPartenaire = auth()->user()->role === 'partenaire' ? true : false;
+        $user = auth()->user();
+
         switch ($filter) {
             case 'approuved':
-                $produits = Produit::where('nom', 'LIKE', "%$search%")
-                ->where('approuved_at', '!=', null)
-                ->where('approuved_by', '!=', null)
-                ->where('active', true)
-                ->orderBy('created_at', 'desc')
-                ->paginate(25);
+                $produits = Produit::when($isPartenaire, function ($query) use ($user) {
+                    return $query->where('author_id', $user->id);
+                })
+                    ->where('nom', 'LIKE', "%$search%")
+                    ->where('approuved_at', '!=', null)
+                    ->where('approuved_by', '!=', null)
+                    ->where('active', true)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(25);
                 break;
                 // case 'declined':
                 //     break;
             case 'delete':
-                $produits = Produit::where('nom', 'LIKE', "%$search%")
-                ->where('active', false)
-                ->orderBy('created_at', 'desc')
-                ->paginate(25);
+                $produits = Produit::when($isPartenaire, function ($query) use ($user) {
+                    return $query->where('author_id', $user->id);
+                })
+                    ->where('nom', 'LIKE', "%$search%")
+                    ->where('active', false)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(25);
                 break;
             default:
-                $produits = Produit::where('nom', 'LIKE', "%$search%")
-                ->where('approuved_at', null)
-                ->where('approuved_by', null)
-                ->where('active', true)
-                ->orderBy('created_at', 'desc')
-                ->paginate(25);
+                $produits = Produit::when($isPartenaire, function ($query) use ($user) {
+                    return $query->where('author_id', $user->id);
+                })
+                    ->where('nom', 'LIKE', "%$search%")
+                    ->where('approuved_at', null)
+                    ->where('approuved_by', null)
+                    ->where('active', true)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(25);
                 break;
         }
 

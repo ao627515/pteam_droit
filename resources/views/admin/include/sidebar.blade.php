@@ -17,6 +17,7 @@
             </div>
             <div class="info">
                 <a href="" class="d-block">{{ auth()->user()->nom . ' ' . auth()->user()->prenom }}</a>
+                <small class="d-block text-light">Rôle : {{ auth()->user()->role }}</small>
             </div>
         </div>
 
@@ -26,16 +27,18 @@
                 data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
            with font-awesome or any other icon font library -->
-                <li class="nav-item">
-                    <a href="{{ route('dashboard') }}"
-                        class="nav-link @if (Str::startsWith(request()->route()->getName(),
-                                'dashboard')) active @endif ">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Dashboard
-                        </p>
-                    </a>
-                </li>
+                @if (auth()->user()->role === 'administrateur')
+                    <li class="nav-item">
+                        <a href="{{ route('dashboard') }}"
+                            class="nav-link @if (Str::startsWith(request()->route()->getName(),
+                                    'dashboard')) active @endif ">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Dashboard
+                            </p>
+                        </a>
+                    </li>
+                @endif
                 <li class="nav-header">Articles</li>
                 {{-- Administrateur --}}
                 <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
@@ -71,7 +74,7 @@
                         'produitAdmin.')) menu-open @endif">
                     <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
                             'produitAdmin.')) active @endif">
-                                <i class="nav-icon fa-solid fa-store"></i>
+                        <i class="nav-icon fa-solid fa-store"></i>
                         <p>
                             Produits
                             <i class="right fas fa-angle-left"></i>

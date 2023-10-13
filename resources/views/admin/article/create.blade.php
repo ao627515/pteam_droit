@@ -60,11 +60,10 @@
                                     class="form-control
                                     @error('categorie') is-invalid @enderror"
                                     name="categorie" id="categorie" value="{{ old('categorie') }}">
-                                    <option value="">Truc </option>
-                                    <option value="">Truc </option>
-                                    <option value="">Truc </option>
-                                    <option value="">Truc </option>
-                                    <option value="">Truc </option>
+                                    <option disabled selected>Veuillez choisir une catégorie</option>
+                                    @foreach ($categories as $categorie)
+                                        <option value="{{ $categorie->id }}">{{ Str::ucfirst($categorie->nom) }}</option>
+                                    @endforeach
                                 </select>
 
                                 @error('categorie')

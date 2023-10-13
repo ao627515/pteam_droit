@@ -32,30 +32,33 @@
                     value="{{ old('search', request()->search) }}">
             </form>
         </div>
-        <div class="card-header px-5">
-            <form action="" method="get" id="filter-form">
-                @csrf
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
-                        @if (!request()->filter or request()->filter === 'authorize') checked @endif>
-                    <label class="form-check-label" for="authorize">Autorisation</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
-                        @if (request()->filter === 'approuved') checked @endif>
-                    <label class="form-check-label" for="approuved">Approuvé</label>
-                </div>
-                {{-- <div class="form-check form-check-inline">
+        @if (auth()->user()->role === 'administrateur')
+            <div class="card-header px-5">
+                <form action="" method="get" id="filter-form">
+                    @csrf
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
+                            @if (!request()->filter or request()->filter === 'authorize') checked @endif>
+                        <label class="form-check-label" for="authorize">Autorisation</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
+                            @if (request()->filter === 'approuved') checked @endif>
+                        <label class="form-check-label" for="approuved">Approuvé</label>
+                    </div>
+                    {{-- <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"  @if (request()->filter === 'declined') checked  @endif>
                     <label class="form-check-label" for="declined">Décliné</label>
                 </div> --}}
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
-                        @if (request()->filter === 'delete') checked @endif>
-                    <label class="form-check-label" for="delete">Supprimé</label>
-                </div>
-            </form>
-        </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
+                            @if (request()->filter === 'delete') checked @endif>
+                        <label class="form-check-label" for="delete">Supprimé</label>
+                    </div>
+                </form>
+            </div>
+        @endif
+
         <div class="card-body">
             <div class="row row-cols-1 row-cols-sm-2  row-cols-md-2 row-cols-lg-2  row-cols-xl-4 row-cols-xll-6">
                 @foreach ($articles as $article)
@@ -158,15 +161,17 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const cards = document.querySelectorAll('.article-card');
-            cards.forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    card.classList.add('active');
-                });
+            if (cards) {
+                cards.forEach(card => {
+                    card.addEventListener('mouseenter', () => {
+                        card.classList.add('active');
+                    });
 
-                card.addEventListener('mouseleave', () => {
-                    card.classList.remove('active');
+                    card.addEventListener('mouseleave', () => {
+                        card.classList.remove('active');
+                    });
                 });
-            });
+            }
 
             // Filtre
 
@@ -180,8 +185,8 @@
             });
 
             // Recherche vide
-
-            const form = document.querySelector('form#search'); // Sélectionnez le formulaire que vous souhaitez gérer
+            const form = document.querySelector(
+                'form#search'); // Sélectionnez le formulaire que vous souhaitez gérer
 
             form.addEventListener('submit', function(event) {
                 const inputSearch = document.getElementsByName('search')[0];

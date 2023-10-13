@@ -28,33 +28,36 @@
         <div class="card-header">
             <form action="" method="get" id="search">
                 @csrf
-                <input type="search" name="search" id="search" placeholder="Nom du produit" class="form-control" value="{{ old('search', request()->search) }}">
+                <input type="search" name="search" id="search" placeholder="Nom du produit" class="form-control"
+                    value="{{ old('search', request()->search) }}">
             </form>
         </div>
-        <div class="card-header px-5">
-            <form action="" method="get" id="filter-form">
-                @csrf
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
-                        @if (!request()->filter or request()->filter === 'authorize') checked @endif>
-                    <label class="form-check-label" for="authorize">Autorisation</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
-                        @if (request()->filter === 'approuved') checked @endif>
-                    <label class="form-check-label" for="approuved">Approuvé</label>
-                </div>
-                {{-- <div class="form-check form-check-inline">
+        @if (auth()->user()->role === 'administrateur')
+            <div class="card-header px-5">
+                <form action="" method="get" id="filter-form">
+                    @csrf
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
+                            @if (!request()->filter or request()->filter === 'authorize') checked @endif>
+                        <label class="form-check-label" for="authorize">Autorisation</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
+                            @if (request()->filter === 'approuved') checked @endif>
+                        <label class="form-check-label" for="approuved">Approuvé</label>
+                    </div>
+                    {{-- <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"  @if (request()->filter === 'declined') checked  @endif>
                     <label class="form-check-label" for="declined">Décliné</label>
                 </div> --}}
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
-                        @if (request()->filter === 'delete') checked @endif>
-                    <label class="form-check-label" for="delete">Supprimé</label>
-                </div>
-            </form>
-        </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
+                            @if (request()->filter === 'delete') checked @endif>
+                        <label class="form-check-label" for="delete">Supprimé</label>
+                    </div>
+                </form>
+            </div>
+        @endif
         <div class="card-body">
             <div class="row row-cols-1 row-cols-sm-2  row-cols-md-2 row-cols-lg-2  row-cols-xl-4 row-cols-xll-6">
                 @foreach ($produits as $produit)
@@ -73,35 +76,37 @@
                                     {{ $produit->short_desc }}
                                 </p>
                             </div>
-                            <ul class="list-group list-group-flush produit-author">
-                                <li class="list-group-item border-top px-3 py-1">
-                                    <div class="d-flex">
-                                        <div class="mr-3 pt-1">
-                                            <img class="rounded-circle"
-                                                src="{{ 'https://eu.ui-avatars.com/api/?name=' . $produit->author->nom . '+' . $produit->author->prenom . '&background=random&size=40' }}">
-                                        </div>
-                                        <div class="">
-                                            <small class="d-block">Publier par </small>
-                                            <small
-                                                class="d-block">{{ $produit->author->nom . ' ' . $produit->author->prenom }}</small>
-                                        </div>
-                                    </div>
-                                </li>
-                                @if ($produit->approuvedBy)
-                                    <li class="list-group-item px-3 py-1">
-                                        <div class="d-flex justify-content-end">
-                                            <div class="">
-                                                <small class="d-block">Aprouvé par</small>
-                                                <small>{{ $produit->approuvedBy->nom . ' ' . $produit->approuvedBy->prenom }}</small>
-                                            </div>
-                                            <div class="pt-1 ml-3">
+                            @if (auth()->user()->role === 'administrateur')
+                                <ul class="list-group list-group-flush produit-author">
+                                    <li class="list-group-item border-top px-3 py-1">
+                                        <div class="d-flex">
+                                            <div class="mr-3 pt-1">
                                                 <img class="rounded-circle"
-                                                    src="{{ 'https://eu.ui-avatars.com/api/?name=' . $produit->approuvedBy->nom . '+' . $produit->approuvedBy->prenom . '&background=random&size=40' }}">
+                                                    src="{{ 'https://eu.ui-avatars.com/api/?name=' . $produit->author->nom . '+' . $produit->author->prenom . '&background=random&size=40' }}">
+                                            </div>
+                                            <div class="">
+                                                <small class="d-block">Publier par </small>
+                                                <small
+                                                    class="d-block">{{ $produit->author->nom . ' ' . $produit->author->prenom }}</small>
                                             </div>
                                         </div>
                                     </li>
-                                @endif
-                            </ul>
+                                    @if ($produit->approuvedBy)
+                                        <li class="list-group-item px-3 py-1">
+                                            <div class="d-flex justify-content-end">
+                                                <div class="">
+                                                    <small class="d-block">Aprouvé par</small>
+                                                    <small>{{ $produit->approuvedBy->nom . ' ' . $produit->approuvedBy->prenom }}</small>
+                                                </div>
+                                                <div class="pt-1 ml-3">
+                                                    <img class="rounded-circle"
+                                                        src="{{ 'https://eu.ui-avatars.com/api/?name=' . $produit->approuvedBy->nom . '+' . $produit->approuvedBy->prenom . '&background=random&size=40' }}">
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endif
+                                </ul>
+                            @endif
                             {{-- @if (!$produit->approuvedBy)
                                 <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                                     <form action="" method="get" class="form-action w-50">
@@ -271,7 +276,7 @@
             // Recherche vide
 
             const form = document.querySelector(
-            'form#search'); // Sélectionnez le formulaire que vous souhaitez gérer
+                'form#search'); // Sélectionnez le formulaire que vous souhaitez gérer
 
             form.addEventListener('submit', function(event) {
                 const inputSearch = document.getElementsByName('search')[0];

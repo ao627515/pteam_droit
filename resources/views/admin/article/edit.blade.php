@@ -8,6 +8,7 @@
 @endsection
 
 @section('content')
+{{ $article->imgInit() }}
     <div class="container">
         <div class="card p-5">
             <form action="{{ route('articleAdmin.featured_image',$article) }}" method="post" id="featuredForm" enctype="multipart/form-data">
@@ -26,7 +27,7 @@
                         </div>
                     </div>
                     <div class="col mb-3">
-                        <img src="{{$article->imageLink() }}" class="img-thumbnail" alt="..." style="width: 250px; height: 250px">
+                        <img src="{{$article->image }}" class="img-thumbnail" alt="..." style="width: 250px; height: 250px">
                     </div>
                 </div>
             </form>
@@ -64,11 +65,14 @@
                             <label for="categorie">Categorie</label>
                             <select class="form-control
                                 @error('categorie') is-invalid @enderror" name="categorie" id="categorie" value="{{ old('categorie') }}">
-                                <option value="">Truc </option>
-                                <option value="">Truc </option>
-                                <option value="">Truc </option>
-                                <option value="">Truc </option>
-                                <option value="">Truc </option>
+                                @foreach ($categories as $categorie)
+                                    <option value="{{ $categorie->id }}"
+                                        @if ($article->categorie->id == $categorie->id)
+                                            selected
+                                        @endif>
+                                        {{ Str::ucfirst($categorie->nom) }}
+                                    </option>
+                                @endforeach
                             </select>
 
                             @error('categorie')

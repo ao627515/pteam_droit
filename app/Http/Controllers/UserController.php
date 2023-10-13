@@ -27,10 +27,11 @@ class UserController extends Controller
                 // if(Auth::user()->getUser()->active){
                 //     return redirect()->intended('/');
                 // }
-                if(Auth::user()->role == "administrateur") {
+
+                if(Auth::user()->role == "administrateur" ) {
                     return to_route('dashboard');
-                }else if(Auth::user()->role == "partenaire") {
-                    // page custom pour partenaire
+                }elseif (Auth::user()->role == "partenaire") {
+                    return to_route('articleAdmin.index');
                 }
 
                 return redirect()->intended('/');

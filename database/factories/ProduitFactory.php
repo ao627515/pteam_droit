@@ -18,15 +18,14 @@ class ProduitFactory extends Factory
     public function definition(): array
     {
         $approuve = fake()->randomNumber() % 2 != 0 ? true : false;
+        $author = User::where('role', 'administrator')->orWhere('role', 'partenaire')->get();
         return [
             'nom' => fake()->sentence,
             'short_desc' => fake()->text(100),
             'description' => fake()->text(200),
             'stock' => fake()->numberBetween(1, 100),
             'image' => fake()->imageUrl(category: 'Produit'), // Exemple d'URL d'image générée aléatoirement
-            'author_id' => function () {
-                return User::inRandomOrder()->first()->id; // Crée un utilisateur et utilise son ID
-            },
+            'author_id' => $author->random()->id,
             'active' => fake()->boolean,
             'approuved_at' => fn() => $approuve == true ? fake()->dateTimeThisDecade : null,
             'approuved_by' => fn() => $approuve == true ? User::inRandomOrder()->first()->id : null,

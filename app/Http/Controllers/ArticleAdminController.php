@@ -7,6 +7,7 @@ use App\Models\Article;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\CategorieArticle;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleAdminController extends Controller
@@ -33,9 +34,15 @@ class ArticleAdminController extends Controller
 
         $search = $request['search'];
 
+        $isPartenaire = auth()->user()->role === 'partenaire' ? true : false;
+        $user = auth()->user();
+
         switch ($filter) {
             case 'approuved':
-                $articles = Article::where('titre', 'LIKE', "%$search%")
+                $articles = Article::when($isPartenaire, function ($query) use ($user) {
+                    return $query->where('author_id', $user->id);
+                })
+                    ->where('titre', 'LIKE', "%$search%")
                     ->where('approuved_at', '!=', null)
                     ->where('approuved_by', '!=', null)
                     ->where('active', true)
@@ -45,13 +52,19 @@ class ArticleAdminController extends Controller
                 // case 'declined':
                 //     break;
             case 'delete':
-                $articles = Article::where('titre', 'LIKE', "%$search%")
+                $articles = Article::when($isPartenaire, function ($query) use ($user) {
+                    return $query->where('author_id', $user->id);
+                })
+                    ->where('titre', 'LIKE', "%$search%")
                     ->where('active', false)
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
             default:
-                $articles = Article::where('titre', 'LIKE', "%$search%")
+                $articles = Article::when($isPartenaire, function ($query) use ($user) {
+                    return $query->where('author_id', $user->id);
+                })
+                    ->where('titre', 'LIKE', "%$search%")
                     ->where('approuved_at', null)
                     ->where('approuved_by', null)
                     ->where('active', true)
@@ -68,7 +81,9 @@ class ArticleAdminController extends Controller
      */
     public function create()
     {
-        return view('admin.article.create');
+        return view('admin.article.create', [
+            'categories' => CategorieArticle::all()
+        ]);
     }
 
     /**
@@ -83,6 +98,7 @@ class ArticleAdminController extends Controller
             'image' => ['required', 'image',],
             'description' => ['required', 'string', 'max:245'],
             'contenu' => ['required', 'string'],
+            'categorie' => ['required']
         ]);
 
         // dd(array_merge($dataValidated, ['slug' => Str::slug($dataValidated['titre'])]));
@@ -142,7 +158,8 @@ class ArticleAdminController extends Controller
     public function edit(Article $articleAdmin)
     {
         return view('admin.article.edit', [
-            'article' => $articleAdmin
+            'article' => $articleAdmin,
+            'categories' => CategorieArticle::all()
         ]);
     }
 

@@ -20,6 +20,8 @@ class ArticleFactory extends Factory
     public function definition(): array
     {
         $title = fake()->sentence;
+        $author = User::where('role', 'administrator')->orWhere('role', 'partenaire')->get();
+
         $approuve = fake()->randomNumber() % 2 != 0 ? true : false;
         return [
             'titre' => $title,
@@ -27,9 +29,7 @@ class ArticleFactory extends Factory
             'contenu' => fake()->paragraphs(100, true),
             'slug' => Str::slug($title),
             'image' => fake()->imageUrl(category: 'Article'),
-            'author_id' => function () {
-                return User::inRandomOrder()->first()->id;
-            },
+            'author_id' => $author->random()->id,
             'active' => fake()->boolean,
             'categorie_article_id' => CategorieArticle::inRandomOrder()->first()->id,
             // 'approuved_at' => fake()->dateTimeThisDecade,

@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('1234'),
                 'type_compte' => 'physique',
                 'active' => 1,
-                'role' => 'administrateur',
+                'role' => 'partenaire',
             ],
             // Ajoutez d'autres enregistrements existants ici
         ]);

@@ -1,6 +1,6 @@
 <div class="card article-card">
     @if ($article->image)
-            <img src="{{ $article->image }}" class="card-img-top" alt="Image">
+        <img src="{{ $article->image }}" class="card-img-top" alt="Image">
     @else
         <img src="{{ asset('admin/dist/img/user1-128x128.jpg') }}" class="card-img-top" alt="Image">
     @endif
@@ -11,48 +11,50 @@
             {{ $article->description }}
         </p>
     </div>
-    <ul class="list-group list-group-flush article-author">
-        <li class="list-group-item border-top px-3 py-1">
-            <div class="d-flex">
-                <div class="mr-3 pt-1">
-                    <img class="rounded-circle"
-                        src="{{ 'https://eu.ui-avatars.com/api/?name=' . $article->author->nom . '+' . $article->author->prenom . '&background=random&size=40' }}">
-                </div>
-                <div class="">
-                    <small class="d-block">Publier par </small>
-                    <small class="d-block">{{ $article->author->nom . ' ' . $article->author->prenom }}</small>
-                </div>
-            </div>
-        </li>
-        @if ($article->approuvedBy)
-            <li class="list-group-item px-3 py-1">
-                <div class="d-flex justify-content-end">
-                    <div class="">
-                        <small  class="d-block">Aprouvé par</small>
-                        <small>{{ $article->approuvedBy->nom . ' ' . $article->approuvedBy->prenom }}</small>
-                    </div>
-                    <div class="pt-1 ml-3">
+    @if (auth()->user()->role === 'administrateur')
+        <ul class="list-group list-group-flush article-author">
+            <li class="list-group-item border-top px-3 py-1">
+                <div class="d-flex">
+                    <div class="mr-3 pt-1">
                         <img class="rounded-circle"
-                            src="{{ 'https://eu.ui-avatars.com/api/?name=' . $article->approuvedBy->nom . '+' . $article->approuvedBy->prenom . '&background=random&size=40' }}">
+                            src="{{ 'https://eu.ui-avatars.com/api/?name=' . $article->author->nom . '+' . $article->author->prenom . '&background=random&size=40' }}">
+                    </div>
+                    <div class="">
+                        <small class="d-block">Publier par </small>
+                        <small class="d-block">{{ $article->author->nom . ' ' . $article->author->prenom }}</small>
                     </div>
                 </div>
             </li>
+            @if ($article->approuvedBy)
+                <li class="list-group-item px-3 py-1">
+                    <div class="d-flex justify-content-end">
+                        <div class="">
+                            <small class="d-block">Aprouvé par</small>
+                            <small>{{ $article->approuvedBy->nom . ' ' . $article->approuvedBy->prenom }}</small>
+                        </div>
+                        <div class="pt-1 ml-3">
+                            <img class="rounded-circle"
+                                src="{{ 'https://eu.ui-avatars.com/api/?name=' . $article->approuvedBy->nom . '+' . $article->approuvedBy->prenom . '&background=random&size=40' }}">
+                        </div>
+                    </div>
+                </li>
+            @endif
+        </ul>
+        @if (!$article->approuvedBy)
+            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                <form action="" method="get" class="form-action w-50">
+                    @csrf
+                    <button type="button" class="btn btn-danger w-100 action-btn">Décliné</button>
+                </form>
+                <form action="{{ route('articleAdmin.approuved', $article) }}" method="get" class="form-action w-50">
+                    @csrf
+                    <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
+                        data-target="#modal-approuve">
+                        Approuvé
+                    </button>
+                </form>
+            </div>
         @endif
-    </ul>
-    @if (!$article->approuvedBy)
-    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-        <form action="" method="get" class="form-action w-50">
-            @csrf
-            <button type="button" class="btn btn-danger w-100 action-btn">Décliné</button>
-        </form>
-        <form action="{{ route('articleAdmin.approuved', $article) }}" method="get" class="form-action w-50">
-            @csrf
-            <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
-                data-target="#modal-approuve">
-                Approuvé
-            </button>
-        </form>
-    </div>
     @endif
     <div class="card-footer">
         <ul class="nav nav-fill">
