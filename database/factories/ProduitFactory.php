@@ -17,6 +17,7 @@ class ProduitFactory extends Factory
      */
     public function definition(): array
     {
+        $approuve = fake()->randomNumber() % 2 != 0 ? true : false;
         return [
             'nom' => fake()->sentence,
             'short_desc' => fake()->text(100),
@@ -26,7 +27,9 @@ class ProduitFactory extends Factory
             'author_id' => function () {
                 return User::inRandomOrder()->first()->id; // Crée un utilisateur et utilise son ID
             },
-            // 'active' => fake()->boolean,
+            'active' => fake()->boolean,
+            'approuved_at' => fn() => $approuve == true ? fake()->dateTimeThisDecade : null,
+            'approuved_by' => fn() => $approuve == true ? User::inRandomOrder()->first()->id : null,
         ];
     }
 }

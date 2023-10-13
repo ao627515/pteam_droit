@@ -16,28 +16,41 @@
     </style>
 
     <div class="card">
+        <div class="card-header bg-secondary">
+            <h1 class="w-100 text-center text-light">Gestion des produits</h1>
+        </div>
+        <div class="card-header d-flex justify-content-end">
+            <a href="{{ route('produitAdmin.create') }}" class="btn btn-primary">
+                <i class="nav-icon fa-solid fa-plus"></i>
+                Créer
+            </a>
+        </div>
         <div class="card-header">
-            <form action="" method="post">
-                <input type="search" name="search" id="search" placeholder="Recherche" class="form-control">
+            <form action="" method="get" id="search">
+                @csrf
+                <input type="search" name="search" id="search" placeholder="Nom du produit" class="form-control" value="{{ old('search', request()->search) }}">
             </form>
         </div>
         <div class="card-header px-5">
             <form action="" method="get" id="filter-form">
                 @csrf
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"  @if(!request()->filter or request()->filter === 'authorize') checked  @endif>
+                    <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
+                        @if (!request()->filter or request()->filter === 'authorize') checked @endif>
                     <label class="form-check-label" for="authorize">Autorisation</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"  @if(request()->filter === 'approuved') checked  @endif>
+                    <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
+                        @if (request()->filter === 'approuved') checked @endif>
                     <label class="form-check-label" for="approuved">Approuvé</label>
                 </div>
                 {{-- <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"  @if(request()->filter === 'declined') checked  @endif>
+                    <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"  @if (request()->filter === 'declined') checked  @endif>
                     <label class="form-check-label" for="declined">Décliné</label>
                 </div> --}}
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="filter" id="delete" value="delete" @if(request()->filter === 'delete') checked  @endif>
+                    <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
+                        @if (request()->filter === 'delete') checked @endif>
                     <label class="form-check-label" for="delete">Supprimé</label>
                 </div>
             </form>
@@ -138,7 +151,7 @@
             </div>
         </div>
         <div class="card-footer px-3 py-0">
-            {{ $produits->links() }}
+            {{ $produits->appends($query)->links() }}
         </div>
 
         <div class="modal fade" id="modal-destroy">
@@ -253,6 +266,22 @@
                 filter.addEventListener('change', () => {
                     filterForm.submit();
                 });
+            });
+
+            // Recherche vide
+
+            const form = document.querySelector(
+            'form#search'); // Sélectionnez le formulaire que vous souhaitez gérer
+
+            form.addEventListener('submit', function(event) {
+                const inputSearch = document.getElementsByName('search')[0];
+                const searchValue = inputSearch.value;
+
+                if (searchValue === '') {
+                    event.preventDefault();
+
+                    window.location.href = "{{ route('produitAdmin.index') }}";
+                }
             });
         })
     </script>

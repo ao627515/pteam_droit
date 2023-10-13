@@ -1,10 +1,6 @@
 <div class="card article-card">
     @if ($article->image)
-        @if ($article->isFactory())
             <img src="{{ $article->image }}" class="card-img-top" alt="Image">
-        @else
-            <img src="{{ $article->imageLink() }}" class="card-img-top" alt="Image">
-        @endif
     @else
         <img src="{{ asset('admin/dist/img/user1-128x128.jpg') }}" class="card-img-top" alt="Image">
     @endif

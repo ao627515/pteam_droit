@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             TypeCompteSeeder::class,
-            ArticleSeeder::class,
             CategorieArticleSeeder::class,
+            ArticleSeeder::class,
             DomaineSeeder::class,
             OrganisationSeeder::class,
             CategoriePartenaireSeeder::class,

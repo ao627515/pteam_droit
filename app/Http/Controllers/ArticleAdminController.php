@@ -14,15 +14,53 @@ class ArticleAdminController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $articles = $this->filter($request);
 
         return view(
             'admin.article.index',
             [
-                'articles' => Article::where('active', true)->orderBy('created_at', 'desc')->paginate(25)
+                'articles' => $articles,
+                'query' => ['search' => $request['search'], 'filter' => $request['filter']],
             ]
         );
+    }
+
+    private function filter(Request $request)
+    {
+        $filter = $request['filter'];
+
+        $search = $request['search'];
+
+        switch ($filter) {
+            case 'approuved':
+                $articles = Article::where('titre', 'LIKE', "%$search%")
+                    ->where('approuved_at', '!=', null)
+                    ->where('approuved_by', '!=', null)
+                    ->where('active', true)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(25);
+                break;
+                // case 'declined':
+                //     break;
+            case 'delete':
+                $articles = Article::where('titre', 'LIKE', "%$search%")
+                    ->where('active', false)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(25);
+                break;
+            default:
+                $articles = Article::where('titre', 'LIKE', "%$search%")
+                    ->where('approuved_at', null)
+                    ->where('approuved_by', null)
+                    ->where('active', true)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(25);
+                break;
+        }
+
+        return $articles;
     }
 
     /**
@@ -183,21 +221,23 @@ class ArticleAdminController extends Controller
         return to_route('articleAdmin.index')->with('sucess', 'Articles publié');
     }
 
-    public function featured_image (Request $request, Article $article) {
+    public function featured_image(Request $request, Article $article)
+    {
         $data = $request->validate([
             'image' => ['required', 'image', 'max:2000']
         ]);
 
         Storage::disk('public')->delete($article->image);
 
-        $article->image = $data['image']->store('articles/'. $article->id, 'public');
+        $article->image = $data['image']->store('articles/' . $article->id, 'public');
 
-         $article->save();
+        $article->save();
 
         return back();
     }
 
-    public function approuved(Article $article) {
+    public function approuved(Article $article)
+    {
 
         $approuveBy = auth()->user()->id;
 
@@ -210,5 +250,4 @@ class ArticleAdminController extends Controller
 
         return back();
     }
-
 }

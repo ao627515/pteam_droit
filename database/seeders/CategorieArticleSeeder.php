@@ -13,6 +13,20 @@ class CategorieArticleSeeder extends Seeder
      */
     public function run(): void
     {
-        CategorieArticle::factory(10)->create();
+        CategorieArticle::factory()->create([
+            'nom' => 'Droit du travail'
+        ]);
+
+        CategorieArticle::factory()->create([
+            'nom' => 'Droit du commerce'
+        ]);
+
+        CategorieArticle::factory()->create([
+            'nom' => 'Droit civil'
+        ]);
+
+        CategorieArticle::factory()->create([
+            'nom' => 'Droit pénal'
+        ]);
     }
 }

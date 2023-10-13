@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\CategorieArticle;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -29,20 +30,20 @@ class ArticleFactory extends Factory
             'author_id' => function () {
                 return User::inRandomOrder()->first()->id;
             },
-            // 'active' => fake()->boolean,
-
+            'active' => fake()->boolean,
+            'categorie_article_id' => CategorieArticle::inRandomOrder()->first()->id,
             // 'approuved_at' => fake()->dateTimeThisDecade,
             // 'approuved_by' => function () {
             //     return User::inRandomOrder()->first()->id;
             // },
-            // 'approuved_at' => function($approuve) {
-            //     return $approuve == true ? fake()->dateTimeThisDecade : null;
-            // },
-            // 'approuved_by' => function ($approuve) {
-            //     return $approuve == true ? User::inRandomOrder()->first()->id : null;
-            // },
+
+            'approuved_at' => function () use ($approuve) {
+                return $approuve == false ? fake()->dateTimeThisDecade : null;
+            },
+
+            'approuved_by' => function () use ($approuve){
+                return $approuve == false ? User::inRandomOrder()->first()->id : null;
+            },
         ];
     }
-
-
 }

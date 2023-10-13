@@ -16,32 +16,41 @@ class ProduitAdminController extends Controller
 
         $produits = $this->filter($request);
 
-        return view('admin.produit.index', compact('produits'));
+        return view('admin.produit.index', [
+            'produits' => $produits,
+            'query' => ['search' => $request['search'], 'filter' => $request['filter']],
+        ]);
     }
 
     private function filter(Request $request)
     {
         $filter = $request['filter'];
+        $search = $request['search'];
 
         switch ($filter) {
             case 'approuved':
-                $produits = Produit::where('approuved_at', '!=', null)
-                    ->where('approuved_by','!=' ,null)
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $produits = Produit::where('nom', 'LIKE', "%$search%")
+                ->where('approuved_at', '!=', null)
+                ->where('approuved_by', '!=', null)
+                ->where('active', true)
+                ->orderBy('created_at', 'desc')
+                ->paginate(25);
                 break;
                 // case 'declined':
                 //     break;
             case 'delete':
-                $produits = Produit::where('active', false)
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $produits = Produit::where('nom', 'LIKE', "%$search%")
+                ->where('active', false)
+                ->orderBy('created_at', 'desc')
+                ->paginate(25);
                 break;
             default:
-                $produits = Produit::where('approuved_at', null)
-                    ->where('approuved_by', null)
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $produits = Produit::where('nom', 'LIKE', "%$search%")
+                ->where('approuved_at', null)
+                ->where('approuved_by', null)
+                ->where('active', true)
+                ->orderBy('created_at', 'desc')
+                ->paginate(25);
                 break;
         }
 

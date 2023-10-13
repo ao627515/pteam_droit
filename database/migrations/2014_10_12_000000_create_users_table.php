@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('type_compte');
-            $table->string('role')->default('administrateur')->nullable();
+            $table->string('role')->default('utilisateur')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('approuved_by')->nullable()->constrained('users');

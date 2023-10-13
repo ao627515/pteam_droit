@@ -2,19 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Article extends Model
 {
     use HasFactory;
 
+
     protected $guarded = [''];
 
-    public function imageLink(): string{
+    public function imgInit() {
+
+        if(!$this->IsFactory())
+        {
+            $this->image = $this->imageLink();
+        }
+    }
+
+    private function imageLink(): string{
+
         return Storage::disk('public')->url($this->image);
     }
 
@@ -46,5 +57,19 @@ class Article extends Model
     public static function articlesNonTraite(): Collection|null {
         return Article::where('approuved_at', null, 'and', 'approuved_by', null)
                         ->get();
+    }
+
+    public function dateFormat(string $dateTime)
+    {
+        $carbone = new Carbon($dateTime);
+
+        return $carbone->format('j M Y');
+    }
+
+    public  function dateTimeFormat(string $dateTime)
+    {
+        $carbone = new Carbon($dateTime);
+
+        return $carbone->format('j M Y à H\h i');
     }
 }
