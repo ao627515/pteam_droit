@@ -88,7 +88,7 @@ class CategorieController extends Controller
             'nom' => $request->input($key),
         ]);
 
-        return to_route('categorie.index')->with('success', 'Nouvelle categorie ajouté !');
+        return to_route('categorie.index')->with('success', 'Modification reussie !');
     }
 
     /**
@@ -96,6 +96,8 @@ class CategorieController extends Controller
      */
     public function destroy(Categorie $categorie)
     {
-        //
+        $categorie->delete();
+
+        return to_route('categorie.index')->with('success', ' Suppression réussie !');
     }
 }
