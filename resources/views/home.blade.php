@@ -343,69 +343,28 @@
                 <div class="section-title">
                     <h2 data-animate="fadeInUp" data-delay=".1" class="text-primary">Publications récentes</h2>
                 </div>
-                
+
             <div class="row">
+                @foreach ($articles as $article)
+                {{ $article->imgInit() }}
                 <div class="col-lg-3 col-md-6">
                     <div class="single-post" data-animate="fadeInUp" data-delay=".1">
                         <div class="image-hover-wrap">
-                            <img src="{{asset('assets/img/posts/post1.jpg')}}" alt="">
+                            <img src=" {{ $article->image }}" alt="">
                             <div class="image-hover-content d-flex justify-content-center align-items-center text-center">
                                 <ul class="list-inline">
                                     <li><a href="#"><i class="fas fa-eye"></i></a></li>
                                 </ul>
                             </div>
                         </div>
-                        <span class="text-info">Par Autheur le 19 Jan 2022</span>
-                        <h4 class="truncate-title">Torrent Pirates Prefer To Pay For Video Streaming Services</h4>
+                        <span class="text-info">Publie le {{$article->created_at}}</span>
+                        <h4 class="truncate-title"> {{$article->titre}}</h4>
                         <a href="#">Lire l'article<i class="fas fa-caret-right"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="single-post" data-animate="fadeInUp" data-delay=".2">
-                        <div class="image-hover-wrap">
-                            <img src="{{asset('assets/img/posts/post2.jpg')}}" alt="">
-                            <div class="image-hover-content d-flex justify-content-center align-items-center text-center">
-                                <ul class="list-inline">
-                                    <li><a href="#"><i class="fas fa-eye"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <span class="text-info">Par Autheur le 19 Jan 2022</span>
-                        <h4 class="truncate-title">How to Watch Emmett VS Stephens at UFC Fight Night FOX</h4>
-                        <a href="#">Lire l'article<i class="fas fa-caret-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="single-post" data-animate="fadeInUp" data-delay=".3">
-                        <div class="image-hover-wrap">
-                            <img src="{{asset('assets/img/posts/post3.jpg')}}" alt="">
-                            <div class="image-hover-content d-flex justify-content-center align-items-center text-center">
-                                <ul class="list-inline">
-                                    <li><a href="#"><i class="fas fa-eye"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <span class="text-info">Par Autheur le 19 Jan 2022</span>
-                        <h4 class="truncate-title">Web Hosting Powerhouse Go Daddy to Expand Its Civil Service</h4>
-                        <a href="#">Lire l'article<i class="fas fa-caret-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="single-post" data-animate="fadeInUp" data-delay=".1">
-                        <div class="image-hover-wrap">
-                            <img src="{{asset('assets/img/posts/post4.jpg')}}" alt="">
-                            <div class="image-hover-content d-flex justify-content-center align-items-center text-center">
-                                <ul class="list-inline">
-                                    <li><a href="#"><i class="fas fa-eye"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <span class="text-info">Par Autheur le 19 Jan 2022</span>
-                        <h4 class="truncate-title">Encryption Must Not Be Compromised by Backdoors</h4>
-                        <a href="#">Lire l'article<i class="fas fa-caret-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-12 text-right"> <a href="#" class="btn btn-default">Voir plus</a></div>
+
+                @endforeach
+                <div class="col-md-12 text-right"> <a href="{{route('article.index')}}" class="btn btn-default">Voir plus</a></div>
             </div>
             </div>
         </section>
@@ -434,7 +393,7 @@
             <div class="row">
                 @foreach ($partenaires as $item)
                 <div class="col-lg-3 col-md-4 col-sm-6">
-                        
+
                     <div class="single-member" data-animate="fadeInUp" data-delay="0">
                         <div class="image-hover-wrap">
                             <img src="{{asset($item->logo)}}" height="90" alt="">
@@ -452,7 +411,7 @@
                     </div>
                 </div>
                 @endforeach
-                
+
 
                 <div class="col-md-12 text-right"> <a href="{{route('partenaire.index')}}" class="btn btn-default">Voir plus</a></div>
             </div>
@@ -551,7 +510,7 @@
         </section>
         <!-- End of Reviews -->
 
-        {{-- Mobile app 
+        {{-- Mobile app
         <section class="pt-7 pb-7">
             <div class="container">
                 <div class="row align-items-center">
@@ -653,6 +612,6 @@
                 scrollTop: $("#register").offset().top
             }, 1000);
         }
-        
+
       </script>
 @endsection

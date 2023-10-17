@@ -5,7 +5,7 @@
 @section('content')
     <div class="card">
         <div class="card-header bg-secondary">
-            <h1 class="w-100 text-center text-light">Gestion des produits</h1>
+            <h1 class="w-100 text-center text-light">Gestion des utilisateurs</h1>
         </div>
         <div class="card-header d-flex justify-content-end">
             <a href="{{ route('user.create') }}" class="btn btn-primary">
@@ -13,18 +13,15 @@
                 Créer
             </a>
         </div>
-        <div class="card-header">
-            <form action="" method="get" id="search">
-                @csrf
+        <form action="" method="get" id="search" class="search filter-form">
+            @csrf
+            <div class="card-header">
                 <input type="search" name="search" id="search"
                     placeholder="Recherche 'nom' 'prenom' 'télephone' 'email' " class="form-control"
                     value="{{ old('search', request()->search) }}">
-            </form>
-        </div>
-        @if (auth()->user()->role === 'administrateur')
-            <div class="card-header px-5">
-                <form action="" method="get" id="filter-form">
-                    @csrf
+            </div>
+            @if (auth()->user()->role === 'administrateur')
+                <div class="card-header px-5">
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="filter" id="administrators"
                             value="administrators" @if (!request()->filter or request()->filter === 'administrators') checked @endif>
@@ -40,9 +37,9 @@
                             @if (request()->filter === 'followers') checked @endif>
                         <label class="form-check-label" for="followers">Abonnés</label>
                     </div>
-                </form>
-            </div>
-        @endif
+                </div>
+            @endif
+        </form>
         <div class="card-body">
             <table class="table table-striped responsive">
                 <thead>
@@ -76,15 +73,13 @@
                             <td>
                                 <ul class="nav nav-fill">
                                     <li class="nav-item">
-                                        <a class="nav-link active" href="{{ route('user.edit', $user) }}"
-                                            title="Modifer">
+                                        <a class="nav-link active" href="{{ route('user.edit', $user) }}" title="Modifer">
                                             <i class="nav-icon fa-solid fa-pen"></i>
                                             {{-- Modifer --}}
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('user.show', $user) }}"
-                                            title="Voir">
+                                        <a class="nav-link" href="{{ route('user.show', $user) }}" title="Voir">
                                             <i class="nav-icon fa-solid fa-eye"></i>
                                             {{-- Voir --}}
                                         </a>
@@ -151,30 +146,14 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-
             // Filtre
             const filters = document.getElementsByName('filter');
-            const filterForm = document.querySelector('#filter-form');
+            const filterForm = document.querySelector('form.filter-form');
 
             filters.forEach(filter => {
                 filter.addEventListener('change', () => {
                     filterForm.submit();
                 });
-            });
-
-            // Recherche vide
-            const form = document.querySelector(
-                'form#search'); // Sélectionnez le formulaire que vous souhaitez gérer
-
-            form.addEventListener('submit', function(event) {
-                const inputSearch = document.getElementsByName('search')[0];
-                const searchValue = inputSearch.value;
-
-                if (searchValue === '') {
-                    event.preventDefault();
-
-                    window.location.href = "{{ route('user.index') }}";
-                }
             });
         })
     </script>

@@ -32,11 +32,6 @@ class ArticleFactory extends Factory
             'author_id' => $author->random()->id,
             'active' => fake()->boolean,
             'categorie_article_id' => CategorieArticle::inRandomOrder()->first()->id,
-            // 'approuved_at' => fake()->dateTimeThisDecade,
-            // 'approuved_by' => function () {
-            //     return User::inRandomOrder()->first()->id;
-            // },
-
             'approuved_at' => function () use ($approuve) {
                 return $approuve == false ? fake()->dateTimeThisDecade : null;
             },
@@ -44,6 +39,8 @@ class ArticleFactory extends Factory
             'approuved_by' => function () use ($approuve){
                 return $approuve == false ? User::inRandomOrder()->first()->id : null;
             },
+            'created_at' => now(),
+            'updated_at' => now()
         ];
     }
 }

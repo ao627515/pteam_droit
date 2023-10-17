@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\r;
 use App\Models\User;
+use App\Models\Ticket;
 use App\Models\Domaine;
 use App\Models\TypeCompte;
 use App\Models\Organisation;
@@ -177,9 +178,6 @@ class UserController extends Controller
 
         $search = $request['search'];
 
-        $isPartenaire = auth()->user()->role === 'partenaire' ? true : false;
-        $user = auth()->user();
-
         switch ($filter) {
             case 'followers':
                 $users = User::where('active', true)
@@ -262,7 +260,45 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('includes.profile', compact('user'));
+        if($user->role == "administrateur"){
+            return view('admin.user.show', compact('user'));
+        }else{
+            $user = auth()->user();
+            $tickets = Ticket::where('user_id', $user->id)->get();
+            // dd($tickets);
+            return view('includes.profile', compact('user', 'tickets'));
+        }
+    }
+
+    public function update_password(Request $request)
+    {
+        try {
+            $request->validate([
+                'old_password' => 'required',
+                'new_password' => 'required|string|min:6|confirmed',
+                'new_password_confirmation' => 'required|string|min:6',
+            ]);
+
+            $user = Auth::user();
+
+            if (Hash::check($request->old_password, $user->password)) {
+                if ($request->new_password === $request->new_password_confirmation) {
+                    $user->password = Hash::make($request->new_password);
+                    // dd($user);
+                    $user->save();
+                    return redirect()->back()->with('success', 'Mot de passe mis à jour avec succès.');
+                } else {
+                    echo"La confirmation du nouveau mot de passe ne correspond pas.";
+                    // return redirect()->back()->withErrors(['new_password_confirmation' => 'La confirmation du nouveau mot de passe ne correspond pas.'])->withInput();
+                }
+            } else {
+                    echo"Ancien mot de passe incorrect.";
+                // return redirect()->back()->withErrors(['old_password' => 'Ancien mot de passe incorrect.'])->withInput();
+            }
+        } catch (\Exception $e) {
+            dd($e);
+        }
+
     }
 
     /**

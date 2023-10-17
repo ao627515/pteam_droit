@@ -12,11 +12,7 @@ class ProduitController extends Controller
      */
     public function index()
     {
-        $produits = Produit::where('approuved_at', null)
-            ->where('approuved_by', null)
-            ->where('active', true)
-            ->orderBy('created_at', 'desc')
-            ->paginate(25);
+        $produits = Produit::produitsAprouved(paginate: 14);
 
         return view('liste-produits', compact('produits'));
     }

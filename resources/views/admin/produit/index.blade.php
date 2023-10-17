@@ -25,21 +25,18 @@
                 Créer
             </a>
         </div>
-        <div class="card-header">
-            <form action="" method="get" id="search">
-                @csrf
+        <form action="" method="get" id="search" class="search filter-form">
+            @csrf
+            <div class="card-header">
                 <input type="search" name="search" id="search" placeholder="Nom du produit" class="form-control"
                     value="{{ old('search', request()->search) }}">
-            </form>
-        </div>
-        @if (auth()->user()->role === 'administrateur')
-            <div class="card-header px-5">
-                <form action="" method="get" id="filter-form">
-                    @csrf
+            </div>
+            @if (auth()->user()->role === 'administrateur')
+                <div class="card-header px-5">
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
                             @if (!request()->filter or request()->filter === 'authorize') checked @endif>
-                        <label class="form-check-label" for="authorize">Autorisation</label>
+                        <label class="form-check-label" for="authorize">En attente</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
@@ -55,15 +52,16 @@
                             @if (request()->filter === 'delete') checked @endif>
                         <label class="form-check-label" for="delete">Supprimé</label>
                     </div>
-                </form>
-            </div>
-        @endif
+                </div>
+            @endif
+        </form>
         <div class="card-body">
             <div class="row row-cols-1 row-cols-sm-2  row-cols-md-2 row-cols-lg-2  row-cols-xl-4 row-cols-xll-6">
                 @foreach ($produits as $produit)
+                {{ $produit->imgInit() }}
                     <div class="col">
                         <div class="card produit-card">
-                            <img src="{{ asset('admin/dist/img/default-150x150.png') }}" class="card-img-top" alt="Image"
+                            <img src="{{ $produit->image }}" class="card-img-top" alt="Image"
                                 style="height: 150px">
                             <div class="card-body">
                                 <h6 class="card-subtitle font-weight-bold mb-2" style="font-size: 13.5px">
@@ -107,22 +105,28 @@
                                     @endif
                                 </ul>
                             @endif
-                            {{-- @if (!$produit->approuvedBy)
-                                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                    <form action="" method="get" class="form-action w-50">
-                                        @csrf
-                                        <button type="button" class="btn btn-danger w-100 action-btn">Décliné</button>
-                                    </form>
-                                    <form action="{{ route('produitAdmin.approuved', $produit) }}" method="get"
-                                        class="form-action w-50">
-                                        @csrf
-                                        <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
-                                            data-target="#modal-approuve">
-                                            Approuvé
-                                        </button>
-                                    </form>
-                                </div>
-                            @endif --}}
+                            @if (auth()->user()->role === 'administrateur')
+                                @if (!$produit->approuvedBy)
+                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                        <form action="" method="get" class="form-action w-50">
+                                            @csrf
+                                            <button type="button" class="btn btn-danger w-100 action-btn">Décliné</button>
+                                        </form>
+                                        <form action="{{ route('produitAdmin.approuved', $produit) }}" method="get"
+                                            class="form-action w-50">
+                                            @csrf
+                                            <button type="button" class="btn btn-success w-100 action-btn"
+                                                data-toggle="modal" data-target="#modal-approuve">
+                                                Approuvé
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif
+                            @else
+                                @if (!$produit->approuvedBy)
+                                    <p class="lead text-center badge badge-danger p-2">En attente de validation</p>
+                                @endif
+                            @endif
                             <div class="card-footer">
                                 <ul class="nav nav-fill">
                                     <li class="nav-item">
@@ -261,7 +265,7 @@
             // Filtre
 
             const filters = document.getElementsByName('filter');
-            const filterForm = document.querySelector('#filter-form');
+            const filterForm = document.querySelector('form.filter-form');
 
             filters.forEach(filter => {
                 filter.addEventListener('change', () => {
@@ -271,19 +275,19 @@
 
             // Recherche vide
 
-            const form = document.querySelector(
-                'form#search'); // Sélectionnez le formulaire que vous souhaitez gérer
+            // const form = document.querySelector(
+            //     'form#search'); // Sélectionnez le formulaire que vous souhaitez gérer
 
-            form.addEventListener('submit', function(event) {
-                const inputSearch = document.getElementsByName('search')[0];
-                const searchValue = inputSearch.value;
+            // form.addEventListener('submit', function(event) {
+            //     const inputSearch = document.getElementsByName('search')[0];
+            //     const searchValue = inputSearch.value;
 
-                if (searchValue === '') {
-                    event.preventDefault();
+            //     if (searchValue === '') {
+            //         event.preventDefault();
 
-                    window.location.href = "{{ route('produitAdmin.index') }}";
-                }
-            });
+            //         window.location.href = "{{ route('produitAdmin.index') }}";
+            //     }
+            // });
         })
     </script>
     {{-- <script src="{{ asset('admin/dist/js/adminproduit.js') }}"></script> --}}

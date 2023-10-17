@@ -35,7 +35,9 @@ class ProduitAdminController extends Controller
                 $produits = Produit::when($isPartenaire, function ($query) use ($user) {
                     return $query->where('author_id', $user->id);
                 })
-                    ->where('nom', 'LIKE', "%$search%")
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('nom', 'LIKE', "%$search%");
+                    })
                     ->where('approuved_at', '!=', null)
                     ->where('approuved_by', '!=', null)
                     ->where('active', true)
@@ -48,7 +50,9 @@ class ProduitAdminController extends Controller
                 $produits = Produit::when($isPartenaire, function ($query) use ($user) {
                     return $query->where('author_id', $user->id);
                 })
-                    ->where('nom', 'LIKE', "%$search%")
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('nom', 'LIKE', "%$search%");
+                    })
                     ->where('active', false)
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
@@ -57,7 +61,9 @@ class ProduitAdminController extends Controller
                 $produits = Produit::when($isPartenaire, function ($query) use ($user) {
                     return $query->where('author_id', $user->id);
                 })
-                    ->where('nom', 'LIKE', "%$search%")
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('nom', 'LIKE', "%$search%");
+                    })
                     ->where('approuved_at', null)
                     ->where('approuved_by', null)
                     ->where('active', true)
@@ -97,7 +103,7 @@ class ProduitAdminController extends Controller
         ]));
 
         if ($request['image']) {
-            $imagePath = $data['image']->store($produit->id, 'public');
+            $imagePath = $data['image']->store("produits/$produit->id", 'public');
 
             $produit->update([
                 'image' => $imagePath

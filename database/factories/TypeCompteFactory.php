@@ -20,6 +20,8 @@ class TypeCompteFactory extends Factory
             'nom' => fake()->word,
             'short_name' => fake()->word,
             'frais' => fake()->numberBetween(0, 50000),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

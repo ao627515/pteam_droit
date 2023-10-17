@@ -20,16 +20,22 @@ class TypeCompteSeeder extends Seeder
                 'nom' => 'Personne Physique',
                 'short_name' => 'physique',
                 'frais' => 1000,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'nom' => 'Personne Morale',
                 'short_name' => 'morale',
                 'frais' => 50000,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'nom' => 'Partenaire',
                 'short_name' => 'partenaire',
                 'frais' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ]);
 

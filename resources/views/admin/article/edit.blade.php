@@ -5,20 +5,24 @@
 @section('css')
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('admin/plugins/summernote/summernote-bs4.min.css') }}">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('admin/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endsection
 
 @section('content')
-{{ $article->imgInit() }}
+    {{ $article->imgInit() }}
     <div class="container">
         <div class="card p-5">
-            <form action="{{ route('articleAdmin.featured_image',$article) }}" method="post" id="featuredForm" enctype="multipart/form-data">
+            <form action="{{ route('articleAdmin.featured_image', $article) }}" method="post" id="featuredForm"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="row row-cols-1">
                     <div class="col">
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label for="image">Image mise en avant</label>
-                            <input type="file" class="form-control-file @error('image') is-invalid @enderror" id="image"
-                                name="image" required>
+                            <input type="file" class="form-control-file @error('image') is-invalid @enderror"
+                                id="image" name="image" required>
                             @error('image')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -27,12 +31,14 @@
                         </div>
                     </div>
                     <div class="col mb-3">
-                        <img src="{{$article->image }}" class="img-thumbnail" alt="..." style="width: 250px; height: 250px">
+                        <img src="{{ $article->image }}" class="img-thumbnail" alt="..."
+                            style="width: 250px; height: 250px">
                     </div>
                 </div>
             </form>
 
-            <form action="{{ route('articleAdmin.update',$article) }}" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+            <form action="{{ route('articleAdmin.update', $article) }}" method="post" enctype="multipart/form-data"
+                accept-charset="UTF-8">
                 @csrf
                 @method('put')
                 <div class="row row-cols-1">
@@ -40,7 +46,7 @@
                         <div class="form-group">
                             <label for="titre">Titre</label>
                             <input type="text" class="form-control @error('titre') is-invalid @enderror" id="titre"
-                                name="titre" required value="{{ old('titre',$article->titre) }}">
+                                name="titre" required value="{{ old('titre', $article->titre) }}">
                             @error('titre')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -52,7 +58,7 @@
                         <div class="form-group">
                             <label for="description">Description</label>
                             <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
-                                rows="1" required>{{ old('description',$article->description) }}</textarea>
+                                rows="1" required>{{ old('description', $article->description) }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -62,19 +68,16 @@
                     </div>
                     <div class="col mb-3">
                         <div class="form-group">
-                            <label for="categorie">Categorie</label>
-                            <select class="form-control
-                                @error('categorie') is-invalid @enderror" name="categorie" id="categorie" value="{{ old('categorie') }}">
+                            <label>Categorie</label>
+                            <select class="select2 @error('categorie') is-invalid @enderror" multiple
+                                data-placeholder="Select a State" style="width: 100%;" name="categorie[]" id="categorie"
+                                value="{{ old('categorie') }}">
                                 @foreach ($categories as $categorie)
-                                    <option value="{{ $categorie->id }}"
-                                        @if ($article->categorie->id == $categorie->id)
-                                            selected
-                                        @endif>
+                                    <option value="{{ $categorie->id }}" @if ($article->categories->contains($categorie->id)) selected @endif>
                                         {{ Str::ucfirst($categorie->nom) }}
                                     </option>
                                 @endforeach
                             </select>
-
                             @error('categorie')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -86,7 +89,8 @@
                     <div class="col mb-3">
                         <div class="form-group">
                             <label for="contenu">Corps de l'article</label>
-                            <textarea class="form-control @error('contenu') is-invalid @enderror" id="contenu" name="contenu" rows="5" required>
+                            <textarea class="form-control @error('contenu') is-invalid @enderror" id="contenu" name="contenu" rows="5"
+                                required>
                                 {{ old('contenu', $article->contenu) }}
                             </textarea>
                             @error('contenu')
@@ -128,6 +132,8 @@
 @endsection
 
 @section('script')
+    <!-- Select2 -->
+    <script src="{{ asset('admin/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/summernote/summernote-bs4.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/summernote/lang/summernote-fr-FR.min.js') }}"></script>
     <script>
@@ -161,7 +167,14 @@
                 // Soumettre le formulaire
                 $('form').submit();
             });
+
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
         })
     </script>
 @endsection
-

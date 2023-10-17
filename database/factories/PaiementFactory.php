@@ -24,7 +24,9 @@ class PaiementFactory extends Factory
             },
             'montant' => fake()->numberBetween(1000, 100000),
             'methode' => fake()->randomElement(['Carte de crédit', 'PayPal', 'Virement bancaire']),
-            'status' => fake()->randomElement(['En attente', 'Payé', 'Annulé'])
+            'status' => fake()->randomElement(['En attente', 'Payé', 'Annulé']),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

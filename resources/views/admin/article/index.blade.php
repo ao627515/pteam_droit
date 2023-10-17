@@ -25,39 +25,36 @@
                 Créer
             </a>
         </div>
-        <div class="card-header">
-            <form action="" method="get" id="search">
-                @csrf
+        <form action="" method="get" id="search" class="search filter-form">
+            @csrf
+            <div class="card-header">
                 <input type="search" name="search" id="search" placeholder="Nom de l'article" class="form-control"
                     value="{{ old('search', request()->search) }}">
-            </form>
-        </div>
-        @if (auth()->user()->role === 'administrateur')
-            <div class="card-header px-5">
-                <form action="" method="get" id="filter-form">
-                    @csrf
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
-                            @if (!request()->filter or request()->filter === 'authorize') checked @endif>
-                        <label class="form-check-label" for="authorize">Autorisation</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
-                            @if (request()->filter === 'approuved') checked @endif>
-                        <label class="form-check-label" for="approuved">Approuvé</label>
-                    </div>
-                    {{-- <div class="form-check form-check-inline">
+            </div>
+            @if (auth()->user()->role === 'administrateur')
+                <div class="card-header px-5">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
+                                @if (!request()->filter or request()->filter === 'authorize') checked @endif>
+                            <label class="form-check-label" for="authorize">En attente</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
+                                @if (request()->filter === 'approuved') checked @endif>
+                            <label class="form-check-label" for="approuved">Approuvé</label>
+                        </div>
+                        {{-- <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"  @if (request()->filter === 'declined') checked  @endif>
                     <label class="form-check-label" for="declined">Décliné</label>
                 </div> --}}
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
-                            @if (request()->filter === 'delete') checked @endif>
-                        <label class="form-check-label" for="delete">Supprimé</label>
-                    </div>
-                </form>
-            </div>
-        @endif
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
+                                @if (request()->filter === 'delete') checked @endif>
+                            <label class="form-check-label" for="delete">Supprimé</label>
+                        </div>
+                </div>
+            @endif
+        </form>
 
         <div class="card-body">
             <div class="row row-cols-1 row-cols-sm-2  row-cols-md-2 row-cols-lg-2  row-cols-xl-4 row-cols-xll-6">
@@ -176,27 +173,12 @@
             // Filtre
 
             const filters = document.getElementsByName('filter');
-            const filterForm = document.querySelector('#filter-form');
+            const filterForm = document.querySelector('form.filter-form');
 
             filters.forEach(filter => {
                 filter.addEventListener('change', () => {
                     filterForm.submit();
                 });
-            });
-
-            // Recherche vide
-            const form = document.querySelector(
-                'form#search'); // Sélectionnez le formulaire que vous souhaitez gérer
-
-            form.addEventListener('submit', function(event) {
-                const inputSearch = document.getElementsByName('search')[0];
-                const searchValue = inputSearch.value;
-
-                if (searchValue === '') {
-                    event.preventDefault();
-
-                    window.location.href = "{{ route('articleAdmin.index') }}";
-                }
             });
         })
     </script>

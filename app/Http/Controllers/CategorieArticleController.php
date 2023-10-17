@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\CategorieArticle;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class CategorieArticleController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -36,9 +37,10 @@ class CategorieArticleController extends Controller
      */
     public function show($categorieArticle)
     {
-        // $articles = Article::where('categorie_article_id',$categorieArticle)->get();
-        // return view("blog",$articles);
-        return view("blog");
+
+        $articles = Article::articlesAprouved(paginate: 14);
+
+        return view('blog', compact('articles'));
     }
 
     /**

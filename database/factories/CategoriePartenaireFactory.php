@@ -17,7 +17,9 @@ class CategoriePartenaireFactory extends Factory
     public function definition(): array
     {
         return [
-            'nom' => fake()->word,
+            'nom' => fake()->unique()->word,
+            'created_at' => now(),
+            'updated_at' => now()
         ];
     }
 }

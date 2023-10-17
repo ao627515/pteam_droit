@@ -29,6 +29,8 @@ class ProduitFactory extends Factory
             'active' => fake()->boolean,
             'approuved_at' => fn() => $approuve == true ? fake()->dateTimeThisDecade : null,
             'approuved_by' => fn() => $approuve == true ? User::inRandomOrder()->first()->id : null,
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

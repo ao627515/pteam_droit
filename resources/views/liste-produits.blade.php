@@ -10,75 +10,140 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1>Nos article</h1>
-                        </div>
-                    </div>
-                </div><!-- /.container-fluid -->
-            </section>
 
             <!-- Main content -->
             <section class="container content form-group">
-
-                <h3>DROIT CONSTITUTIONNEL</h3>
-                <div class="row">
-                    @foreach ([1, 2, 3, 4, 5] as $produit)
-                        <div class="col-6">
-                            <div class="form-group">
-                                <div class="card card-solid mt-5">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-12 col-sm-6">
-                                                <h3 class="d-inline-block d-sm-none">Livre</h3>
-                                                <div class="col-12">
-                                                    <img src="{{ asset('assets/img/produit.jpg') }}" alt="logo"
-                                                        width="50%">
-
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-6">
-                                                <h3 class="my-3">Nom du livre</h3>
-                                                <p>
-                                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quidem
-                                                    voluptate blanditiis placeat voluptas autem ipsa necessitatibus ea,
-                                                    nulla fugit unde tempora corporis ducimus maxime, eveniet qui commodi
-                                                    sed, minima assumenda.
-
-                                                    Raw denim you probably haven't heard of them jean shorts Austin.
-                                                    Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher
-                                                    synth. Cosby sweater eu banh mi, qui irure terr.</p>
-
-                                                <hr>
-                                                <a href="{{ route('detail') }}">Voir plus</a>
-                                                <div class="bg-gray py-2 px-3 mt-4">
-                                                    <h2 class="mb-0">
-                                                        5.000 fcfa
-                                                    </h2>
-
-                                                </div>
-
-                                                <div class="mt-4">
-                                                    <div class="btn btn-primary btn-lg btn-flat">
-                                                        Payer
-                                                    </div>
-
-
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <!-- /.card-body -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+                <h3></h3>
 
         </div>
+
+        <section class="page-title-wrap position-relative bg-light">
+            <div id="particles_js"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-11">
+                        <div class="page-title position-relative pt-5 pb-5">
+                            <ul class="custom-breadcrumb roboto list-unstyled mb-0 clearfix" data-animate="fadeInUp"
+                                data-delay="1.2">
+                                <li><a href="index.html">Accueil</a></li>
+                                <li><i class="fas fa-angle-double-right"></i></li>
+                                <li><a href="#">Publications</a></li>
+                            </ul>
+                            <h1 data-animate="fadeInUp" data-delay="1.3">Librairie</h1>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="world-map position-relative">
+                            <img src="img/map.svg" alt="" alt="" data-no-retina class="svg">>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Blog -->
+        <section class="blog pt-7 pb-7">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 order-last">
+                        <!-- Posts -->
+                        <div class="row">
+                            @foreach ($produits as $produit)
+                            {{ $produit->imgInit() }}
+                                <div class="col-md-6">
+                                    <div class="single-post" data-delay=".1">
+                                        <div class="image-hover-wrap">
+                                            <img src="{{ $produit->image}}">
+                                            <div
+                                                class="image-hover-content d-flex justify-content-center align-items-center text-center">
+                                                <ul class="list-inline">
+                                                    <li><a href="{{ route('detail') }}"><i class="fas fa-eye"></i></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <span class="text-dark">Publié le <a class="text-dark"
+                                                href="#">19/09/2017</a></span>
+
+                                        <a href="{{ route('detail') }}" class="text-primary">Droit administratif</a>
+                                        <h4 class="text-warning">
+                                            5.000 fcfa
+                                        </h4>
+                                        <h4> stock : <a href="#">554545</a> </h4>
+                                        <div>
+                                            <div class="btn btn-primary btn-flat"> <a
+                                                    href="{{ route('paiement.create') }}">Payer</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <!-- Pagination -->
+                        {{-- <ul class="custom-pagination list-inline text-center text-uppercase mt-4" data-animate="fadeInUp" data-delay=".1">
+                                <li class="float-left disabled"><a href="#"><i class="fas fa-caret-left"></i> Prev</a></li>
+                                <li class="active"><a href="#">01</a></li>
+                                <li><a href="#">02</a></li>
+                                <li><a href="#">03</a></li>
+                                <li><a href="#">04</a></li>
+                                <li><a href="#">05</a></li>
+                                <li class="float-right"><a href="#">Next <i class="fas fa-caret-right"></i></a></li>
+                            </ul> --}}
+                        {{ $produits->links() }}
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="col-md-4">
+                        <aside>
+                            <div class="single-widget" data-animate="fadeInUp" data-delay=".1">
+                                <form action="#">
+                                    <div class="form-group position-relative mb-0">
+                                        <input class="form-control" type="text" placeholder="Rechercher"
+                                            data-parsley-required-message="Please type at least one word."
+                                            data-parsley-minlength="3"
+                                            data-parsley-minlength-message="Please type at least one word." required>
+                                        <button type="submit"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="single-widget" data-animate="fadeInUp" data-delay=".1">
+                                <h3 data-animate="fadeInUp" data-delay=".2">Categories</h3>
+                                <ul class="widget-categories list-unstyled mb-0">
+                                    <li data-animate="fadeInUp" data-delay=".25"><a href="#"><span>Droit du
+                                                travail</span><span class="count">55</span></a></li>
+                                    <li data-animate="fadeInUp" data-delay=".3"><a href="#"><span>Droit du
+                                                commerce</span><span class="count">10</span></a></li>
+                                    <li data-animate="fadeInUp" data-delay=".35"><a href="#"><span>Droit
+                                                civil</span><span class="count">23</span></a></li>
+                                    <li data-animate="fadeInUp" data-delay=".4"><a href="#"><span>Droit
+                                                penal</span><span class="count">46</span></a></li>
+
+                                </ul>
+                            </div>
+
+                            {{-- <div class="single-widget" data-animate="fadeInUp" data-delay=".1">
+                                    <h3 data-animate="fadeInUp" data-delay=".2">Publications Récentes</h3>
+                                    <ul class="recent-posts list-unstyled mb-0">
+                                        <li data-animate="fadeInUp" data-delay=".25"><a href="#">How to Watch Smith VS Holzken Live Online From Anywhere?</a></li>
+                                        <li data-animate="fadeInUp" data-delay=".3"><a href="#">In Major Hiring Push, Web Hosting Powerhouse Go Daddy to Expand</a></li>
+                                        <li data-animate="fadeInUp" data-delay=".35"><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing elit fastus.</a></li>
+                                        <li data-animate="fadeInUp" data-delay=".4"><a href="#">How to Watch Emmett VS Stephens at UFC Fight Night FOX 28?</a></li>
+                                        <li data-animate="fadeInUp" data-delay=".45"><a href="#">UK children being subjected to invasive data retention</a></li>
+                                    </ul>
+                                </div> --}}
+
+                            <div class="single-widget text-center" data-animate="fadeInUp" data-delay=".1">
+                                <h3 data-animate="fadeInUp" data-delay=".2">Publicité</h3>
+                                <img src="{{ asset('assets/img/camera.jpg') }}" alt="" data-animate="fadeInUp"
+                                    data-delay=".25">
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End of Blog -->
+
         <!-- Default box -->
 
         </section>

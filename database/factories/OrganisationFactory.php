@@ -42,6 +42,8 @@ class OrganisationFactory extends Factory
             'domaine_id' => function () {
                 return Domaine::inRandomOrder()->first()->id;
             },
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('status')->default(1);
             $table->foreignId('user_id');
             $table->foreignId('target_user_id')->nullable()->constrained('users');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

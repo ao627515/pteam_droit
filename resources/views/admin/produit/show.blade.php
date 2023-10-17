@@ -3,6 +3,7 @@
 @section('titre', 'produit')
 
 @section('content')
+{{ $produit->imgInit() }}
     <div class="card">
         <div class="card-body">
             <div class="row">
@@ -10,7 +11,7 @@
                     <div class="col-12">
                         <div class="card">
                             {{-- <img src="{{ asset('assets/img/produit.jpg') }}" alt="logo" width="50%" class="card-img-top"> --}}
-                            <img src="{{ asset('admin/dist/img/default-150x150.png') }}" class="card-img-top" alt="Image">
+                            <img src="{{ $produit->image }}" class="card-img-top" alt="Image">
                             <h3 class="card-title text-center mt-3">{{ $produit->nom }}</h3>
                         </div>
                     </div>
@@ -52,7 +53,7 @@
                             @endif
                         </ul>
                     </div>
-                    @if (!$produit->approuvedBy)
+                    @if (!$produit->approuvedBy && auth()->user()->role == 'administrateur')
                         <div class="btn-group mt-3 w-100" role="group" aria-label="Basic mixed styles example">
                             <form action="" method="get" class="form-action w-50">
                                 @csrf

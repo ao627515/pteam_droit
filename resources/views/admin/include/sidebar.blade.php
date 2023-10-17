@@ -39,8 +39,34 @@
                         </a>
                     </li>
                 @endif
-                <li class="nav-header">ARTICLES</li>
-                {{-- Administrateur --}}
+                {{-- <li class="nav-header">REQUETES UTILISATEUR</li> --}}
+                <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
+                        '')) menu-open @endif">
+                    <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
+                            '')) active @endif">
+                        <i class="nav-icon fas fa-user-cog"></i>
+                        <p>
+                            Requêtes utilisateur
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        {{-- <li class="nav-item">
+                                <a href="{{ route('user.create') }}"
+                                    class="nav-link @if (Request::routeIs('user.create')) active @endif">
+                                    <i class="fa-solid fa-user-plus nav-icon"></i>
+                                    <p>Créer</p>
+                                </a>
+                            </li> --}}
+                        <li class="nav-item">
+                            <a href="#" class="nav-link  @if (Request::routeIs('')) active @endif">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Listes</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {{-- <li class="nav-header">ARTICLES</li> --}}
                 <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
                         'articleAdmin.')) menu-open @endif">
                     <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
@@ -69,7 +95,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-header">PRODUITS</li>
+                {{-- <li class="nav-header">PRODUITS</li> --}}
                 <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
                         'produitAdmin.')) menu-open @endif">
                     <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
@@ -97,35 +123,85 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-header">UTILISATEURS</li>
-                {{-- Administrateur --}}
-                <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
-                        'user.')) menu-open @endif">
-                    <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
-                            'user.')) active @endif">
-                        <i class="nav-icon fa-solid fa-users"></i>
-                        <p>
-                            Uitilisateurs
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('user.create') }}"
-                                class="nav-link @if (Request::routeIs('user.create')) active @endif">
-                                <i class="fa-solid fa-user-plus nav-icon"></i>
-                                <p>Créer</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('user.index') }}"
-                                class="nav-link  @if (Request::routeIs('user.index')) active @endif">
-                                <i class="nav-icon fa-solid fa-user-secret"></i>
-                                <p>Listes</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                @if (auth()->user()->role === 'administrateur')
+                    {{-- <li class="nav-header">UTILISATEURS</li> --}}
+                    {{-- Administrateur --}}
+                    <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
+                            'user.')) menu-open @endif">
+                        <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
+                                'user.')) active @endif">
+                            <i class="nav-icon fa-solid fa-users"></i>
+                            <p>
+                                Uitilisateurs
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('user.create') }}"
+                                    class="nav-link @if (Request::routeIs('user.create')) active @endif">
+                                    <i class="fa-solid fa-user-plus nav-icon"></i>
+                                    <p>Créer</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('user.index') }}"
+                                    class="nav-link  @if (Request::routeIs('user.index')) active @endif">
+                                    <i class="nav-icon fa-solid fa-user-secret"></i>
+                                    <p>Listes</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {{-- <li class="nav-header">PARAMETRES</li> --}}
+                    <li class="nav-item @if (str_contains(request()->route()->getName(),
+                            'domaine') ||
+                            str_contains(request()->route()->getName(),
+                                'categorie') ||
+                            str_contains(request()->route()->getName(),
+                                'typeCompte') ||
+                            str_contains(request()->route()->getName(),
+                                'prestation')) menu-open @endif">
+                        <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
+                                '')) active @endif">
+                            <i class="nav-icon fas fa-cogs"></i> <!-- FontAwesome 5 gear icon -->
+                            <p>
+                                Paramètres
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('categorie.index') }}"
+                                    class="nav-link @if (Request::routeIs('categorie.index')) active @endif">
+                                    <i class="nav-icon fas fa-folder"></i> <!-- FontAwesome 5 folder icon -->
+                                    <p>Categories</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('domaine.index') }}"
+                                    class="nav-link @if (Request::routeIs('domaine.index')) active @endif">
+                                    <i class="nav-icon fas fa-globe"></i> <!-- FontAwesome 5 globe icon -->
+                                    <p>Domaines</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('prestation.index') }}"
+                                    class="nav-link  @if (Request::routeIs('prestation.index')) active @endif">
+                                    <i class="nav-icon fas fa-store-alt"></i> <!-- FontAwesome 5 store-alt icon -->
+                                    <p>Prestations</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('typeCompte.index') }}"
+                                    class="nav-link  @if (Request::routeIs('typeCompte.index')) active @endif">
+                                    <i class="nav-icon fas fa-id-card"></i> <!-- FontAwesome 5 id-card icon -->
+                                    <p>Type de comptes</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
                 <li class="nav-header">DECONNEXION</li>
                 <li class="nav-item ">
                     <a href="{{ route('disconnect') }}" class="nav-link ">

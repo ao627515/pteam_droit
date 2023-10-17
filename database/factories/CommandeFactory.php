@@ -25,6 +25,8 @@ class CommandeFactory extends Factory
             'produit_id' => Produit::inRandomOrder()->first()->id, // Remplacez par l'ID du produit correspondant
             'user_id' => User::inRandomOrder()->first()->id, // Remplacez par l'ID de l'utilisateur correspondant
             'quantity' => fake()->numberBetween(1, $stock), // Quantité aléatoire entre 1 et 5
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

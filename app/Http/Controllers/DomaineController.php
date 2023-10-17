@@ -4,15 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Domaine;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DomaineController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $search = $request['search'];
+
+        $domaines = Domaine::when($search, function ($query) use ($search) {
+            return $query->where('nom', 'LIKE', "%$search%");
+        })
+            ->where('active', true)
+            ->orderBy('created_at', 'desc')
+            ->paginate(25);
+
+        return view(
+            'admin.domaine.index',
+            [
+                'domaines' => $domaines,
+                'query' => ['search' => $search],
+            ]
+        );
     }
 
     /**
@@ -28,7 +44,24 @@ class DomaineController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $data = $request->validate([
+            'nom' => ['required', 'string', 'max:245', 'unique:domaines,nom'],
+            'icon' => ['nullable', 'image'],
+            'estPartenaire' => ['required', 'boolean']
+        ]);
+
+         $domaine = Domaine::create($data);
+
+        if($request->icon){
+
+            $iconPath = $data['icon']->store("domaines/icon/$domaine->id",'public');
+            $domaine->update([
+                'icon' => $iconPath
+            ]);
+        }
+
+        return to_route('domaine.index')->with('success', 'Nouveau domaine enregistré');
     }
 
     /**
@@ -52,7 +85,36 @@ class DomaineController extends Controller
      */
     public function update(Request $request, Domaine $domaine)
     {
-        //
+        // dump($domaine->id);
+        $nom = "domaines_{$domaine->id}_nom";
+        $icon = "icon_{$domaine->id}";
+        $estPartenaire = "estPartenaire_{$domaine->id}";
+
+        // dump($nom);
+        // dump($icon);
+        // dump($estPartenaire);
+        // dd($request->all());
+
+        $request->validate([
+            $nom => ['required', 'string', 'max:245', Rule::unique(Domaine::class, 'nom')->ignore($domaine->id)],
+            $icon => ['nullable', 'image'],
+            $estPartenaire => ['required', 'boolean']
+        ]);
+
+        if($request->input($icon)){
+            $domaine->update([
+                'nom' => $request->input($nom),
+                'icon' => $request->input($icon),
+                'estPartenaire' => $request->input($estPartenaire),
+            ]);
+        }else{
+            $domaine->update([
+                'nom' => $request->input($nom),
+                'estPartenaire' => $request->input($estPartenaire),
+            ]);
+        }
+
+        return to_route('domaine.index')->with('success', 'Nouvelle domaine ajouté !');
     }
 
     /**
@@ -60,6 +122,7 @@ class DomaineController extends Controller
      */
     public function destroy(Domaine $domaine)
     {
-        //
+        $domaine->delete();
+        return to_route('domaine.index')->with('success', 'Dommaine supprimé !');
     }
 }

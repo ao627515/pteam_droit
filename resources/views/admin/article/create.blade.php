@@ -5,6 +5,9 @@
 @section('css')
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('admin/plugins/summernote/summernote-bs4.min.css') }}">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('admin/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endsection
 
 @section('content')
@@ -14,7 +17,8 @@
                 <h1 class="text-center w-100">Créer un article</h3>
             </div>
             <div class="card-body">
-                <form action="{{ route('articleAdmin.store') }}" method="post" enctype="multipart/form-data" id="formCreate">
+                <form action="{{ route('articleAdmin.store') }}" method="post" enctype="multipart/form-data"
+                    id="formCreate">
                     @csrf
                     <div class="row row-cols-1">
                         <div class="col mb-3">
@@ -55,17 +59,17 @@
                         </div>
                         <div class="col mb-3">
                             <div class="form-group">
-                                <label for="categorie">Categorie</label>
-                                <select
-                                    class="form-control
-                                    @error('categorie') is-invalid @enderror"
-                                    name="categorie" id="categorie" value="{{ old('categorie') }}">
-                                    <option disabled selected>Veuillez choisir une catégorie</option>
+                                <label>Categorie</label>
+                                <select class="select2 @error('categorie') is-invalid @enderror" multiple
+                                    data-placeholder="Select a State" style="width: 100%;" name="categorie[]" id="categorie"
+                                    value="{{ old('categorie') }}">
                                     @foreach ($categories as $categorie)
-                                        <option value="{{ $categorie->id }}">{{ Str::ucfirst($categorie->nom) }}</option>
+                                        <option value="{{ $categorie->id }}"
+                                            @if (in_array($categorie->id, old('categorie', []))) selected @endif>
+                                            {{ Str::ucfirst($categorie->nom) }}
+                                        </option>
                                     @endforeach
                                 </select>
-
                                 @error('categorie')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -122,6 +126,8 @@
 @endsection
 
 @section('script')
+    <!-- Select2 -->
+    <script src="{{ asset('admin/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/summernote/summernote-bs4.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/summernote/lang/summernote-fr-FR.min.js') }}"></script>
     <script>
@@ -146,12 +152,18 @@
                 ]
             });
 
-
-
             $('#confirmCreate').on('click', function() {
                 // Soumettre le formulaire
                 $('form').submit();
             });
+
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
         });
     </script>
 @endsection

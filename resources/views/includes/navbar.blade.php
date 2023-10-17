@@ -43,21 +43,21 @@
                                             <a href="{{route('home.index')}}">Accueil</a>
                                         </li>
                                         <li><a href="#services">Services</a></li>
-                                        <li class="{{ Request::routeIs('categorie.show') ? 'active' : '' }}">
+                                        <li class="{{ Request::routeIs('categorieArticle.show') ? 'active' : '' }}">
                                             <a href="#">Publications <i
                                                     class="fas fa-caret-down"></i></a>
                                             <ul>
                                                 <li>
-                                                    <a href="{{route('categorie.show',1)}}">Droit du travail</a>
+                                                    <a href="{{route('categorieArticle.show',1)}}">Droit du travail</a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{route('categorie.show',2)}}">Droit du commerce</a>
+                                                    <a href="{{route('categorieArticle.show',2)}}">Droit du commerce</a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{route('categorie.show',3)}}">Droit Civil</a>
+                                                    <a href="{{route('categorieArticle.show',3)}}">Droit Civil</a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{route('categorie.show',4)}}">Etc...</a>
+                                                    <a href="{{route('categorieArticle.show',4)}}">Etc...</a>
                                                 </li>
                                             </ul>
                                         </li>

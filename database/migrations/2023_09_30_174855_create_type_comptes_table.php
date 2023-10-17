@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nom',50);
             $table->string('short_name',20);
             $table->integer('frais')->default(0);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

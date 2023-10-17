@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
             // CategorieProduitSeeder::class,
             FaqSeeder::class,
             PaiementSeeder::class,
+            CategorieSeeder::class,
+            PrestationSeeder::class,
         ]);
     }
 }

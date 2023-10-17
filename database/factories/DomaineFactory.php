@@ -18,8 +18,10 @@ class DomaineFactory extends Factory
     {
         return [
             'nom' => fake()->word,
-            'description' => fake()->text,
             'estPartenaire' => fake()->boolean,
+            'icon' => fake()->imageUrl(category: 'domaine icon'),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

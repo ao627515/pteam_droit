@@ -26,6 +26,8 @@ class UserSeeder extends Seeder
                 'type_compte' => 'physique',
                 'active' => 1,
                 'role' => 'administrateur',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'nom' => 'Ouedraogo',
@@ -36,11 +38,24 @@ class UserSeeder extends Seeder
                 'type_compte' => 'physique',
                 'active' => 1,
                 'role' => 'partenaire',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
-            // Ajoutez d'autres enregistrements existants ici
+            [
+                'nom' => 'Ouedraogo',
+                'prenom' => 'Abdoul Aziz',
+                'phone' => '70164871',
+                'email' => 'exemple@gmail.com',
+                'password' => Hash::make('1234'),
+                'type_compte' => 'physique',
+                'active' => 1,
+                'role' => 'utilisateur',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
 
         // Générez ensuite des enregistrements à l'aide de la factory
-        User::factory(200)->create();
+        User::factory(100)->create();
     }
 }

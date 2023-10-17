@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DOMDocument;
+use App\Models\Categorie;
 use App\Models\Article;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -18,7 +19,6 @@ class ArticleAdminController extends Controller
     public function index(Request $request)
     {
         $articles = $this->filter($request);
-
         return view(
             'admin.article.index',
             [
@@ -42,20 +42,22 @@ class ArticleAdminController extends Controller
                 $articles = Article::when($isPartenaire, function ($query) use ($user) {
                     return $query->where('author_id', $user->id);
                 })
-                    ->where('titre', 'LIKE', "%$search%")
+                ->when($search, function($query) use ($search) {
+                    return $query->where('titre', 'LIKE', "%$search%");
+                })
                     ->where('approuved_at', '!=', null)
                     ->where('approuved_by', '!=', null)
                     ->where('active', true)
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
-                // case 'declined':
-                //     break;
             case 'delete':
                 $articles = Article::when($isPartenaire, function ($query) use ($user) {
                     return $query->where('author_id', $user->id);
                 })
-                    ->where('titre', 'LIKE', "%$search%")
+                    ->when($search, function($query) use ($search) {
+                    return $query->where('titre', 'LIKE', "%$search%");
+                })
                     ->where('active', false)
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
@@ -64,7 +66,9 @@ class ArticleAdminController extends Controller
                 $articles = Article::when($isPartenaire, function ($query) use ($user) {
                     return $query->where('author_id', $user->id);
                 })
-                    ->where('titre', 'LIKE', "%$search%")
+                    ->when($search, function($query) use ($search) {
+                    return $query->where('titre', 'LIKE', "%$search%");
+                })
                     ->where('approuved_at', null)
                     ->where('approuved_by', null)
                     ->where('active', true)
@@ -82,7 +86,7 @@ class ArticleAdminController extends Controller
     public function create()
     {
         return view('admin.article.create', [
-            'categories' => CategorieArticle::all()
+            'categories' => Categorie::all()
         ]);
     }
 
@@ -91,17 +95,19 @@ class ArticleAdminController extends Controller
      */
     public function store(Request $request)
     {
-        // dump($request->all());
+        // dd($request->all());
         // Validation des données reçues
         $dataValidated = $request->validate([
             'titre' => ['required', 'string', 'max:245'],
             'image' => ['required', 'image',],
             'description' => ['required', 'string', 'max:245'],
             'contenu' => ['required', 'string'],
-            'categorie' => ['required']
+            'categorie' => ['required', 'array']
         ]);
 
-        // dd(array_merge($dataValidated, ['slug' => Str::slug($dataValidated['titre'])]));
+
+        $categories = $dataValidated['categorie'];
+        // dd($categories);
 
         // Création de l'article
         $article = Article::create(array_merge($dataValidated, [
@@ -157,9 +163,10 @@ class ArticleAdminController extends Controller
      */
     public function edit(Article $articleAdmin)
     {
+
         return view('admin.article.edit', [
             'article' => $articleAdmin,
-            'categories' => CategorieArticle::all()
+            'categories' => Categorie::all()
         ]);
     }
 
@@ -172,6 +179,7 @@ class ArticleAdminController extends Controller
             'titre' => ['required', 'string'],
             'description' => ['required', 'string', 'max:255'],
             'contenu' => ['required', 'string'],
+            'categorie' => ['required', 'array']
         ]);
 
         $originalContent = $articleAdmin->contenu; // Contenu d'origine
@@ -218,6 +226,9 @@ class ArticleAdminController extends Controller
         $dataValidated['contenu'] =  $updatedDom->saveHTML();
 
         $articleAdmin->update($dataValidated);
+
+        $categories = $dataValidated['categorie'];
+        $articleAdmin->categories()->sync($categories);
 
         return to_route('articleAdmin.index')->with('success', 'Articles Modifier');
     }

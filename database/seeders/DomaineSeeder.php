@@ -15,30 +15,25 @@ class DomaineSeeder extends Seeder
     public function run(): void
     {
         $domaines = [
-            [
-                'nom' => 'Droit civil',
-                'description' => 'Spécialisé dans le droit civil',
-            ],
-            [
-                'nom' => 'Droit pénal',
-                'description' => 'Spécialisé dans le droit pénal',
-            ],
-            [
-                'nom' => 'Droit commercial',
-                'description' => 'Spécialisé dans le droit commercial',
-            ],
-            [
-                'nom' => 'Droit de la famille',
-                'description' => 'Spécialisé dans le droit de la famille',
-            ],
-            [
-                'nom' => 'Droit des contrats',
-                'description' => 'Spécialisé dans le droit des contrats',
-            ],
+            'Droit de la famille',
+            'Droit du commerce',
+            'Droit du civil',
+            'autre',
+            'Droit des contrats',
+            'Droit des sociétés',
+            'Droit du travail',
+            'Droit immobilier',
+            'Droit criminel',
+            'Droit de la propriété intellectuelle',
+            'Droit de l\'environnement',
+            'Droit de la cyber-sécurité et de la vie privée',
+            'Droit de la santé',
         ];
 
-        // Insertion des données dans la table "domaines"
-        DB::table('domaines')->insert($domaines);
-        Domaine::factory(10)->create();
+        foreach ($domaines as $domaine) {
+            Domaine::factory()->create([
+                'nom' => $domaine
+            ]);
+        }
     }
 }

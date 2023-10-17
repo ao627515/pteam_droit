@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Domaine;
+use App\Models\TypeCompte;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -10,12 +12,16 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PartenaireController;
+use App\Http\Controllers\PrestationController;
 use App\Http\Controllers\ArticleAdminController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\ProduitAdminController;
 use App\Http\Controllers\CategorieArticleController;
+use App\Http\Controllers\DomaineController;
+use App\Http\Controllers\TypeCompteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +51,8 @@ Route::resources([
     'partenaire' => PartenaireController::class,
     'article' => ArticleController::class,
     'articleAdmin'=>ArticleAdminController::class,
-    'categorie' => CategorieArticleController::class,
+    'categorie' => CategorieController::class,
+    'categorieArticle' => CategorieArticleController::class,
     'ticket' => TicketController::class,
     'paiement' => PaiementController::class,
     'organisation' => OrganisationController::class,
@@ -53,6 +60,9 @@ Route::resources([
     'produit' => ProduitController::class,
     'produitAdmin' => ProduitAdminController::class,
     'commande' => CommandeController::class,
+    'prestation' => PrestationController::class,
+    'typeCompte' => TypeCompteController::class,
+    'domaine' => DomaineController::class,
 ], ['middleware' => ['auth']]);
 
 
@@ -62,6 +72,7 @@ Route::post('produit/{produit}/featured_image', [ArticleController::class, 'feat
 
 Route::get('/login', [UserController::class, 'loginForm'])->name('auth.loginform');
 Route::get('/register', [UserController::class, 'registerForm'])->name('auth.registerform');
+Route::get('user/change/password', [UserController::class, 'update_password'])->name('user.update_password');
 
 
 Route::post('/login', [UserController::class, 'login'])->name('auth.login');
@@ -70,9 +81,11 @@ Route::post('/register', [UserController::class, 'register'])->name('auth.regist
 
 Route::get('disconnect', [UserController::class, 'disconnect'])->name('disconnect');
 
-Route::get('/dashbord', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('detail', [ProduitController::class, 'detail'])->name('detail');
 
 Route::get('article/{article}/admin/approuve', [ArticleAdminController::class, 'approuved'])->name('articleAdmin.approuved');
 Route::get('produit/{produit}/admin/approuve', [ProduitAdminController::class, 'approuved'])->name('produitAdmin.approuved');
+
+
