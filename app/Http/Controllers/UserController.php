@@ -48,6 +48,8 @@ class UserController extends Controller
 
     function register(Request $request)
     {
+        $typeComptes = TypeCompte::all();
+
         $request->validate([
             'nom' => 'required',
             'prenom' => 'required',
@@ -279,7 +281,9 @@ class UserController extends Controller
                 'new_password_confirmation' => 'required|string|min:6',
             ]);
 
-            $user = Auth::user();
+            // $user = Auth::user();
+
+            $user = User::find(Auth::user()->id);
 
             if (Hash::check($request->old_password, $user->password)) {
                 if ($request->new_password === $request->new_password_confirmation) {

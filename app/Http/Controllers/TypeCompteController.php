@@ -88,14 +88,16 @@ class TypeCompteController extends Controller
             'frais' => $request->input($key),
         ]);
 
-        return to_route('typeCompte.index')->with('success', 'Frais modifier !');
+        return to_route('typeCompte.index')->with('success', 'Modification réussie !');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TypeCompte $prestation)
+    public function destroy(TypeCompte $typeCompte)
     {
-        //
+        $typeCompte->delete();
+
+        return to_route('typeCompte.index')->with('success', 'Suppression réussi !');
     }
 }

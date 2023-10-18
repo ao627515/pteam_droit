@@ -154,4 +154,10 @@
             });
         });
     </script>
+        <script>
+            enableEditButtons(
+                '.btnEdit',
+                "input[type='text']",
+            );
+        </script>
 @endsection
