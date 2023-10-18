@@ -48,7 +48,7 @@ class PrestationController extends Controller
             'nom' => ['required', 'string', 'max:245', 'unique:prestations,nom']
         ]);
 
-        prestation::create($data);
+        Prestation::create($data);
 
         return to_route('prestation.index')->with('success', 'Nouvelle catégorie enregistré');
     }
@@ -56,7 +56,7 @@ class PrestationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(prestation $prestation)
+    public function show(Prestation $prestation)
     {
         //
     }
@@ -64,7 +64,7 @@ class PrestationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(prestation $prestation)
+    public function edit(Prestation $prestation)
     {
         //
     }
@@ -72,29 +72,33 @@ class PrestationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, prestation $prestation)
+    public function update(Request $request, Prestation $prestation)
     {
         // dump($prestation->id);
-        $key = "Prestations_{$prestation->id}_nom";
+        $key = "prestations_{$prestation->id}_nom";
         // dump($key);
 
         // dd($request->all());
         // Rule::unique(prestation::class, 'nom')->ignore($prestation->id)
         $request->validate([
-            $key => ['required', 'string', 'max:245', Rule::unique(prestation::class, 'nom')->ignore($prestation->id)],
+            $key => ['required', 'string', 'max:245', Rule::unique(Prestation::class, 'nom')->ignore($prestation->id)],
         ]);
 
         $prestation->update([
             'nom' => $request->input($key),
         ]);
 
-        return to_route('prestation.index')->with('success', 'Nouvelle prestation ajouté !');
+        return to_route('prestation.index')->with('success', 'Modification réussie !');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(prestation $prestation)
+    public function destroy(Prestation $prestation)
     {
+        $prestation->delete();
+
+        return to_route('prestation.index')->with('success', 'Suppression réussie !');
+
     }
 }

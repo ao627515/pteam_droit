@@ -18,32 +18,38 @@
                 Créer
             </button>
         </div>
-        <div class="card-header" id="cardCreate" style="display: @if(!$errors->has("nom")) none @else block @endif">
-            <h3 class="text-center">Nouvelle catégorie</h3>
-            <form action="{{ route('prestation.store') }}" method="post">
-                @csrf
-                <div class="row row-cols-1">
-                    <div class="col col-sm-11">
-                        <input type="text" name="nom" id="prestation"
-                            placeholder="Entrer le nom de la nouvel catégorie"
-                            class="form-control @error('nom') is-invalid @enderror" value="{{ old('nom') }}">
-                        @error('nom')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="col col-sm-1">
-                        <button type="submit" class="btn btn-success">Valider</button>
-                    </div>
+        <div class="card-header" id="cardCreate" style="display: @if (!$errors->has('nom')) none @else block @endif">
+            <div class="card">
+                <div class="card-header bg-secondary">
+                    <h3 class="text-center w-100 text-center text-light">Enregistré une nouvelle prestation</h3>
                 </div>
-            </form>
+                <div class="card-body">
+                    <form action="{{ route('prestation.store') }}" method="post">
+                        @csrf
+                        <div class="row row-cols-1">
+                            <div class="col col-sm-11">
+                                <input type="text" name="nom" id="prestation"
+                                    placeholder="Entrer le nom de la nouvelle prestaion"
+                                    class="form-control @error('nom') is-invalid @enderror" value="{{ old('nom') }}">
+                                @error('nom')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="col col-sm-1">
+                                <button type="submit" class="btn btn-success">Valider</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
         <form action="" method="get" id="search" class="search filter-form">
             @csrf
             <div class="card-header">
-                <input type="search" name="search"  placeholder="Recherche 'nom de la catégorie'  "
-                    class="form-control" value="{{ old('search', request()->search) }}"  @if($errors->has("search")) disabled  @endif>
+                <input type="search" name="search" placeholder="Recherche 'nom de la prestation'  " class="form-control"
+                    value="{{ old('search', request()->search) }}" @if ($errors->has('nom')) disabled @endif>
             </div>
         </form>
         <div class="card-body">
@@ -59,17 +65,24 @@
                                 <form action="{{ route('prestation.update', $prestation) }}" method="post">
                                     @csrf
                                     @method('put')
-                                    <div class="form-group">
-                                        <input type="text" name="{{ "prestations.$prestation->id.nom" }}"
-                                            placeholder="Entrer le nom de la nouvelle catégorie"
-                                            class="form-control @error("prestations.$prestation->id.nom") is-invalid @enderror"
-                                            value="{{ old("prestations.$prestation->id.nom", $prestation->nom) }}"
-                                            @if(!$errors->has("prestations.$prestation->id.nom")) disabled @endif >
-                                        @error("prestations.$prestation->id.nom")
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
+                                    <div class="row row-cols-1">
+                                        <div class="col col-sm-11">
+                                            <div class="form-group">
+                                                <input type="text" name="{{ "prestations.$prestation->id.nom" }}"
+                                                    placeholder="Entrer le nom de la nouvelle catégorie"
+                                                    class="form-control @error("prestations.$prestation->id.nom") is-invalid @enderror"
+                                                    value="{{ old("prestations.$prestation->id.nom", $prestation->nom) }}"
+                                                    @if (!$errors->has("prestations.$prestation->id.nom")) disabled @endif>
+                                                @error("prestations.$prestation->id.nom")
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
                                             </div>
-                                        @enderror
+                                        </div>
+                                        {{-- <div class="col col-sm-1">
+                                            <button type="submit" class="btn btn-success">Modifier</button>
+                                        </div> --}}
                                     </div>
                                 </form>
                             </td>
@@ -113,7 +126,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Voullez vous supprimé cet utilisateur ?</p>
+                    <p>Voullez vous supprimé cette prestation ?</p>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
@@ -129,6 +142,8 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('admin/dist/js/parameterSearchBar.js') }}"></script>
+    <script src="{{ asset('admin/dist/js/parameterEditBtnV1.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('.action-btn').on('click', function() {
@@ -141,66 +156,4 @@
             });
         });
     </script>
-    <script>
-        const btnCreate = document.getElementById('btnCreate');
-        const cardCreate = document.getElementById('cardCreate');
-
-        btnCreate.addEventListener('click', function() {
-
-            const bool = cardCreate.style.display == 'block' ? true : false;
-            const search = document.querySelector('input[name="search"]');
-            console.log(search);
-            if (bool) {
-                btnCreate.textContent = 'Créer';
-                cardCreate.style.display = 'none';
-                search.removeAttribute('disabled');
-            } else {
-                cardCreate.style.display = 'block';
-                btnCreate.textContent = 'Annuler';
-                search.setAttribute('disabled', 'true');
-            }
-        });
-
-    </script>
-    <script>
-        // Sélectionnez tous les boutons "btnEdit" par leur classe
-        var editButtons = document.querySelectorAll('.btnEdit');
-
-        // Parcourez tous les boutons et ajoutez un gestionnaire d'événement de clic
-        editButtons.forEach(function(button) {
-            // Suivi de l'état d'édition pour chaque ligne
-            var isEditing = false;
-
-            button.addEventListener('click', function() {
-                // Trouvez l'élément parent (la ligne <tr>) du bouton cliqué
-                var row = button.closest('tr');
-
-                // Trouvez l'élément <input> à l'intérieur de cette ligne
-                var input = row.querySelector('input[type="text"]');
-
-                // Vérifiez l'état d'édition actuel
-                if (isEditing) {
-                    // Si l'édition est active, réactivez l'attribut "disabled"
-                    input.setAttribute('disabled', 'true');
-                    // Changez l'icône en 'annuler' (FontAwesome)
-                    button.classList.remove('fa-times-circle');
-                    button.classList.add('fa-pencil');
-                    button.style.color = "black";
-                } else {
-                    // Si l'édition n'est pas active, supprimez l'attribut "disabled"
-                    input.removeAttribute('disabled');
-                    // Changez l'icône en 'édition' (FontAwesome)
-                    button.classList.remove('fa-pencil');
-                    button.classList.add('fa-times-circle');
-                    button.style.color = "red";
-                }
-
-                // Inversez l'état d'édition
-                isEditing = !isEditing;
-            });
-        });
-    </script>
-
-
-
 @endsection
