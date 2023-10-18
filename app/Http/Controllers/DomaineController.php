@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Domaine;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class DomaineController extends Controller
 {
@@ -55,7 +56,7 @@ class DomaineController extends Controller
 
         if($request->icon){
 
-            $iconPath = $data['icon']->store("domaines/icon/$domaine->id",'public');
+            $iconPath = $data['icon']->store("domaines/icons/$domaine->id",'public');
             $domaine->update([
                 'icon' => $iconPath
             ]);
@@ -114,7 +115,7 @@ class DomaineController extends Controller
             ]);
         }
 
-        return to_route('domaine.index')->with('success', 'Nouvelle domaine ajouté !');
+        return to_route('domaine.index')->with('success', 'Modification réussie !');
     }
 
     /**
@@ -122,7 +123,11 @@ class DomaineController extends Controller
      */
     public function destroy(Domaine $domaine)
     {
+        $parentDirectory = dirname($domaine->image);
+
+        Storage::disk('public')->deleteDirectory($parentDirectory);
+
         $domaine->delete();
-        return to_route('domaine.index')->with('success', 'Dommaine supprimé !');
+        return to_route('domaine.index')->with('success', 'Suppression reussie !');
     }
 }

@@ -58,7 +58,7 @@
             </div>
         </form>
         <div class="card-body">
-            <table class="table table-striped responsive">
+            <table class="table table-striped table-responsive-sm">
                 <thead>
                     <th>Nom</th>
                     <th>Actions</th>

@@ -4,7 +4,7 @@
 
 @section('content')
     @if (session('success'))
-        <div class="alert alert-success">
+        <div class="alert alert-success text-center">
             {{ session('success') }}
         </div>
     @endif
@@ -18,10 +18,10 @@
                 Créer
             </button>
         </div>
-        <div class="card-header" id="cardCreate" style="display: @if ($errors->has('nom') or $errors->has('icon')) block @else none @endif">
+        <div class="card-header" id="cardCreate" style="display: @if ($errors->has('nom') or $errors->has('icon') or $errors->has('estPartenaire')) block @else none @endif">
             <div class="card">
-                <div class="card-header  bg-secondary">
-                    <h3 class="text-center w-100 text-center text-light">Creer un ouveau domaine</h3>
+                <div class="card-header bg-secondary">
+                    <h3 class="text-center w-100 text-center text-light">Creer un nouveau domaine</h3>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('domaine.store') }}" method="post" enctype="multipart/form-data">
@@ -29,8 +29,9 @@
                         <div class="row row-cols-1">
                             <div class="col col-sm-4">
                                 <input type="text" name="nom" id="domaine"
-                                    placeholder="Entrer le nom de la nouvel catégorie"
-                                    class="form-control @error('nom') is-invalid @enderror" value="{{ old('nom') }}">
+                                    placeholder="Entrer le nom du nouveau domaine"
+                                    class="form-control @error('nom') is-invalid @enderror" value="{{ old('nom') }}"
+                                    required>
                                 @error('nom')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -40,7 +41,7 @@
                             <div class="col col-sm-4">
                                 <div class="form-group">
                                     <input type="file" class="form-control-file @error('icon') is-invalid @enderror"
-                                        id="icon" name="icon" required>
+                                        id="icon" name="icon">
                                     @error('icon')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -60,6 +61,11 @@
                                         class="custom-control-input" value="0" checked>
                                     <label class="custom-control-label" for="isPartenaire2">Non</label>
                                 </div>
+                                @error('estPartenaire')
+                                <div>
+                                    <small class="text-danger"> {{ $message }} </small>
+                                </div>
+                                @enderror
                             </div>
                             <div class="col col-sm-1">
                                 <button type="submit" class="btn btn-success">Valider</button>
@@ -72,12 +78,12 @@
         <form action="" method="get" id="search" class="search filter-form">
             @csrf
             <div class="card-header">
-                <input type="search" name="search" placeholder="Recherche 'nom de la catégorie'  " class="form-control"
-                    value="{{ old('search', request()->search) }}" @if ($errors->has('search')) disabled @endif>
+                <input type="search" name="search" placeholder="Recherche 'nom du domaine'  " class="form-control"
+                    value="{{ old('search', request()->search) }}" @if ($errors->has('nom') or $errors->has('icon')) disabled @endif>
             </div>
         </form>
         <div class="card-body">
-            <table class="table table-striped responsive">
+            <table class="table table-striped table-responsive-sm">
                 <thead>
                     <th></th>
                     <th>Nom</th>
@@ -120,7 +126,10 @@
                                 </ul>
                             </td>
                         </tr>
-                        <tr class="formUpdate" style="display: none">
+                        <tr class="formUpdate" style="display: @if (
+                            $errors->has("icon.$domaine->id") or
+                                $errors->has("domaines.$domaine->id.nom") or
+                                $errors->has("estPartenaire1.$domaine->id")) block @else none @endif">
                             <form action="{{ route('domaine.update', $domaine) }}" method="post">
                                 @csrf
                                 @method('put')
@@ -152,15 +161,15 @@
                                     Partenaire :
                                     <div class="custom-control custom-radio custom-control-inline">
                                         <input type="radio" id="{{ "estPartenaire1.$domaine->id" }}"
-                                            name="{{ "estPartenaire.$domaine->id" }}" class="custom-control-input" value="1"
-                                            @if ($domaine->estPartenaire == 1) checked @endif>
+                                            name="{{ "estPartenaire.$domaine->id" }}" class="custom-control-input"
+                                            value="1" @if ($domaine->estPartenaire == 1) checked @endif>
                                         <label class="custom-control-label"
                                             for="{{ "estPartenaire1.$domaine->id" }}">Oui</label>
                                     </div>
                                     <div class="custom-control custom-radio custom-control-inline">
                                         <input type="radio" id="{{ "estPartenaire2.$domaine->id" }}"
-                                            name="{{ "estPartenaire.$domaine->id" }}" class="custom-control-input" value="0"
-                                            @if ($domaine->estPartenaire == 0) checked @endif>
+                                            name="{{ "estPartenaire.$domaine->id" }}" class="custom-control-input"
+                                            value="0" @if ($domaine->estPartenaire == 0) checked @endif>
                                         <label class="custom-control-label"
                                             for="{{ "estPartenaire2.$domaine->id" }}">Non</label>
                                     </div>
@@ -190,7 +199,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Voullez vous supprimé cet utilisateur ?</p>
+                    <p>Voullez vous supprimé ce domaine ?</p>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
@@ -206,10 +215,12 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('admin/dist/js/parameterSearchBar.js') }}"></script>
+    <script src="{{ asset('admin/dist/js/parameterEditBtnV2.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('.action-btn').on('click', function() {
-                let form = $(this).closest('.form-action');
+                var form = $(this).closest('.form-action');
 
                 $('#confirmDestroy').on('click', function() {
                     // Soumettre le formulaire
@@ -218,131 +229,4 @@
             });
         });
     </script>
-    <script>
-        const btnCreate = document.getElementById('btnCreate');
-        const cardCreate = document.getElementById('cardCreate');
-
-        btnCreate.addEventListener('click', function() {
-
-            const bool = cardCreate.style.display == 'block' ? true : false;
-            const search = document.querySelector('input[name="search"]');
-            console.log(search);
-            if (bool) {
-                btnCreate.textContent = 'Créer';
-                cardCreate.style.display = 'none';
-                search.removeAttribute('disabled');
-            } else {
-                cardCreate.style.display = 'block';
-                btnCreate.textContent = 'Annuler';
-                search.setAttribute('disabled', 'true');
-            }
-        });
-    </script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Gérer le clic sur .btnEdit
-        document.body.addEventListener("click", function(event) {
-            var target = event.target;
-            if (target.classList.contains("btnEdit")) {
-                var parentTR = target.closest("tr").nextElementSibling;
-                if (parentTR.style.display === "none") {
-                    // Cacher tous les éléments .formUpdate
-                    var formUpdateElements = document.querySelectorAll(".formUpdate");
-                    formUpdateElements.forEach(function(formUpdateElement) {
-                        formUpdateElement.style.display = "none";
-                    });
-
-                    // Afficher le .formUpdate frère du tr parent de .btnEdit
-                    parentTR.style.display = "table-row";
-
-                    // Remplacer le contenu du td parent de .btnEdit par un bouton Annuler
-                    var parentTD = target.closest("td");
-                    parentTD.innerHTML = '<button class="btnCancel btn btn-secondary">Annuler</button>';
-
-                    // Gérer le clic sur le bouton Annuler
-                    var btnCancel = parentTD.querySelector(".btnCancel");
-                    btnCancel.addEventListener("click", function(e) {
-                        e.preventDefault();
-                        // Cacher le .formUpdate
-                        parentTR.style.display = "none";
-
-                        // Restaurer le contenu d'origine du td parent
-                        parentTD.innerHTML = `
-                            <ul class="nav nav-fill">
-                                <li class="nav-item">
-                                    <i class="nav-icon fa-solid fa-pen btnEdit" title="Modifer"></i>
-                                </li>
-                                <li class="nav-item">
-                                    <i class="nav-icon fa-solid fa-eye" title="Voir" style="color: blue"></i>
-                                </li>
-                                <li class="nav-item">
-                                    <form action="{{ route('domaine.destroy', $domaine) }}" method="post"
-                                        class="form-action nav-link" title="Supprimer">
-                                        @csrf
-                                        @method('delete')
-                                        <i class="nav-icon fa-solid fa-trash action-btn" style="color: red"
-                                            data-target="#modal-destroy" data-toggle="modal"></i>
-                                    </form>
-                                </li>
-                            </ul>`;
-                    });
-                }
-            }
-        });
-    });
-</script>
-{{-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Récupérer tous les éléments .formUpdate une seule fois
-        var formUpdateElements = document.querySelectorAll(".formUpdate");
-
-        // Gérer le clic sur .btnEdit
-        var btnEditElements = document.querySelectorAll(".btnEdit");
-        btnEditElements.forEach(function(btnEditElement) {
-            btnEditElement.addEventListener("click", function() {
-                // Cacher tous les éléments .formUpdate
-                formUpdateElements.forEach(function(formUpdateElement) {
-                    formUpdateElement.style.display = "none";
-                });
-
-                // Afficher le .formUpdate frère du tr parent de .btnEdit
-                var parentTR = this.closest("tr").nextElementSibling;
-                parentTR.style.display = "table-row";
-
-                // Remplacer le contenu du td parent de .btnEdit par un bouton Annuler
-                var parentTD = this.closest("td");
-                parentTD.innerHTML = '<button class="btnCancel btn btn-secondary">Annuler</button>';
-
-                // Gérer le clic sur le bouton Annuler
-                var btnCancel = parentTD.querySelector(".btnCancel");
-                btnCancel.addEventListener("click", function(event) {
-                    event.preventDefault();
-                    // Cacher le .formUpdate
-                    parentTR.style.display = "none";
-
-                    // Restaurer le contenu d'origine du td parent
-                    parentTD.innerHTML = `
-                        <ul class="nav nav-fill">
-                            <li class="nav-item">
-                                <i class="nav-icon fa-solid fa-pen btnEdit" title="Modifer"></i>
-                            </li>
-                            <li class="nav-item">
-                                <i class="nav-icon fa-solid fa-eye" title="Voir" style="color: blue"></i>
-                            </li>
-                            <li class="nav-item">
-                                <form action="{{ route('domaine.destroy', $domaine) }}" method="post"
-                                    class="form-action nav-link" title="Supprimer">
-                                    @csrf
-                                    @method('delete')
-                                    <i class="nav-icon fa-solid fa-trash action-btn" style="color: red"
-                                        data-target="#modal-destroy" data-toggle="modal"></i>
-                                </form>
-                            </li>
-                        </ul>`;
-                });
-            });
-        });
-    });
-</script> --}}
-
 @endsection
