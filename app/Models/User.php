@@ -23,6 +23,7 @@ class User extends Authenticatable
         'phone',
         'email',
         'password',
+        'role',
         'type_compte',
         'approuved_by',
         'approuved_at',
@@ -47,4 +48,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    public function prestations() {
+
+        if($this->role == "partenaire"){
+            return $this->belongsToMany(Prestation::class, "prestation_user", 'user_id', 'prestation_id');
+        }
+
+        return "Vous n'avez pas droit a des prestation";
+    }
 }

@@ -153,24 +153,26 @@
                             </li>
                         </ul>
                     </li>
-                    {{-- <li class="nav-header">PARAMETRES</li> --}}
-                    <li class="nav-item @if (str_contains(request()->route()->getName(),
-                            'domaine') ||
-                            str_contains(request()->route()->getName(),
-                                'categorie') ||
-                            str_contains(request()->route()->getName(),
-                                'typeCompte') ||
-                            str_contains(request()->route()->getName(),
-                                'prestation')) menu-open @endif">
-                        <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
-                                '')) active @endif">
-                            <i class="nav-icon fas fa-cogs"></i> <!-- FontAwesome 5 gear icon -->
-                            <p>
-                                Paramètres
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
+                @endif
+                {{-- <li class="nav-header">PARAMETRES</li> --}}
+                <li class="nav-item @if (str_contains(request()->route()->getName(),
+                        'domaine') ||
+                        str_contains(request()->route()->getName(),
+                            'categorie') ||
+                        str_contains(request()->route()->getName(),
+                            'typeCompte') ||
+                        str_contains(request()->route()->getName(),
+                            'prestation')) menu-open @endif">
+                    <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
+                            '')) active @endif">
+                        <i class="nav-icon fas fa-cogs"></i> <!-- FontAwesome 5 gear icon -->
+                        <p>
+                            Paramètres
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @if (auth()->user()->role == 'administrateur')
                             <li class="nav-item">
                                 <a href="{{ route('categorie.index') }}"
                                     class="nav-link @if (Request::routeIs('categorie.index')) active @endif">
@@ -178,30 +180,32 @@
                                     <p>Categories</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ route('domaine.index') }}"
-                                    class="nav-link @if (Request::routeIs('domaine.index')) active @endif">
-                                    <i class="nav-icon fas fa-globe"></i> <!-- FontAwesome 5 globe icon -->
-                                    <p>Domaines</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('prestation.index') }}"
-                                    class="nav-link  @if (Request::routeIs('prestation.index')) active @endif">
-                                    <i class="nav-icon fas fa-store-alt"></i> <!-- FontAwesome 5 store-alt icon -->
-                                    <p>Prestations</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('typeCompte.index') }}"
-                                    class="nav-link  @if (Request::routeIs('typeCompte.index')) active @endif">
-                                    <i class="nav-icon fas fa-id-card"></i> <!-- FontAwesome 5 id-card icon -->
-                                    <p>Type de comptes</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endif
+                        @endif
+                        <li class="nav-item">
+                            <a href="{{ route('domaine.index') }}"
+                                class="nav-link @if (Request::routeIs('domaine.index')) active @endif">
+                                <i class="nav-icon fas fa-globe"></i> <!-- FontAwesome 5 globe icon -->
+                                <p>Domaines</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('prestation.index') }}"
+                                class="nav-link  @if (Request::routeIs('prestation.index')) active @endif">
+                                <i class="nav-icon fas fa-store-alt"></i> <!-- FontAwesome 5 store-alt icon -->
+                                <p>Prestations</p>
+                            </a>
+                        </li>
+                        @if (auth()->user()->role == 'administrateur')
+                        <li class="nav-item">
+                            <a href="{{ route('typeCompte.index') }}"
+                                class="nav-link  @if (Request::routeIs('typeCompte.index')) active @endif">
+                                <i class="nav-icon fas fa-id-card"></i> <!-- FontAwesome 5 id-card icon -->
+                                <p>Type de comptes</p>
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
+                </li>
                 <li class="nav-header">DECONNEXION</li>
                 <li class="nav-item ">
                     <a href="{{ route('disconnect') }}" class="nav-link ">

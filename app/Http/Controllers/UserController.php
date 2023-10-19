@@ -48,7 +48,6 @@ class UserController extends Controller
 
     function register(Request $request)
     {
-        $typeComptes = TypeCompte::all();
 
         $request->validate([
             'nom' => 'required',
@@ -70,10 +69,17 @@ class UserController extends Controller
             ]);
         }
 
+        if($request->type == 'partenaire'){
+            $role = "partenaire";
+        }else{
+            $role = "utilisateur";
+        }
+
         $user = User::create([
             'nom' => $request->nom,
             'prenom' => $request->prenom,
             'phone' => $request->telephone,
+            'role' => $role,
             'email' => $request->email,
             'type_compte' => $request->type,
             'password' => Hash::make($request->password),

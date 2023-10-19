@@ -88,4 +88,4 @@ Route::get('detail', [ProduitController::class, 'detail'])->name('detail');
 Route::get('article/{article}/admin/approuve', [ArticleAdminController::class, 'approuved'])->name('articleAdmin.approuved');
 Route::get('produit/{produit}/admin/approuve', [ProduitAdminController::class, 'approuved'])->name('produitAdmin.approuved');
 
-
+Route::delete('prestation/{prestation}/detach', [PrestationController::class, 'detach'])->name('prestation.detach');

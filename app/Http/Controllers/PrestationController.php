@@ -13,20 +13,31 @@ class PrestationController extends Controller
      */
     public function index(Request $request)
     {
+        $user = auth()->user();
+
         $search = $request['search'];
 
-        $prestations = Prestation::when($search, function ($query) use ($search) {
-            return $query->where('nom', 'LIKE', "%$search%");
-        })
-            ->where('active', true)
-            ->orderBy('created_at', 'desc')
-            ->paginate(25);
+        if ($user->role == 'administrateur') {
+            $prestations = Prestation::when($search, function ($query) use ($search) {
+                return $query->where('nom', 'LIKE', "%$search%");
+            })
+                ->where('active', true)
+                ->orderBy('created_at', 'desc')
+                ->paginate(25);
+
+            $view = 'admin.prestation.index';
+        }else{
+            $allPrestations = Prestation::all();
+            $prestations = $user->prestations;
+            $view = 'admin.partenaire.prestation.index';
+        }
 
         return view(
-            'admin.prestation.index',
+            $view,
             [
                 'prestations' => $prestations,
                 'query' => ['search' => $search],
+                'allPrestations' => $allPrestations
             ]
         );
     }
@@ -44,11 +55,21 @@ class PrestationController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nom' => ['required', 'string', 'max:245', 'unique:prestations,nom']
-        ]);
+        $user = auth()->user();
 
-        Prestation::create($data);
+        if($user->role == "administrateur"){
+            $data = $request->validate([
+                'nom' => ['required', 'string', 'max:245', 'unique:prestations,nom']
+            ]);
+
+            Prestation::create($data);
+        }else{
+            $data = $request->validate([
+                'prestation' => ['required', 'array']
+            ]);
+
+            $user->prestations()->sync($data['prestation']);
+        }
 
         return to_route('prestation.index')->with('success', 'Nouvelle catégorie enregistré');
     }
@@ -99,6 +120,15 @@ class PrestationController extends Controller
         $prestation->delete();
 
         return to_route('prestation.index')->with('success', 'Suppression réussie !');
+    }
 
+    public function detach(Request $request, Prestation $prestation){
+
+
+        $user = auth()->user();
+
+        $user->prestations()->detach($prestation->id);
+
+        return to_route('prestation.index')->with('success', 'Suppression réussie !');
     }
 }

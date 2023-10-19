@@ -107,7 +107,6 @@ class ArticleAdminController extends Controller
 
 
         $categories = $dataValidated['categorie'];
-        // dd($categories);
 
         // Création de l'article
         $article = Article::create(array_merge($dataValidated, [
@@ -144,6 +143,8 @@ class ArticleAdminController extends Controller
         // Traitement de l'image de couverture
         $article->image = $dataValidated['image']->store('articles/' . $article->id, 'public');
         $article->save();
+
+        $article->categories()->attach($categories);
 
         return redirect()->route('articleAdmin.index')->with('success', 'Article publié avec succès.');
     }
@@ -228,6 +229,7 @@ class ArticleAdminController extends Controller
         $articleAdmin->update($dataValidated);
 
         $categories = $dataValidated['categorie'];
+
         $articleAdmin->categories()->sync($categories);
 
         return to_route('articleAdmin.index')->with('success', 'Articles Modifier');

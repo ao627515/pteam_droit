@@ -10,6 +10,7 @@ use Database\Seeders\ArticleSeeder;
 use Database\Seeders\PartenaireSeeder;
 use Database\Seeders\TypeCompteSeeder;
 use Database\Seeders\OrganisationSeeder;
+use Database\Seeders\PrestationRoleSeeder;
 use Database\Seeders\CategorieArticleSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -36,6 +37,7 @@ class DatabaseSeeder extends Seeder
             PaiementSeeder::class,
             CategorieSeeder::class,
             PrestationSeeder::class,
+            PrestationRoleSeeder::class,
         ]);
     }
 }

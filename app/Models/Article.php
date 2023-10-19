@@ -20,7 +20,6 @@ class Article extends Model
 
     public function imgInit()
     {
-
         if (!$this->IsFactory()) {
             $this->image = $this->imageLink();
         }
