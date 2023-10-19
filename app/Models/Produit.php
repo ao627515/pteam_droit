@@ -8,10 +8,11 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Notifications\Notifiable;
 
 class Produit extends Model
 {
@@ -37,6 +38,11 @@ class Produit extends Model
 
     public function approuvedBy () {
         return $this->belongsTo(User::class, 'approuved_by');
+    }
+
+    public function declinedBy()
+    {
+        return $this->belongsTo(User::class, 'declined_by');
     }
 
     // public function categorie () {
@@ -85,5 +91,17 @@ class Produit extends Model
         $carbone = new Carbon($this->approuved_at);
 
         return $carbone->format('j M Y à H\h i');
+    }
+
+        /**
+     * Route notifications for the mail channel.
+     *
+     * @return  array<string, string>|string
+     */
+    public function routeNotificationForMail(Notification $notification): array|string
+    {
+        // Return email address only...
+        return $this->author->email;
+
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Article;
+use App\Models\Produit;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -41,17 +42,33 @@ class MonitoringStatusNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        if ($this->status) {
-            $line = "Votre article << $notifiable->titre >> à été appouvé.";
-        } else {
-            $line = "Votre article << $notifiable->titre >> à été décliné.";
-        }
+        if($notifiable instanceof Article){
+            if ($this->status) {
+                $line = "Votre article << $notifiable->titre >> à été appouvé.";
+            } else {
+                $line = "Votre article << $notifiable->titre >> à été décliné.";
+            }
 
-        return (new MailMessage)
+            return (new MailMessage)
             ->subject('Statut article')
             ->line($line)
             ->action('Voir l\'article', route('articleAdmin.show', $notifiable))
             ->line('Merci d\'utiliser notre site !');
+
+        }elseif($notifiable instanceof Produit){
+            if ($this->status) {
+                $line = "Votre produit << $notifiable->nom >> à été appouvé.";
+            } else {
+                $line = "Votre produit << $notifiable->nom >> à été décliné.";
+            }
+
+            return (new MailMessage)
+            ->subject('Statut produit')
+            ->line($line)
+            ->action('Voir produit', route('produitAdmin.show', $notifiable))
+            ->line('Merci d\'utiliser notre site !');
+        }
+
     }
 
 
@@ -59,13 +76,13 @@ class MonitoringStatusNotification extends Notification
     {
         if ($this->status) {
             return [
-                'article_id' => $notifiable->id,
+                'object_id' => $notifiable->id,
                 'message' => "Votre article a été approuvé \n Voir l'article " . route('articleAdmin.show', $notifiable),
                 'approuved_by' => $notifiable->approuved_by,
             ];
         } else {
             return [
-                'article_id' => $notifiable->id,
+                'object_id' => $notifiable->id,
                 'declined_by' => $notifiable->declined_by,
                 'motif' => $this->motif,
                 'message' => "Votre article a été décliné \n Voir l'article " . route('articleAdmin.show', $notifiable),

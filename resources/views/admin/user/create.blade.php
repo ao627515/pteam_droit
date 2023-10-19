@@ -5,7 +5,7 @@
 @section('content')
     <div class="card">
         <div class="card-header bg-secondary">
-            <h1 class="text-center w-100 text-light">Créer un produit</h3>
+            <h1 class="text-center w-100 text-light">Créer un administrateur</h3>
         </div>
         <div class="card-body">
             <form action="{{ route('user.store') }}" method="post" id="formCreate">

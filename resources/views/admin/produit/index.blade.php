@@ -43,10 +43,11 @@
                             @if (request()->filter === 'approuved') checked @endif>
                         <label class="form-check-label" for="approuved">Approuvé</label>
                     </div>
-                    {{-- <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"  @if (request()->filter === 'declined') checked  @endif>
-                    <label class="form-check-label" for="declined">Décliné</label>
-                </div> --}}
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"
+                            @if (request()->filter === 'declined') checked @endif>
+                        <label class="form-check-label" for="declined">Décliné</label>
+                    </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
                             @if (request()->filter === 'delete') checked @endif>
@@ -58,11 +59,10 @@
         <div class="card-body">
             <div class="row row-cols-1 row-cols-sm-2  row-cols-md-2 row-cols-lg-2  row-cols-xl-4 row-cols-xll-6">
                 @foreach ($produits as $produit)
-                {{ $produit->imgInit() }}
+                    {{ $produit->imgInit() }}
                     <div class="col">
                         <div class="card produit-card">
-                            <img src="{{ $produit->image }}" class="card-img-top" alt="Image"
-                                style="height: 150px">
+                            <img src="{{ $produit->image }}" class="card-img-top" alt="Image" style="height: 150px">
                             <div class="card-body">
                                 <h6 class="card-subtitle font-weight-bold mb-2" style="font-size: 13.5px">
                                     {{ $produit->nom }}
@@ -102,21 +102,39 @@
                                                 </div>
                                             </div>
                                         </li>
+                                    @elseif($produit->declinedBy)
+                                        <li class="list-group-item px-3 py-1">
+                                            <div class="d-flex justify-content-end">
+                                                <div class="">
+                                                    <small class="d-block">Décliné par</small>
+                                                    <small>{{ $produit->declinedBy->nom . ' ' . $produit->declinedBy->prenom }}</small>
+                                                </div>
+                                                <div class="pt-1 ml-3">
+                                                    <img class="rounded-circle"
+                                                        src="{{ 'https://eu.ui-avatars.com/api/?name=' . $produit->declinedBy->nom . '+' . $produit->declinedBy->prenom . '&background=random&size=40' }}">
+                                                </div>
+                                            </div>
+                                        </li>
                                     @endif
                                 </ul>
                             @endif
                             @if (auth()->user()->role === 'administrateur')
-                                @if (!$produit->approuvedBy)
+                                @if (!$produit->approuvedBy and !$produit->declinedBy)
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                        <form action="" method="get" class="form-action w-50">
+                                        <form action="{{ route('produitAdmin.declined', $produit) }}" method="post"
+                                            class="form-action w-50" id="declinedForm">
                                             @csrf
-                                            <button type="button" class="btn btn-danger w-100 action-btn">Décliné</button>
+                                            <input type="hidden" name="motif" id="motifHidden">
+                                            <button type="button" class="btn btn-danger w-100 action-btn"
+                                                data-toggle="modal" data-target="#modal-declined">
+                                                Decliné
+                                            </button>
                                         </form>
-                                        <form action="{{ route('produitAdmin.approuved', $produit) }}" method="get"
+                                        <form action="{{ route('produitAdmin.approuved', $produit) }}" method="post"
                                             class="form-action w-50">
                                             @csrf
                                             <button type="button" class="btn btn-success w-100 action-btn"
-                                                data-toggle="modal" data-target="#modal-approuve">
+                                                data-toggle="modal" data-target="#modal-approuved">
                                                 Approuvé
                                             </button>
                                         </form>
@@ -185,7 +203,7 @@
             <!-- /.modal-dialog -->
         </div>
 
-        <div class="modal fade" id="modal-approuve">
+        <div class="modal fade" id="modal-approuved">
             <div class="modal-dialog">
                 <div class="modal-content bg-success">
                     <div class="modal-header">
@@ -206,21 +224,27 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
-        <div class="modal fade" id="modal-decline">
+        <div class="modal fade" id="modal-declined">
             <div class="modal-dialog">
-                <div class="modal-content bg-warning">
+                <div class="modal-content bg-danger">
                     <div class="modal-header">
-                        <h4 class="modal-title">Success Modal</h4>
+                        <h4 class="modal-title">Décliné un article</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Ete vous surs de vouloir refusé cette produit ?</p>
+                        <div class="form-group">
+                            <label for="motif">Motif de refus</label>
+                            <textarea id="motifModal" id="motif" cols="20" id="motif" class="form-control">{{ old('motif') }}</textarea>
+                        </div>
+                        @error('motif')
+                            <span class="text-light">Erreur : {{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-outline-light" id="confirmApprouvation">Oui</button>
+                        <button type="button" class="btn btn-outline-light" id="confirmRefus">Oui</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -246,6 +270,18 @@
                     form.submit();
                 });
             });
+
+            $('#modal-declined').on('show.bs.modal', function(event) {
+
+                $('#confirmRefus').on('click', function() {
+                    let motif = $('#motifModal').val();
+
+                    $('#motifHidden').val(motif);
+
+                    $('#declinedForm').submit();
+                });
+            });
+
         });
     </script>
     <script>

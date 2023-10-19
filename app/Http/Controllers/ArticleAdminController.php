@@ -45,8 +45,8 @@ class ArticleAdminController extends Controller
                     ->when($isPartenaire, function ($query) use ($user) {
                         return $query->where('author_id', $user->id);
                     })
-                    ->where('approuved_at', '!=', null)
-                    ->where('approuved_by', '!=', null)
+                    ->whereNotNull('approuved_at')
+                    ->whereNotNull('approuved_by')
                     ->when($search, function ($query) use ($search) {
                         return $query->where('titre', 'LIKE', "%$search%");
                     })
@@ -58,8 +58,8 @@ class ArticleAdminController extends Controller
                     ->when($isPartenaire, function ($query) use ($user) {
                         return $query->where('author_id', $user->id);
                     })
-                    ->where('declined_at', '!=', null)
-                    ->where('declined_by', '!=', null)
+                    ->whereNotNull('declined_at')
+                    ->whereNotNull('declined_by')
                     ->when($search, function ($query) use ($search) {
                         return $query->where('titre', 'LIKE', "%$search%");
                     })

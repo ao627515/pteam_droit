@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\MonitoringStatusNotification;
 
 class ProduitAdminController extends Controller
 {
@@ -32,20 +33,31 @@ class ProduitAdminController extends Controller
 
         switch ($filter) {
             case 'approuved':
-                $produits = Produit::when($isPartenaire, function ($query) use ($user) {
-                    return $query->where('author_id', $user->id);
-                })
+                $produits = Produit::where('active', true)
+                    ->when($isPartenaire, function ($query) use ($user) {
+                        return $query->where('author_id', $user->id);
+                    })
+                    ->whereNotNull('approuved_at')
+                    ->whereNotNull('approuved_by')
                     ->when($search, function ($query) use ($search) {
                         return $query->where('nom', 'LIKE', "%$search%");
                     })
-                    ->where('approuved_at', '!=', null)
-                    ->where('approuved_by', '!=', null)
-                    ->where('active', true)
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
-                // case 'declined':
-                //     break;
+            case 'declined':
+                $produits = Produit::where('active', true)
+                    ->when($isPartenaire, function ($query) use ($user) {
+                        return $query->where('author_id', $user->id);
+                    })
+                    ->whereNotNull('declined_at')
+                    ->whereNotNull('declined_by')
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('nom', 'LIKE', "%$search%");
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(25);
+                break;
             case 'delete':
                 $produits = Produit::when($isPartenaire, function ($query) use ($user) {
                     return $query->where('author_id', $user->id);
@@ -58,15 +70,17 @@ class ProduitAdminController extends Controller
                     ->paginate(25);
                 break;
             default:
-                $produits = Produit::when($isPartenaire, function ($query) use ($user) {
-                    return $query->where('author_id', $user->id);
-                })
+                $produits = Produit::where('active', true)
+                    ->when($isPartenaire, function ($query) use ($user) {
+                        return $query->where('author_id', $user->id);
+                    })
                     ->when($search, function ($query) use ($search) {
                         return $query->where('nom', 'LIKE', "%$search%");
                     })
-                    ->where('approuved_at', null)
-                    ->where('approuved_by', null)
-                    ->where('active', true)
+                    ->where('approuved_at')
+                    ->where('approuved_by')
+                    ->where('declined_at')
+                    ->where('declined_by')
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
@@ -188,12 +202,32 @@ class ProduitAdminController extends Controller
 
         $approuveBy = auth()->user()->id;
 
-        // dd($produit);
-
         $produit->update([
             'approuved_at' => now(),
             'approuved_by' => $approuveBy
         ]);
+
+        $produit->notify(new MonitoringStatusNotification('approuved'));
+
+        return back();
+    }
+
+    public function declined(Request $request,Produit $produit)
+    {
+
+
+        $data = $request->validate([
+            'motif' => ['required', 'string']
+        ]);
+
+        $declinedBy = auth()->user()->id;
+
+        $produit->update([
+            'declined_at' => now(),
+            'declined_by' => $declinedBy
+        ]);
+
+        $produit->notify(new MonitoringStatusNotification('declined', $data['motif']));
 
         return back();
     }

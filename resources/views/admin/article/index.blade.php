@@ -125,21 +125,18 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="" method="post" id="declinedForm">
-                            @csrf
-                            <div class="form-group">
-                                <label for="motif">Motif de refus</label>
-                                <textarea name="motif" id="motif" cols="20" id="motif" class="form-control">{{ old('motif') }}</textarea>
-                            </div>
-                            @error('motif')
-                                <span class="text-light">Erreur : {{ $message }}</span>
-                            @enderror
-                        </form>
+                        <div class="form-group">
+                            <label for="motif">Motif de refus</label>
+                            <textarea id="motifModal" id="motif" cols="20" id="motif" class="form-control">{{ old('motif') }}</textarea>
+                        </div>
+                        @error('motif')
+                            <span class="text-light">Erreur : {{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
-                        <button type="submit" form="declinedForm" class="btn btn-outline-light"
-                            id="confirmApprouvation">Oui</button>
+                        <button type="button"  class="btn btn-outline-light"
+                            id="confirmRefus">Oui</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -166,21 +163,22 @@
                 });
             });
 
+
+
+            $('#modal-declined').on('show.bs.modal', function(event) {
+
+                $('#confirmRefus').on('click', function() {
+                    let motif = $('#motifModal').val();
+
+                    $('#motifHidden').val(motif);
+
+                    $('#declinedForm').submit();
+                });
+            });
+
             @if ($errors->has('motif'))
                 $('#modal-declined').modal('show')
             @endif
-
-            $('#modal-declined').on('show.bs.modal', function (event){
-                let button = $(event.relatedTarget);
-                let dataArticle = button.data('article');
-                console.log(dataArticle);
-                $('#motif').val(dataArticle);
-
-                $('#submitForm').on('click', function () {
-                    $('#monForm').action(`article/${dataArticle}/admin/declined`);
-                    $('#monForm').submit();
-                });
-            });
         });
     </script>
     <script>

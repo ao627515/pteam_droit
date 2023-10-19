@@ -55,10 +55,11 @@
         </ul>
         @if (!$article->approuvedBy and !$article->declinedBy)
             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                <form action="" method="post" class="form-action w-50">
+                    <form action="{{ route('articleAdmin.declined', $article) }}" method="post" class="form-action w-50" id="declinedForm">
                     @csrf
+                    <input type="hidden" name="motif" id="motifHidden">
                     <button type="button" class="btn btn-danger w-100 action-btn" data-toggle="modal"
-                        data-target="#modal-declined" :data-article="$article">
+                        data-target="#modal-declined">
                         Decliné
                     </button>
                 </form>

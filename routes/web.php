@@ -89,6 +89,6 @@ Route::post('article/{article}/admin/approuved', [ArticleAdminController::class,
 Route::post('produit/{produit}/admin/approuved', [ProduitAdminController::class, 'approuved'])->name('produitAdmin.approuved');
 
 Route::post('article/{article}/admin/declined', [ArticleAdminController::class, 'declined'])->name('articleAdmin.declined');
-Route::post('produit/{produit}/admin/declinde', [ProduitAdminController::class, 'declined'])->name('produitAdmin.declined');
+Route::post('produit/{produit}/admin/declinded', [ProduitAdminController::class, 'declined'])->name('produitAdmin.declined');
 
 Route::delete('prestation/{prestation}/detach', [PrestationController::class, 'detach'])->name('prestation.detach');
