@@ -69,9 +69,9 @@ class UserController extends Controller
             ]);
         }
 
-        if($request->type == 'partenaire'){
+        if ($request->type == 'partenaire') {
             $role = "partenaire";
-        }else{
+        } else {
             $role = "utilisateur";
         }
 
@@ -268,9 +268,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        if($user->role == "administrateur"){
+        if ($user->role == "administrateur") {
             return view('admin.user.show', compact('user'));
-        }else{
+        } else {
             $user = auth()->user();
             $tickets = Ticket::where('user_id', $user->id)->get();
             // dd($tickets);
@@ -287,9 +287,9 @@ class UserController extends Controller
                 'new_password_confirmation' => 'required|string|min:6',
             ]);
 
-            // $user = Auth::user();
+            /** @var $user App\Model\User */
 
-            $user = User::find(Auth::user()->id);
+            $user = Auth::user();
 
             if (Hash::check($request->old_password, $user->password)) {
                 if ($request->new_password === $request->new_password_confirmation) {
@@ -298,17 +298,16 @@ class UserController extends Controller
                     $user->save();
                     return redirect()->back()->with('success', 'Mot de passe mis à jour avec succès.');
                 } else {
-                    echo"La confirmation du nouveau mot de passe ne correspond pas.";
+                    echo "La confirmation du nouveau mot de passe ne correspond pas.";
                     // return redirect()->back()->withErrors(['new_password_confirmation' => 'La confirmation du nouveau mot de passe ne correspond pas.'])->withInput();
                 }
             } else {
-                    echo"Ancien mot de passe incorrect.";
+                echo "Ancien mot de passe incorrect.";
                 // return redirect()->back()->withErrors(['old_password' => 'Ancien mot de passe incorrect.'])->withInput();
             }
         } catch (\Exception $e) {
             dd($e);
         }
-
     }
 
     /**
@@ -329,8 +328,8 @@ class UserController extends Controller
         $data = $request->validate([
             'nom' => 'required',
             'prenom' => 'required',
-            'phone' => ['required',Rule::unique(User::class)->ignore($user->id)],
-            'email' => ['required', 'email',Rule::unique(User::class)->ignore($user->id)],
+            'phone' => ['required', Rule::unique(User::class)->ignore($user->id)],
+            'email' => ['required', 'email', Rule::unique(User::class)->ignore($user->id)],
         ]);
 
         $user->update($data);

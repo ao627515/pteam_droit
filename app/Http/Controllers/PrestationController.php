@@ -26,7 +26,9 @@ class PrestationController extends Controller
                 ->paginate(25);
 
             $view = 'admin.prestation.index';
-        }else{
+
+            $allPrestations = [];
+        } else {
             $allPrestations = Prestation::all();
             $prestations = $user->prestations;
             $view = 'admin.partenaire.prestation.index';
@@ -55,19 +57,20 @@ class PrestationController extends Controller
      */
     public function store(Request $request)
     {
+        /** @var $user App\Model\User */
+
         $user = auth()->user();
 
-        if($user->role == "administrateur"){
+        if ($user->role == "administrateur") {
             $data = $request->validate([
                 'nom' => ['required', 'string', 'max:245', 'unique:prestations,nom']
             ]);
 
             Prestation::create($data);
-        }else{
+        } else {
             $data = $request->validate([
                 'prestation' => ['required', 'array']
             ]);
-
             $user->prestations()->sync($data['prestation']);
         }
 
@@ -122,8 +125,10 @@ class PrestationController extends Controller
         return to_route('prestation.index')->with('success', 'Suppression réussie !');
     }
 
-    public function detach(Request $request, Prestation $prestation){
+    public function detach(Request $request, Prestation $prestation)
+    {
 
+        /** @var $user App\Model\User */
 
         $user = auth()->user();
 
