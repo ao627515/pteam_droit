@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Article extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
 
     protected $guarded = [''];
@@ -28,7 +30,7 @@ class Article extends Model
     private function imageLink(): string
     {
 
-        return Storage::disk('public')->url($this->image);
+        return Storage::url($this->image);
     }
 
     public function author()
@@ -39,6 +41,11 @@ class Article extends Model
     public function approuvedBy()
     {
         return $this->belongsTo(User::class, 'approuved_by');
+    }
+
+    public function declinedBy()
+    {
+        return $this->belongsTo(User::class, 'declined_by');
     }
 
     // public function categorie()
@@ -60,13 +67,13 @@ class Article extends Model
         return Article::where('active', true)
             ->whereNotNull('approuved_at')
             ->whereNotNull('approuved_by')
-            ->when($limit, function ($query) use ($limit){
+            ->when($limit, function ($query) use ($limit) {
                 return $query->limit($limit);
             })
-            ->when(!$paginate, function ($query){
+            ->when(!$paginate, function ($query) {
                 return $query->get();
             })
-            ->when($paginate, function ($query) use ($paginate){
+            ->when($paginate, function ($query) use ($paginate) {
                 return $query->paginate($paginate);
             });
     }
@@ -95,5 +102,17 @@ class Article extends Model
         $carbone = new Carbon($this->approuved_at);
 
         return $carbone->format('j M Y à H\h i');
+    }
+
+    /**
+     * Route notifications for the mail channel.
+     *
+     * @return  array<string, string>|string
+     */
+    public function routeNotificationForMail(Notification $notification): array|string
+    {
+        // Return email address only...
+        return $this->author->email;
+
     }
 }

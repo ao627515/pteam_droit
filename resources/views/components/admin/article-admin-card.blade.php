@@ -38,18 +38,34 @@
                         </div>
                     </div>
                 </li>
+            @elseif ($article->declinedBy)
+                <li class="list-group-item px-3 py-1">
+                    <div class="d-flex justify-content-end">
+                        <div class="">
+                            <small class="d-block">Décliné par</small>
+                            <small>{{ $article->declinedBy->nom . ' ' . $article->declinedBy->prenom }}</small>
+                        </div>
+                        <div class="pt-1 ml-3">
+                            <img class="rounded-circle"
+                                src="{{ 'https://eu.ui-avatars.com/api/?name=' . $article->declinedBy->nom . '+' . $article->declinedBy->prenom . '&background=random&size=40' }}">
+                        </div>
+                    </div>
+                </li>
             @endif
         </ul>
-        @if (!$article->approuvedBy)
+        @if (!$article->approuvedBy and !$article->declinedBy)
             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                <form action="" method="get" class="form-action w-50">
+                <form action="" method="post" class="form-action w-50">
                     @csrf
-                    <button type="button" class="btn btn-danger w-100 action-btn">Décliné</button>
+                    <button type="button" class="btn btn-danger w-100 action-btn" data-toggle="modal"
+                        data-target="#modal-declined" :data-article="$article">
+                        Decliné
+                    </button>
                 </form>
-                <form action="{{ route('articleAdmin.approuved', $article) }}" method="get" class="form-action w-50">
+                <form action="{{ route('articleAdmin.approuved', $article) }}" method="post" class="form-action w-50">
                     @csrf
                     <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
-                        data-target="#modal-approuve">
+                        data-target="#modal-approuved">
                         Approuvé
                     </button>
                 </form>

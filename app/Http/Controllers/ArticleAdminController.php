@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\CategorieArticle;
+use App\Notifications\MonitoringStatusNotification;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleAdminController extends Controller
@@ -19,6 +20,7 @@ class ArticleAdminController extends Controller
     public function index(Request $request)
     {
         $articles = $this->filter($request);
+
         return view(
             'admin.article.index',
             [
@@ -39,39 +41,54 @@ class ArticleAdminController extends Controller
 
         switch ($filter) {
             case 'approuved':
-                $articles = Article::when($isPartenaire, function ($query) use ($user) {
-                    return $query->where('author_id', $user->id);
-                })
-                ->when($search, function($query) use ($search) {
-                    return $query->where('titre', 'LIKE', "%$search%");
-                })
+                $articles = Article::where('active', true)
+                    ->when($isPartenaire, function ($query) use ($user) {
+                        return $query->where('author_id', $user->id);
+                    })
                     ->where('approuved_at', '!=', null)
                     ->where('approuved_by', '!=', null)
-                    ->where('active', true)
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('titre', 'LIKE', "%$search%");
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(25);
+                break;
+            case 'declined':
+                $articles = Article::where('active', true)
+                    ->when($isPartenaire, function ($query) use ($user) {
+                        return $query->where('author_id', $user->id);
+                    })
+                    ->where('declined_at', '!=', null)
+                    ->where('declined_by', '!=', null)
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('titre', 'LIKE', "%$search%");
+                    })
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
             case 'delete':
-                $articles = Article::when($isPartenaire, function ($query) use ($user) {
-                    return $query->where('author_id', $user->id);
-                })
-                    ->when($search, function($query) use ($search) {
-                    return $query->where('titre', 'LIKE', "%$search%");
-                })
-                    ->where('active', false)
+                $articles = Article::where('active', false)
+                    ->when($isPartenaire, function ($query) use ($user) {
+                        return $query->where('author_id', $user->id);
+                    })
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('titre', 'LIKE', "%$search%");
+                    })
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
             default:
-                $articles = Article::when($isPartenaire, function ($query) use ($user) {
-                    return $query->where('author_id', $user->id);
-                })
-                    ->when($search, function($query) use ($search) {
-                    return $query->where('titre', 'LIKE', "%$search%");
-                })
-                    ->where('approuved_at', null)
-                    ->where('approuved_by', null)
-                    ->where('active', true)
+                $articles = Article::where('active', true)
+                    ->when($isPartenaire, function ($query) use ($user) {
+                        return $query->where('author_id', $user->id);
+                    })
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('titre', 'LIKE', "%$search%");
+                    })
+                    ->where('approuved_at')
+                    ->where('approuved_by')
+                    ->where('declined_at')
+                    ->where('declined_by')
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
@@ -271,12 +288,32 @@ class ArticleAdminController extends Controller
 
         $approuveBy = auth()->user()->id;
 
-        // dd($article);
-
         $article->update([
             'approuved_at' => now(),
             'approuved_by' => $approuveBy
         ]);
+
+        $article->notify(new MonitoringStatusNotification());
+
+        return back();
+    }
+
+    public function declined(Request $request,Article $article)
+    {
+
+
+        $data = $request->validate([
+            'motif' => ['required', 'string']
+        ]);
+
+        $declinedBy = auth()->user()->id;
+
+        $article->update([
+            'declined_at' => now(),
+            'declined_by' => $declinedBy
+        ]);
+
+        $article->notify(new MonitoringStatusNotification('declined', $data['motif']));
 
         return back();
     }

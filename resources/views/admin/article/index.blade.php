@@ -33,25 +33,26 @@
             </div>
             @if (auth()->user()->role === 'administrateur')
                 <div class="card-header px-5">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
-                                @if (!request()->filter or request()->filter === 'authorize') checked @endif>
-                            <label class="form-check-label" for="authorize">En attente</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
-                                @if (request()->filter === 'approuved') checked @endif>
-                            <label class="form-check-label" for="approuved">Approuvé</label>
-                        </div>
-                        {{-- <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"  @if (request()->filter === 'declined') checked  @endif>
-                    <label class="form-check-label" for="declined">Décliné</label>
-                </div> --}}
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
-                                @if (request()->filter === 'delete') checked @endif>
-                            <label class="form-check-label" for="delete">Supprimé</label>
-                        </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
+                            @if (!request()->filter or request()->filter === 'authorize') checked @endif>
+                        <label class="form-check-label" for="authorize">En attente</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
+                            @if (request()->filter === 'approuved') checked @endif>
+                        <label class="form-check-label" for="approuved">Approuvé</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"
+                            @if (request()->filter === 'declined') checked @endif>
+                        <label class="form-check-label" for="declined">Décliné</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
+                            @if (request()->filter === 'delete') checked @endif>
+                        <label class="form-check-label" for="delete">Supprimé</label>
+                    </div>
                 </div>
             @endif
         </form>
@@ -92,7 +93,7 @@
             <!-- /.modal-dialog -->
         </div>
 
-        <div class="modal fade" id="modal-approuve">
+        <div class="modal fade" id="modal-approuved">
             <div class="modal-dialog">
                 <div class="modal-content bg-success">
                     <div class="modal-header">
@@ -113,21 +114,32 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
-        <div class="modal fade" id="modal-decline">
+
+        <div class="modal fade" id="modal-declined">
             <div class="modal-dialog">
-                <div class="modal-content bg-warning">
+                <div class="modal-content bg-danger">
                     <div class="modal-header">
-                        <h4 class="modal-title">Success Modal</h4>
+                        <h4 class="modal-title">Décliné un article</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Ete vous surs de vouloir refusé cette article ?</p>
+                        <form action="" method="post" id="declinedForm">
+                            @csrf
+                            <div class="form-group">
+                                <label for="motif">Motif de refus</label>
+                                <textarea name="motif" id="motif" cols="20" id="motif" class="form-control">{{ old('motif') }}</textarea>
+                            </div>
+                            @error('motif')
+                                <span class="text-light">Erreur : {{ $message }}</span>
+                            @enderror
+                        </form>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-outline-light" id="confirmApprouvation">Oui</button>
+                        <button type="submit" form="declinedForm" class="btn btn-outline-light"
+                            id="confirmApprouvation">Oui</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -153,6 +165,22 @@
                     form.submit();
                 });
             });
+
+            @if ($errors->has('motif'))
+                $('#modal-declined').modal('show')
+            @endif
+
+            $('#modal-declined').on('show.bs.modal', function (event){
+                let button = $(event.relatedTarget);
+                let dataArticle = button.data('article');
+                console.log(dataArticle);
+                $('#motif').val(dataArticle);
+
+                $('#submitForm').on('click', function () {
+                    $('#monForm').action(`article/${dataArticle}/admin/declined`);
+                    $('#monForm').submit();
+                });
+            });
         });
     </script>
     <script>
@@ -171,7 +199,6 @@
             }
 
             // Filtre
-
             const filters = document.getElementsByName('filter');
             const filterForm = document.querySelector('form.filter-form');
 

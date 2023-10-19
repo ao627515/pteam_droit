@@ -23,6 +23,8 @@ class ArticleFactory extends Factory
         $author = User::where('role', 'administrator')->orWhere('role', 'partenaire')->get();
 
         $approuve = fake()->randomNumber() % 2 != 0 ? true : false;
+        $declined = !$approuve;
+        $nullish = fake()->randomNumber() % 2 != 0 ? true : false;
         return [
             'titre' => $title,
             'description' => fake()->text,
@@ -32,12 +34,20 @@ class ArticleFactory extends Factory
             'author_id' => $author->random()->id,
             'active' => fake()->boolean,
             'categorie_article_id' => CategorieArticle::inRandomOrder()->first()->id,
-            'approuved_at' => function () use ($approuve) {
-                return $approuve == false ? fake()->dateTimeThisDecade : null;
+            'approuved_at' => function () use ($approuve, $nullish) {
+                return $nullish == true ? null : ($approuve == true ? fake()->dateTimeThisDecade : null);
             },
 
-            'approuved_by' => function () use ($approuve){
-                return $approuve == false ? User::inRandomOrder()->first()->id : null;
+            'approuved_by' => function () use ($approuve, $nullish){
+                return $nullish == true ? null : ($approuve == true ? User::inRandomOrder()->first()->id : null);
+            },
+
+            'declined_at' => function () use ($declined, $nullish) {
+                return $nullish == true ? null : ($declined == true ? fake()->dateTimeThisDecade : null);
+            },
+
+            'declined_by' => function () use ($declined, $nullish){
+                return $nullish == true ? null  : ($declined == true ? User::inRandomOrder()->first()->id : null);
             },
             'created_at' => now(),
             'updated_at' => now()

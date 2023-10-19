@@ -22,6 +22,8 @@ return new class extends Migration
             $table->boolean('active')->default(true);
             $table->timestamp('approuved_at')->nullable();
             $table->foreignId('approuved_by')->nullable()->constrained('users');
+            $table->timestamp('declined_at')->nullable();
+            $table->foreignId('declined_by')->nullable()->constrained('users');
             $table->timestamps();
         });
     }

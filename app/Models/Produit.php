@@ -11,10 +11,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Notifications\Notifiable;
 
 class Produit extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected $guarded = [''];
 
@@ -27,7 +28,7 @@ class Produit extends Model
     }
 
     public function imageLink(): string{
-        return Storage::disk('public')->url($this->image);
+        return Storage::url($this->image);
     }
 
     public function author () {

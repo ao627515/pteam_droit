@@ -85,7 +85,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 Route::get('detail', [ProduitController::class, 'detail'])->name('detail');
 
-Route::get('article/{article}/admin/approuve', [ArticleAdminController::class, 'approuved'])->name('articleAdmin.approuved');
-Route::get('produit/{produit}/admin/approuve', [ProduitAdminController::class, 'approuved'])->name('produitAdmin.approuved');
+Route::post('article/{article}/admin/approuved', [ArticleAdminController::class, 'approuved'])->name('articleAdmin.approuved');
+Route::post('produit/{produit}/admin/approuved', [ProduitAdminController::class, 'approuved'])->name('produitAdmin.approuved');
+
+Route::post('article/{article}/admin/declined', [ArticleAdminController::class, 'declined'])->name('articleAdmin.declined');
+Route::post('produit/{produit}/admin/declinde', [ProduitAdminController::class, 'declined'])->name('produitAdmin.declined');
 
 Route::delete('prestation/{prestation}/detach', [PrestationController::class, 'detach'])->name('prestation.detach');

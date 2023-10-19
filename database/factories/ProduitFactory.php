@@ -18,6 +18,7 @@ class ProduitFactory extends Factory
     public function definition(): array
     {
         $approuve = fake()->randomNumber() % 2 != 0 ? true : false;
+        $declined = fake()->randomNumber() % 2 != 0 ? true : false;
         $author = User::where('role', 'administrator')->orWhere('role', 'partenaire')->get();
         return [
             'nom' => fake()->sentence,
@@ -29,6 +30,13 @@ class ProduitFactory extends Factory
             'active' => fake()->boolean,
             'approuved_at' => fn() => $approuve == true ? fake()->dateTimeThisDecade : null,
             'approuved_by' => fn() => $approuve == true ? User::inRandomOrder()->first()->id : null,
+            'declined_at' => function () use ($declined) {
+                return $declined == false ? fake()->dateTimeThisDecade : null;
+            },
+
+            'declined_by' => function () use ($declined){
+                return $declined == false ? User::inRandomOrder()->first()->id : null;
+            },
             'created_at' => now(),
             'updated_at' => now(),
         ];
