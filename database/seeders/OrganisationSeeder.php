@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Domaine;
 use App\Models\Organisation;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +35,7 @@ class OrganisationSeeder extends Seeder
                 'val_doc_2' => 'Valeur 2',
                 'val_doc_3' => 'Valeur 3',
                 'val_doc_4' => 'Valeur 4',
-                'domaine_id' => 1, // ID du domaine associé
+                'domaine_id' => Domaine::inRandomOrder()->first()->id,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -46,7 +47,7 @@ class OrganisationSeeder extends Seeder
                 'description' => 'Description de l\'organisation 2',
                 'short_description' => 'Courte description 2',
                 'active' => 1,
-                'user_id' => 3, // ID de l'utilisateur associé
+                'user_id' => 2,
                 'approuved_by' => 4, // ID de l'utilisateur qui a approuvé
                 'approuved_at' => now(),
                 'lib_doc_1' => 'Document 5',

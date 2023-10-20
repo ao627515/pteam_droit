@@ -58,4 +58,8 @@ class User extends Authenticatable
 
         return "Vous n'avez pas droit a des prestation";
     }
+
+    public function organisation(){
+        return $this->hasOne(Organisation::class, 'user_id');
+    }
 }

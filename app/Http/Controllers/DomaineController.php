@@ -14,12 +14,29 @@ class DomaineController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request['search'];
+        $user = auth()->user();
+        if ($user->role === "administrateur") {
+            $search = $request['search'];
 
-        $domaines = Domaine::when($search, function ($query) use ($search) {
-            return $query->where('nom', 'LIKE', "%$search%");
-        })
-            ->where('active', true)
+            $domaines = Domaine::when($search, function ($query) use ($search) {
+                return $query->where('nom', 'LIKE', "%$search%");
+            })
+                ->where('active', true)
+                ->orderBy('created_at', 'desc')
+                ->paginate(25);
+
+            return view(
+                'admin.domaine.index',
+                [
+                    'domaines' => $domaines,
+                    'query' => ['search' => $search],
+                ]
+            );
+        }
+
+        $domaines = [$user->organisation->domaine,];
+
+        $allDomaines = Domaine::where('active', true)
             ->orderBy('created_at', 'desc')
             ->paginate(25);
 
@@ -27,7 +44,7 @@ class DomaineController extends Controller
             'admin.domaine.index',
             [
                 'domaines' => $domaines,
-                'query' => ['search' => $search],
+                "allDomaines" => $allDomaines
             ]
         );
     }
@@ -52,11 +69,11 @@ class DomaineController extends Controller
             'estPartenaire' => ['required', 'boolean']
         ]);
 
-         $domaine = Domaine::create($data);
+        $domaine = Domaine::create($data);
 
-        if($request->icon){
+        if ($request->icon) {
 
-            $iconPath = $data['icon']->store("domaines/icons/$domaine->id",'public');
+            $iconPath = $data['icon']->store("domaines/icons/$domaine->id", 'public');
             $domaine->update([
                 'icon' => $iconPath
             ]);
@@ -102,13 +119,13 @@ class DomaineController extends Controller
             $estPartenaire => ['required', 'boolean']
         ]);
 
-        if($request->input($icon)){
+        if ($request->input($icon)) {
             $domaine->update([
                 'nom' => $request->input($nom),
                 'icon' => $request->input($icon),
                 'estPartenaire' => $request->input($estPartenaire),
             ]);
-        }else{
+        } else {
             $domaine->update([
                 'nom' => $request->input($nom),
                 'estPartenaire' => $request->input($estPartenaire),
@@ -129,5 +146,20 @@ class DomaineController extends Controller
 
         $domaine->delete();
         return to_route('domaine.index')->with('success', 'Suppression reussie !');
+    }
+
+    public function change(Request $request)
+    {
+        $data = $request->validate([
+            'domaine' => 'required|integer|exists:domaines,id'
+        ]);
+
+        $user = auth()->user();
+
+        $user->organisation->update([
+            'domaine_id' => $data['domaine']
+        ]);
+
+        return back();
     }
 }

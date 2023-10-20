@@ -21,7 +21,9 @@ use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\ProduitAdminController;
 use App\Http\Controllers\CategorieArticleController;
 use App\Http\Controllers\DomaineController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TypeCompteController;
+use Mockery\Matcher\Not;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,3 +94,6 @@ Route::post('article/{article}/admin/declined', [ArticleAdminController::class, 
 Route::post('produit/{produit}/admin/declinded', [ProduitAdminController::class, 'declined'])->name('produitAdmin.declined');
 
 Route::delete('prestation/{prestation}/detach', [PrestationController::class, 'detach'])->name('prestation.detach');
+
+Route::get('notification', [NotificationController::class, 'index'])->name('notifications');
+Route::post('domaine/change', [DomaineController::class, 'change'])->name('domaine.change');

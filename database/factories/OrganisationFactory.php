@@ -39,9 +39,7 @@ class OrganisationFactory extends Factory
             'val_doc_2' => fake()->word,
             'val_doc_3' => fake()->word,
             'val_doc_4' => fake()->word,
-            'domaine_id' => function () {
-                return Domaine::inRandomOrder()->first()->id;
-            },
+            'domaine_id' => Domaine::inRandomOrder()->first()->id,
             'created_at' => now(),
             'updated_at' => now(),
         ];
