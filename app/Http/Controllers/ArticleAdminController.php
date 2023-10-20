@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use DOMDocument;
-use App\Models\Categorie;
 use App\Models\Article;
+use App\Models\Categorie;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\CategorieArticle;
-use App\Notifications\MonitoringStatusNotification;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\MonitoringStatusNotification;
 
 class ArticleAdminController extends Controller
 {
@@ -85,6 +86,7 @@ class ArticleAdminController extends Controller
                     ->when($search, function ($query) use ($search) {
                         return $query->where('titre', 'LIKE', "%$search%");
                     })
+                    ->where('author_id', 2)
                     ->where('approuved_at')
                     ->where('approuved_by')
                     ->where('declined_at')
@@ -293,12 +295,11 @@ class ArticleAdminController extends Controller
             'approuved_by' => $approuveBy
         ]);
 
-        $article->notify(new MonitoringStatusNotification());
-
+        Notification::send($article->author, new MonitoringStatusNotification($article,'approved'));
         return back();
     }
 
-    public function declined(Request $request,Article $article)
+    public function declined(Request $request, Article $article)
     {
 
 
@@ -313,7 +314,7 @@ class ArticleAdminController extends Controller
             'declined_by' => $declinedBy
         ]);
 
-        $article->notify(new MonitoringStatusNotification('declined', $data['motif']));
+        Notification::send($article->author, new MonitoringStatusNotification($article,'declined', $data['motif']));
 
         return back();
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
 use App\Notifications\MonitoringStatusNotification;
 
 class ProduitAdminController extends Controller
@@ -65,6 +66,7 @@ class ProduitAdminController extends Controller
                     ->when($search, function ($query) use ($search) {
                         return $query->where('nom', 'LIKE', "%$search%");
                     })
+
                     ->where('active', false)
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
@@ -77,6 +79,8 @@ class ProduitAdminController extends Controller
                     ->when($search, function ($query) use ($search) {
                         return $query->where('nom', 'LIKE', "%$search%");
                     })
+                    // A supprimer
+                    ->where('author_id', 2)
                     ->where('approuved_at')
                     ->where('approuved_by')
                     ->where('declined_at')
@@ -207,7 +211,8 @@ class ProduitAdminController extends Controller
             'approuved_by' => $approuveBy
         ]);
 
-        $produit->notify(new MonitoringStatusNotification('approuved'));
+        Notification::send($produit->author, new MonitoringStatusNotification($produit,'approved'));
+
 
         return back();
     }
@@ -227,7 +232,7 @@ class ProduitAdminController extends Controller
             'declined_by' => $declinedBy
         ]);
 
-        $produit->notify(new MonitoringStatusNotification('declined', $data['motif']));
+        Notification::send($produit->author, new MonitoringStatusNotification($produit,'declined', $data['motif']));
 
         return back();
     }

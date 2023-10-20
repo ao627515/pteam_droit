@@ -6,9 +6,7 @@ use App\Models\Article;
 use App\Models\Produit;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\DatabaseMessage;
 use Termwind\Components\Li;
 
 class MonitoringStatusNotification extends Notification
@@ -21,10 +19,11 @@ class MonitoringStatusNotification extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        string $status = 'approuved',
-        public string $motif = ''
+        public Article|Produit $object,
+        string $status = 'approved',
+        public string $motif = '',
     ) {
-        $this->status = $status == 'approuved' ? true : false;
+        $this->status = $status === 'approved';
     }
 
     /**
@@ -42,52 +41,39 @@ class MonitoringStatusNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        if($notifiable instanceof Article){
-            if ($this->status) {
-                $line = "Votre article << $notifiable->titre >> à été appouvé.";
-            } else {
-                $line = "Votre article << $notifiable->titre >> à été décliné.";
-            }
+        $objectType = $this->object instanceof Article ? 'article' : 'produit';
+        $objectName = $this->object instanceof Article ? $this->object->titre : $this->object->nom;
+        $actionText = $this->status ? 'approuvé' : 'décliné';
 
-            return (new MailMessage)
-            ->subject('Statut article')
+        $line = "Votre $objectType << $objectName >> a été $actionText.";
+
+        $routeName = $this->object instanceof Article ? 'articleAdmin.show' : 'produitAdmin.show';
+
+        return (new MailMessage)
+            ->subject("Statut $objectType")
             ->line($line)
-            ->action('Voir l\'article', route('articleAdmin.show', $notifiable))
+            ->action("Voir l'$objectType", route($routeName, $this->object))
             ->line('Merci d\'utiliser notre site !');
-
-        }elseif($notifiable instanceof Produit){
-            if ($this->status) {
-                $line = "Votre produit << $notifiable->nom >> à été appouvé.";
-            } else {
-                $line = "Votre produit << $notifiable->nom >> à été décliné.";
-            }
-
-            return (new MailMessage)
-            ->subject('Statut produit')
-            ->line($line)
-            ->action('Voir produit', route('produitAdmin.show', $notifiable))
-            ->line('Merci d\'utiliser notre site !');
-        }
-
     }
-
 
     public function toDatabase($notifiable)
     {
-        if ($this->status) {
-            return [
-                'object_id' => $notifiable->id,
-                'message' => "Votre article a été approuvé \n Voir l'article " . route('articleAdmin.show', $notifiable),
-                'approuved_by' => $notifiable->approuved_by,
-            ];
-        } else {
-            return [
-                'object_id' => $notifiable->id,
-                'declined_by' => $notifiable->declined_by,
-                'motif' => $this->motif,
-                'message' => "Votre article a été décliné \n Voir l'article " . route('articleAdmin.show', $notifiable),
-            ];
+        $objectType = $this->object instanceof Article ? 'Article' : 'Produit';
+        $objectRouteName = $this->object instanceof Article ? 'articleAdmin' : 'produitAdmin';
+        $object = $this->object->titre ?? $this->object->nom;
+        $actionText = $this->status ? 'approuvé' : 'décliné';
+
+        $data = [
+            'type' => $objectType,
+            'message' => "Votre $objectType << {$object} >> a été $actionText.",
+            'object_show' => route($objectRouteName.'.show', $this->object)
+        ];
+
+        if (!$this->status) {
+            $data['motif'] = $this->motif;
         }
+
+        return $data;
     }
 
     /**
@@ -102,3 +88,4 @@ class MonitoringStatusNotification extends Notification
         ];
     }
 }
+

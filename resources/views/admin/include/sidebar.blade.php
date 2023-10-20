@@ -125,7 +125,6 @@
                 </li>
                 @if (auth()->user()->role === 'administrateur')
                     {{-- <li class="nav-header">UTILISATEURS</li> --}}
-                    {{-- Administrateur --}}
                     <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
                             'user.')) menu-open @endif">
                         <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
@@ -205,6 +204,17 @@
                         </li>
                         @endif
                     </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('notifications') }}"
+                        class="nav-link @if (Str::startsWith(request()->route()->getName(),
+                                'notifications')) active @endif ">
+                        <i class="nav-icon fas fa-bell"></i>
+                        <p>
+                            Notifications  <span class="badge badge-light">{{ auth()->user()->unreadNotifications->count() }}</span>
+                            <span class="sr-only">unread messages</span>
+                        </p>
+                    </a>
                 </li>
                 <li class="nav-header">DECONNEXION</li>
                 <li class="nav-item ">

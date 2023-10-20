@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('email');
             $table->string('logo')->nullable();
-            $table->string('domaine')->nullable();
+            // $table->string('domaine')->nullable();
             $table->string('description')->nullable();
             $table->string('short_description')->nullable();
             $table->boolean('active')->default(true);

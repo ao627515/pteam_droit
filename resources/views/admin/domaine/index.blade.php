@@ -12,76 +12,79 @@
         <div class="card-header bg-secondary">
             <h1 class="w-100 text-center text-light">Gestion des domaines</h1>
         </div>
-        <div class="card-header d-flex justify-content-end">
-            <button class="btn btn-primary" id="btnCreate">
-                {{-- <i class="nav-icon fa-solid fa-plus"></i> --}}
-                Créer
-            </button>
-        </div>
-        <div class="card-header" id="cardCreate" style="display: @if ($errors->has('nom') or $errors->has('icon') or $errors->has('estPartenaire')) block @else none @endif">
-            <div class="card">
-                <div class="card-header bg-secondary">
-                    <h3 class="text-center w-100 text-center text-light">Creer un nouveau domaine</h3>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('domaine.store') }}" method="post" enctype="multipart/form-data">
-                        @csrf
-                        <div class="row row-cols-1">
-                            <div class="col col-sm-4">
-                                <input type="text" name="nom" id="domaine"
-                                    placeholder="Entrer le nom du nouveau domaine"
-                                    class="form-control @error('nom') is-invalid @enderror" value="{{ old('nom') }}"
-                                    required>
-                                @error('nom')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                            <div class="col col-sm-4">
-                                <div class="form-group">
-                                    <input type="file" class="form-control-file @error('icon') is-invalid @enderror"
-                                        id="icon" name="icon">
-                                    @error('icon')
+        @if (auth()->user()->role == 'administrateur')
+            <div class="card-header d-flex justify-content-end">
+                <button class="btn btn-primary" id="btnCreate">
+                    {{-- <i class="nav-icon fa-solid fa-plus"></i> --}}
+                    Créer
+                </button>
+            </div>
+            <div class="card-header" id="cardCreate"
+                style="display: @if ($errors->has('nom') or $errors->has('icon') or $errors->has('estPartenaire')) block @else none @endif">
+                <div class="card">
+                    <div class="card-header bg-secondary">
+                        <h3 class="text-center w-100 text-center text-light">Creer un nouveau domaine</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('domaine.store') }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <div class="row row-cols-1">
+                                <div class="col col-sm-4">
+                                    <input type="text" name="nom" id="domaine"
+                                        placeholder="Entrer le nom du nouveau domaine"
+                                        class="form-control @error('nom') is-invalid @enderror" value="{{ old('nom') }}"
+                                        required>
+                                    @error('nom')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                     @enderror
                                 </div>
-                            </div>
-                            <div class="col col-sm-3">
-                                Partenaire :
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="isPartenaire1" name="estPartenaire"
-                                        class="custom-control-input" value="1">
-                                    <label class="custom-control-label" for="isPartenaire1">Oui</label>
+                                <div class="col col-sm-4">
+                                    <div class="form-group">
+                                        <input type="file" class="form-control-file @error('icon') is-invalid @enderror"
+                                            id="icon" name="icon">
+                                        @error('icon')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
                                 </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="isPartenaire2" name="estPartenaire"
-                                        class="custom-control-input" value="0" checked>
-                                    <label class="custom-control-label" for="isPartenaire2">Non</label>
+                                <div class="col col-sm-3">
+                                    Partenaire :
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="isPartenaire1" name="estPartenaire"
+                                            class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="isPartenaire1">Oui</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="isPartenaire2" name="estPartenaire"
+                                            class="custom-control-input" value="0" checked>
+                                        <label class="custom-control-label" for="isPartenaire2">Non</label>
+                                    </div>
+                                    @error('estPartenaire')
+                                        <div>
+                                            <small class="text-danger"> {{ $message }} </small>
+                                        </div>
+                                    @enderror
                                 </div>
-                                @error('estPartenaire')
-                                <div>
-                                    <small class="text-danger"> {{ $message }} </small>
+                                <div class="col col-sm-1">
+                                    <button type="submit" class="btn btn-success">Valider</button>
                                 </div>
-                                @enderror
                             </div>
-                            <div class="col col-sm-1">
-                                <button type="submit" class="btn btn-success">Valider</button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        <form action="" method="get" id="search" class="search filter-form">
-            @csrf
-            <div class="card-header">
-                <input type="search" name="search" placeholder="Recherche 'nom du domaine'  " class="form-control"
-                    value="{{ old('search', request()->search) }}" @if ($errors->has('nom') or $errors->has('icon')) disabled @endif>
-            </div>
-        </form>
+            <form action="" method="get" id="search" class="search filter-form">
+                @csrf
+                <div class="card-header">
+                    <input type="search" name="search" placeholder="Recherche 'nom du domaine'  " class="form-control"
+                        value="{{ old('search', request()->search) }}" @if ($errors->has('nom') or $errors->has('icon')) disabled @endif>
+                </div>
+            </form>
+        @endif
         <div class="card-body">
             <table class="table table-striped table-responsive-sm">
                 <thead>
@@ -111,81 +114,116 @@
                                     <li class="nav-item">
                                         <i class="nav-icon fa-solid fa-pen btnEdit" title="Modifer"></i>
                                     </li>
-                                    <li class="nav-item">
-                                        <i class="nav-icon fa-solid fa-eye" title="Voir" style="color: blue"></i>
-                                    </li>
-                                    <li class="nav-item">
-                                        <form action="{{ route('domaine.destroy', $domaine) }}" method="post"
-                                            class="form-action nav-link" title="Supprimer">
-                                            @csrf
-                                            @method('delete')
-                                            <i class="nav-icon fa-solid fa-trash action-btn" style="color: red"
-                                                data-target="#modal-destroy" data-toggle="modal"></i>
-                                        </form>
-                                    </li>
+                                    @if (auth()->user()->role == 'administrateur')
+                                        <li class="nav-item">
+                                            <i class="nav-icon fa-solid fa-eye" title="Voir" style="color: blue"></i>
+                                        </li>
+                                        <li class="nav-item">
+                                            <form action="{{ route('domaine.destroy', $domaine) }}" method="post"
+                                                class="form-action nav-link" title="Supprimer">
+                                                @csrf
+                                                @method('delete')
+                                                <i class="nav-icon fa-solid fa-trash action-btn" style="color: red"
+                                                    data-target="#modal-destroy" data-toggle="modal"></i>
+                                            </form>
+                                        </li>
+                                    @endif
                                 </ul>
                             </td>
                         </tr>
-                        <tr class="formUpdate" style="display: @if (
-                            $errors->has("icon.$domaine->id") or
-                                $errors->has("domaines.$domaine->id.nom") or
-                                $errors->has("estPartenaire1.$domaine->id")) block @else none @endif">
-                            <form action="{{ route('domaine.update', $domaine) }}" method="post">
-                                @csrf
-                                @method('put')
-                                <td>
-                                    <div class="form-group">
-                                        <input type="file" class="form-control-file @error('icon') is-invalid @enderror"
-                                            id="icon" name="{{ "icon.$domaine->id" }}">
-                                        @error('icon')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" name="{{ "domaines.$domaine->id.nom" }}"
-                                            placeholder="Entrer le nom de la nouvelle catégorie"
-                                            class="form-control @error("domaines.$domaine->id.nom") is-invalid @enderror"
-                                            value="{{ old("domaines.$domaine->id.nom", $domaine->nom) }}">
-                                        @error("domaines.$domaine->id.nom")
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                </td>
-                                <td>
-                                    Partenaire :
-                                    <div class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio" id="{{ "estPartenaire1.$domaine->id" }}"
-                                            name="{{ "estPartenaire.$domaine->id" }}" class="custom-control-input"
-                                            value="1" @if ($domaine->estPartenaire == 1) checked @endif>
-                                        <label class="custom-control-label"
-                                            for="{{ "estPartenaire1.$domaine->id" }}">Oui</label>
-                                    </div>
-                                    <div class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio" id="{{ "estPartenaire2.$domaine->id" }}"
-                                            name="{{ "estPartenaire.$domaine->id" }}" class="custom-control-input"
-                                            value="0" @if ($domaine->estPartenaire == 0) checked @endif>
-                                        <label class="custom-control-label"
-                                            for="{{ "estPartenaire2.$domaine->id" }}">Non</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button type="submit" class="btn btn-success">Valider</button>
-                                </td>
-                            </form>
-                        </tr>
+                        @if (auth()->user()->role === 'administrateur')
+                            <tr class="formUpdate"
+                                style="display: @if (
+                                    $errors->has("icon.$domaine->id") or
+                                        $errors->has("domaines.$domaine->id.nom") or
+                                        $errors->has("estPartenaire1.$domaine->id")) block @else none @endif">
+                                <form action="{{ route('domaine.update', $domaine) }}" method="post">
+                                    @csrf
+                                    @method('put')
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="file"
+                                                class="form-control-file @error('icon') is-invalid @enderror" id="icon"
+                                                name="{{ "icon.$domaine->id" }}">
+                                            @error('icon')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" name="{{ "domaines.$domaine->id.nom" }}"
+                                                placeholder="Entrer le nom de la nouvelle catégorie"
+                                                class="form-control @error("domaines.$domaine->id.nom") is-invalid @enderror"
+                                                value="{{ old("domaines.$domaine->id.nom", $domaine->nom) }}">
+                                            @error("domaines.$domaine->id.nom")
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </td>
+                                    <td>
+                                        Partenaire :
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="{{ "estPartenaire1.$domaine->id" }}"
+                                                name="{{ "estPartenaire.$domaine->id" }}" class="custom-control-input"
+                                                value="1" @if ($domaine->estPartenaire == 1) checked @endif>
+                                            <label class="custom-control-label"
+                                                for="{{ "estPartenaire1.$domaine->id" }}">Oui</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="{{ "estPartenaire2.$domaine->id" }}"
+                                                name="{{ "estPartenaire.$domaine->id" }}" class="custom-control-input"
+                                                value="0" @if ($domaine->estPartenaire == 0) checked @endif>
+                                            <label class="custom-control-label"
+                                                for="{{ "estPartenaire2.$domaine->id" }}">Non</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-success">Valider</button>
+                                    </td>
+                                </form>
+                            </tr>
+                        @else
+                            <tr class="formUpdate" style="display: @if($errors->has("domaine")) block @else none @endif">
+                                <form action="{{ route("domaine.change") }}" method="post">
+                                    @csrf
+                                    <td colspan="3">
+                                        <div class="form-group">
+                                            <select class="form-control @error('domaine') is-invalid @enderror"
+                                                name="domaine" id="domaine" value="{{ old('domaine') }}">
+                                                @foreach ($allDomaines as $item)
+                                                    <option value="{{ $item->id }}"
+                                                        @if ($domaine->id === $item->id) selected @endif>
+                                                        {{ Str::ucfirst($item->nom) }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('domaine')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-success">Valider</button>
+                                    </td>
+                                </form>
+                            </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>
         </div>
-        <div class="card-footer px-3 py-0">
-            {{ $domaines->appends($query)->links() }}
-        </div>
+        @if (auth()->user()->role == 'administrateur')
+            <div class="card-footer px-3 py-0">
+                {{ $domaines->appends($query)->links() }}
+            </div>
+        @endif
     </div>
 
 
