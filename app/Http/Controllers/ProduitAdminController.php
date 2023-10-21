@@ -258,7 +258,7 @@ class ProduitAdminController extends Controller
             'declined_by' => null,
         ]);
 
-        return to_route('articleAdmin.index')->with('Produit relancé !');
+        return to_route('produitAdmin.index')->with('Produit relancé !');
     }
 
     // private function drafts (Produit $produit) {

@@ -167,6 +167,11 @@ class Produit extends Model
         return $this->status === 5;
     }
 
+    public function isDeclined()
+    {
+        return $this->status === 3;
+    }
+
     public function isApprove()
     {
         return $this->status === 2;

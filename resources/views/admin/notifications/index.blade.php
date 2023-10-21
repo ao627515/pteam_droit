@@ -16,6 +16,7 @@
                 </thead>
                 <tbody>
                     @if($notifications->count() > 0)
+                    {{ $notifications->markAsRead() }}
                         @foreach ($notifications as $notification)
                             <tr>
                                 <td>{{ $notification->data['type'] }}</td>

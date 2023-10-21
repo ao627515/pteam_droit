@@ -133,6 +133,16 @@
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu" role="menu">
+                                        @if ($produit->isDeclined())
+                                        <form action="{{ route('produitAdmin.relaunch', $produit) }}" method="post"
+                                            class="form-action dropdown-item">
+                                            @csrf
+                                            <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
+                                                data-target="#modal-relaunch">
+                                                <i class="fas fa-check-circle"></i> Relancé
+                                            </button>
+                                        </form>
+                                    @endif
                                         @if ($produit->isDraft())
                                             <form action="{{ route('produitAdmin.publish', $produit) }}" method="post"
                                                 class="form-action dropdown-item">
@@ -248,6 +258,28 @@
             <!-- /.modal-dialog -->
         </div>
 
+        <div class="modal fade" id="modal-relaunch">
+            <div class="modal-dialog">
+                <div class="modal-content bg-default">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Confirmation</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Voullez vous Relancé cette article ?</p>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-outline-primary" id="confirmRelaunch">Oui</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
         <div class="modal fade" id="modal-declined">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content bg-danger">
@@ -290,6 +322,11 @@
                 });
 
                 $('#confirmApprouvation').on('click', function() {
+                    // Soumettre le formulaire
+                    form.submit();
+                });
+
+                $('#confirmRelaunch').on('click', function() {
                     // Soumettre le formulaire
                     form.submit();
                 });
