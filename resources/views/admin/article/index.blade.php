@@ -116,7 +116,7 @@
         </div>
 
         <div class="modal fade" id="modal-declined">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content bg-danger">
                     <div class="modal-header">
                         <h4 class="modal-title">Décliné un article</h4>
@@ -127,7 +127,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="motif">Motif de refus</label>
-                            <textarea id="motifModal" id="motif" cols="20" id="motif" class="form-control">{{ old('motif') }}</textarea>
+                            <textarea id="motifModal" id="motif" rows="15" id="motif" class="form-control">{{ old('motif') }}</textarea>
                         </div>
                         @error('motif')
                             <span class="text-light">Erreur : {{ $message }}</span>
