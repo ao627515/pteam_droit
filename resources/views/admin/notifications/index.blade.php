@@ -10,7 +10,7 @@
                     <tr>
                         <th>Type</th>
                         <th>Message</th>
-                        <th>Motif</th>
+                        <th></th>
                         <th>Action</th>
                     </tr>
                 </thead>

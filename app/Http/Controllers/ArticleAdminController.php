@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\CategorieArticle;
 use App\Http\Controllers\Controller;
+use App\Notifications\ArticleStatusNotification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\MonitoringStatusNotification;
@@ -84,6 +85,7 @@ class ArticleAdminController extends Controller
                     ->when($search, function ($query) use ($search) {
                         return $query->where('titre', 'LIKE', "%$search%");
                     })
+                    ->where('author_id', 2)
                     ->where('status', 1)
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
@@ -297,7 +299,7 @@ class ArticleAdminController extends Controller
             'status' => 2
         ]);
 
-        Notification::send($article->author, new MonitoringStatusNotification($article, 'approved'));
+        Notification::send($article->author, new ArticleStatusNotification($article, 'approved'));
         return back();
     }
 
@@ -317,7 +319,7 @@ class ArticleAdminController extends Controller
             'status' => 3,
         ]);
 
-        Notification::send($article->author, new MonitoringStatusNotification($article, 'declined', $data['motif']));
+        Notification::send($article->author, new ArticleStatusNotification($article, 'declined', $data['motif']));
 
         return back();
     }
