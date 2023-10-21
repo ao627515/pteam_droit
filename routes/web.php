@@ -23,7 +23,6 @@ use App\Http\Controllers\CategorieArticleController;
 use App\Http\Controllers\DomaineController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TypeCompteController;
-use Mockery\Matcher\Not;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,3 +99,6 @@ Route::post('domaine/change', [DomaineController::class, 'change'])->name('domai
 
 Route::post('article/{article}/publish', [ArticleAdminController::class, 'publish'])->name('articleAdmin.publish');
 Route::post('produit/{produit}/publish', [ProduitAdminController::class, 'publish'])->name('produitAdmin.publish');
+
+Route::post('article/{article}/relaunch', [ArticleAdminController::class, 'relaunch'])->name('articleAdmin.relaunch');
+Route::post('produit/{produit}/relaunch', [ProduitAdminController::class, 'relaunch'])->name('produitAdmin.relaunch');

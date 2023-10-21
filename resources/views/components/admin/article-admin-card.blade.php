@@ -66,6 +66,17 @@
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu" role="menu">
+                @if ($article->isDeclined())
+                    <form action="{{ route('articleAdmin.relaunch', $article) }}" method="post"
+                        class="form-action dropdown-item">
+                        @csrf
+                        <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
+                            data-target="#modal-relaunch">
+                            <i class="fas fa-check-circle"></i> Relancé
+                        </button>
+                    </form>
+                @endif
+
                 @if ($article->isDraft())
                     <form action="{{ route('articleAdmin.publish', $article) }}" method="post"
                         class="form-action dropdown-item">

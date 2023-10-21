@@ -185,6 +185,11 @@ class Article extends Model
         return $this->status === 2;
     }
 
+    public function isDeclined()
+    {
+        return $this->status === 3;
+    }
+
     public function getActionDate()
     {
         switch ($this->status) {

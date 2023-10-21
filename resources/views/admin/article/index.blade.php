@@ -119,6 +119,28 @@
             <!-- /.modal-dialog -->
         </div>
 
+        <div class="modal fade" id="modal-relaunch">
+            <div class="modal-dialog">
+                <div class="modal-content bg-default">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Confirmation</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Voullez vous Relancé cette article ?</p>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-outline-primary" id="confirmRelaunch">Oui</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
         <div class="modal fade" id="modal-declined">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content bg-danger">
@@ -146,6 +168,7 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
+
     </div>
 @endsection
 
@@ -161,6 +184,11 @@
                 });
 
                 $('#confirmApprouvation').on('click', function() {
+                    // Soumettre le formulaire
+                    form.submit();
+                });
+
+                $('#confirmRelaunch').on('click', function() {
                     // Soumettre le formulaire
                     form.submit();
                 });
