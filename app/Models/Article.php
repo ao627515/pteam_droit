@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\StatusTrait;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Article extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, StatusTrait;
 
 
     protected $guarded = [''];
@@ -29,7 +30,6 @@ class Article extends Model
 
     private function imageLink(): string
     {
-
         return Storage::url($this->image);
     }
 
@@ -48,10 +48,6 @@ class Article extends Model
         return $this->belongsTo(User::class, 'declined_by');
     }
 
-    // public function categorie()
-    // {
-    //     return $this->belongsTo(categorie::class, 'categorie_article_id');
-    // }
     public function categories()
     {
         return $this->belongsToMany(categorie::class, 'article_categorie', 'article_id', 'categorie_id');
@@ -118,76 +114,6 @@ class Article extends Model
         $carbone = new Carbon($datetime);
 
         return $carbone->format('j M Y à H\h i');
-    }
-
-
-    private function adminStatus()
-    {
-        // Si ce n'est pas approuvé mais décliné
-        switch ($this->status) {
-            case 1:
-                return 'Demande de publication';
-                break;
-            case 2:
-                return 'Article publier';
-                break;
-            case 3:
-                return 'Article decliné';
-                break;
-            case 4:
-                return 'Demande de suppression';
-                break;
-        }
-    }
-
-    private function partenaireStatus()
-    {
-        switch ($this->status) {
-            case 1:
-                return 'En attente';
-                break;
-            case 2:
-                return 'Article publier';
-                break;
-            case 3:
-                return 'Article decliné';
-                break;
-            case 4:
-                return 'En attente';
-                break;
-            case 5:
-                return 'Brouillons';
-                break;
-        }
-    }
-
-    public function getStatus()
-    {
-        if (auth()->user()->role == 'administrateur') {
-            return $this->adminStatus();
-        } else {
-            return $this->partenaireStatus();
-        }
-    }
-
-    public function isStandby()
-    {
-        return $this->status === 1;
-    }
-
-    public function isDraft()
-    {
-        return $this->status === 5;
-    }
-
-    public function isApprove()
-    {
-        return $this->status === 2;
-    }
-
-    public function isDeclined()
-    {
-        return $this->status === 3;
     }
 
     public function getActionDate()

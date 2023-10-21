@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Traits\StatusTrait;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class Produit extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, StatusTrait;
 
     protected $guarded = [''];
 
@@ -42,10 +43,6 @@ class Produit extends Model
     {
         return $this->belongsTo(User::class, 'declined_by');
     }
-
-    // public function categorie () {
-    //     return $this->belongsTo(User::class, 'categorie_produit_id');
-    // }
 
     public function IsFactory(): bool{
         return Str::startsWith($this->image, 'https');
@@ -105,76 +102,6 @@ class Produit extends Model
         $carbone = new Carbon($datetime);
 
         return $carbone->format('j M Y à H\h i');
-    }
-
-
-    private function adminStatus()
-    {
-        // Si ce n'est pas approuvé mais décliné
-        switch ($this->status) {
-            case 1:
-                return 'Demande de publication';
-                break;
-            case 2:
-                return 'Produit publier';
-                break;
-            case 3:
-                return 'Produit decliné';
-                break;
-            case 4:
-                return 'Demande de suppression';
-                break;
-        }
-    }
-
-    private function partenaireStatus()
-    {
-        switch ($this->status) {
-            case 1:
-                return 'En attente';
-                break;
-            case 2:
-                return 'Produit publier';
-                break;
-            case 3:
-                return 'Produit decliné';
-                break;
-            case 4:
-                return 'En attente';
-                break;
-            case 5:
-                return 'Brouillons';
-                break;
-        }
-    }
-
-    public function getStatus()
-    {
-        if (auth()->user()->role == 'administrateur') {
-            return $this->adminStatus();
-        } else {
-            return $this->partenaireStatus();
-        }
-    }
-
-    public function isStandby()
-    {
-        return $this->status === 1;
-    }
-
-    public function isDraft()
-    {
-        return $this->status === 5;
-    }
-
-    public function isDeclined()
-    {
-        return $this->status === 3;
-    }
-
-    public function isApprove()
-    {
-        return $this->status === 2;
     }
 
     public function getActionDate()
