@@ -27,7 +27,7 @@
                     <form action="{{ route('prestation.store') }}" method="post">
                         @csrf
                         <div class="row row-cols-1">
-                            <div class="col col-sm-11">
+                            <div class="col col-sm-5">
                                 <input type="text" name="nom" id="prestation"
                                     placeholder="Entrer le nom de la nouvelle prestaion"
                                     class="form-control @error('nom') is-invalid @enderror" value="{{ old('nom') }}">
@@ -36,6 +36,17 @@
                                         {{ $message }}
                                     </div>
                                 @enderror
+                            </div>
+                            <div class="col col-sm-5">
+                                <div class="form-group">
+                                    <textarea name="description" class="form-control @error('description') is-invalid @enderror"
+                                        value="{{ old('description') }}" placeholder="Description"></textarea>
+                                    @error('description')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
                             </div>
                             <div class="col col-sm-1">
                                 <button type="submit" class="btn btn-success">Valider</button>
@@ -56,43 +67,24 @@
             <table class="table table-striped responsive">
                 <thead>
                     <th>Nom</th>
+                    <th>Description</th>
                     <th>Actions</th>
                 </thead>
                 <tbody>
                     @foreach ($prestations as $prestation)
                         <tr>
-                            <td>
-                                <form action="{{ route('prestation.update', $prestation) }}" method="post">
-                                    @csrf
-                                    @method('put')
-                                    <div class="row row-cols-1">
-                                        <div class="col col-sm-11">
-                                            <div class="form-group">
-                                                <input type="text" name="{{ "prestations.$prestation->id.nom" }}"
-                                                    placeholder="Entrer le nom de la nouvelle catégorie"
-                                                    class="form-control @error("prestations.$prestation->id.nom") is-invalid @enderror"
-                                                    value="{{ old("prestations.$prestation->id.nom", $prestation->nom) }}"
-                                                    @if (!$errors->has("prestations.$prestation->id.nom")) disabled @endif>
-                                                @error("prestations.$prestation->id.nom")
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        {{-- <div class="col col-sm-1">
-                                            <button type="submit" class="btn btn-success">Modifier</button>
-                                        </div> --}}
-                                    </div>
-                                </form>
+                            <td class="w-25">
+                                {{ $prestation->nom }}
                             </td>
-                            <td>
+                            <td class="w-50">
+                                <p class="lead">
+                                    {{ $prestation->description }}
+                                </p>
+                            </td>
+                            <td class="w-25">
                                 <ul class="nav nav-fill">
                                     <li class="nav-item">
                                         <i class="nav-icon fa-solid fa-pen btnEdit" title="Modifer"></i>
-                                    </li>
-                                    <li class="nav-item">
-                                        <i class="nav-icon fa-solid fa-eye" title="Voir" style="color: blue"></i>
                                     </li>
                                     <li class="nav-item">
                                         <form action="{{ route('prestation.destroy', $prestation) }}" method="post"
@@ -105,6 +97,39 @@
                                     </li>
                                 </ul>
                             </td>
+                        </tr>
+                        <tr class="formUpdate" style="display: @if ($errors->has("prestations.$prestation->id.nom") or $errors->has("prestations.$prestation->id.description")) block @else none @endif">
+
+                            <form action="{{ route('prestation.update', $prestation) }}" method="post">
+                                @csrf
+                                @method('put')
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" name="{{ "prestations.$prestation->id.nom" }}"
+                                            class="form-control @error("prestations.$prestation->id.nom") is-invalid @enderror"
+                                            value="{{ old("prestations.$prestation->id.nom", $prestation->nom) }}">
+                                        @error("prestations.$prestation->id.nom")
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <textarea name="{{ "prestations.$prestation->id.description" }}"
+                                            class="form-control @error("prestations.$prestation->id.description") is-invalid @enderror">{{ old("prestations.$prestation->id.description", $prestation->description) }}</textarea>
+                                        @error("prestations.$prestation->id.description")
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </td>
+                                <td>
+                                    <button type="submit" class="btn btn-success">Valider</button>
+                                </td>
+                            </form>
                         </tr>
                     @endforeach
                 </tbody>
@@ -143,7 +168,7 @@
 
 @section('script')
     <script src="{{ asset('admin/dist/js/parameterSearchBar.js') }}"></script>
-    <script src="{{ asset('admin/dist/js/parameterEditBtnV1.js') }}"></script>
+    <script src="{{ asset('admin/dist/js/parameterEditBtnV2.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('.action-btn').on('click', function() {
@@ -156,10 +181,10 @@
             });
         });
     </script>
-        <script>
-            enableEditButtons(
-                '.btnEdit',
-                "input[type='text']",
-            );
-        </script>
+    {{-- <script>
+        enableEditButtons(
+            '.btnEdit',
+            "input[type='text']",
+        );
+    </script> --}}
 @endsection

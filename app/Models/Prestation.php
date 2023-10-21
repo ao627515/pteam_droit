@@ -9,5 +9,5 @@ class Prestation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nom'];
+    protected $fillable = ['nom', 'description'];
 }

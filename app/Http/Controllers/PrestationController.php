@@ -57,15 +57,16 @@ class PrestationController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         /** @var $user App\Model\User */
 
         $user = auth()->user();
 
         if ($user->role == "administrateur") {
             $data = $request->validate([
-                'nom' => ['required', 'string', 'max:245', 'unique:prestations,nom']
+                'nom' => ['required', 'string', 'max:245', 'unique:prestations,nom'],
+                'description' => ['required', 'string', 'max:245']
             ]);
-
             Prestation::create($data);
         } else {
             $data = $request->validate([
@@ -99,17 +100,20 @@ class PrestationController extends Controller
     public function update(Request $request, Prestation $prestation)
     {
         // dump($prestation->id);
-        $key = "prestations_{$prestation->id}_nom";
-        // dump($key);
+        $keyName = "prestations_{$prestation->id}_nom";
+        $keyDescription = "prestations_{$prestation->id}_description";
+        // dump($keyName);
 
         // dd($request->all());
         // Rule::unique(prestation::class, 'nom')->ignore($prestation->id)
         $request->validate([
-            $key => ['required', 'string', 'max:245', Rule::unique(Prestation::class, 'nom')->ignore($prestation->id)],
+            $keyName => ['required', 'string', 'max:245', Rule::unique(Prestation::class, 'nom')->ignore($prestation->id)],
+            $keyDescription => ['required', 'string', 'max:245']
         ]);
 
         $prestation->update([
-            'nom' => $request->input($key),
+            'nom' => $request->input($keyName),
+            'description' => $request->input($keyDescription),
         ]);
 
         return to_route('prestation.index')->with('success', 'Modification réussie !');

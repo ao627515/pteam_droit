@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Organisation;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,7 +27,7 @@ class TicketFactory extends Factory
                 return User::where('role', 'utilisateur')->inRandomOrder()->first()->id; // Crée un utilisateur et utilise son ID
             },
             'target_user_id' => function () {
-                return User::where('role', 'partenaire')->inRandomOrder()->first()->id; // Crée un utilisateur et utilise son ID
+                return Organisation::inRandomOrder()->first()->id; // Crée un utilisateur et utilise son ID
             },
             'created_at' => now(),
             'updated_at' => now(),

@@ -11,7 +11,11 @@ class Organisation extends Model
 
     protected $guarded = [];
 
-    public function domaine (){
+    public function domaine(){
         return $this->belongsTo(Domaine::class, 'domaine_id');
+    }
+
+    public function owner(){
+        return $this->belongsTo(Domaine::class, 'user_id');
     }
 }

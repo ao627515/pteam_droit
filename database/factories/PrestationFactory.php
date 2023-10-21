@@ -17,6 +17,7 @@ class PrestationFactory extends Factory
     public function definition(): array
     {
         return [
+            'description' => fake()->text(),
             'created_at' => now(),
             'updated_at' => now(),
         ];

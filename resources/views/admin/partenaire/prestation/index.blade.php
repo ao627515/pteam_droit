@@ -64,15 +64,19 @@
             <table class="table table-striped responsive">
                 <thead>
                     <th>Nom</th>
+                    <th>Description</th>
                     <th>Actions</th>
                 </thead>
                 <tbody>
                     @foreach ($prestations as $prestation)
                         <tr>
-                            <td>
+                            <td class="w-25">
                                 {{ $prestation->nom }}
                             </td>
-                            <td>
+                            <td class="w-50">
+                                <p class="lead">{{ $prestation->description }}</p>
+                            </td>
+                            <td class="25">
                                 <ul class="nav nav-fill">
                                     <li class="nav-item">
                                         <form action="{{ route('prestation.detach', $prestation) }}" method="post"

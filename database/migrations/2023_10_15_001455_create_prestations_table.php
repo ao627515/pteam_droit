@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('prestations', function (Blueprint $table) {
             $table->id();
             $table->string('nom', 245);
+            $table->string('description');
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
