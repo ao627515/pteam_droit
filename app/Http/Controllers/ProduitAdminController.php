@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\MonitoringStatusNotification;
+use App\Notifications\ProduitStatusNotification;
 
 class ProduitAdminController extends Controller
 {
@@ -221,7 +222,7 @@ class ProduitAdminController extends Controller
             'status' => 2
         ]);
 
-        Notification::send($produit->author, new MonitoringStatusNotification($produit, 'approved'));
+        Notification::send($produit->author, new ProduitStatusNotification($produit, 'approved'));
 
 
         return back();
@@ -243,7 +244,7 @@ class ProduitAdminController extends Controller
             'status' => 3,
         ]);
 
-        Notification::send($produit->author, new MonitoringStatusNotification($produit, 'declined', $data['motif']));
+        Notification::send($produit->author, new ProduitStatusNotification($produit, 'declined', $data['motif']));
 
         return back();
     }

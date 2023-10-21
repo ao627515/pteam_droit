@@ -96,7 +96,7 @@
                         class="form-action dropdown-item" title="Supprimer">
                         @csrf
                         @method('delete')
-                        <button data-target="#modal-destroy" data-toggle="modal" class="btn btn-danger w-100">
+                        <button type="button" data-target="#modal-destroy" data-toggle="modal" class="btn btn-danger w-100">
                             <i class="nav-icon fa-solid fa-trash action-btn"></i>
                             Supprimer
                         </button>
