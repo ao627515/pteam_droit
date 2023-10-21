@@ -31,30 +31,30 @@
                 <input type="search" name="search" id="search" placeholder="Nom de l'article" class="form-control"
                     value="{{ old('search', request()->search) }}">
             </div>
-            @if (auth()->user()->role === 'administrateur')
-                <div class="card-header px-5">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
-                            @if (!request()->filter or request()->filter === 'authorize') checked @endif>
-                        <label class="form-check-label" for="authorize">En attente</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
-                            @if (request()->filter === 'approuved') checked @endif>
-                        <label class="form-check-label" for="approuved">Approuvé</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"
-                            @if (request()->filter === 'declined') checked @endif>
-                        <label class="form-check-label" for="declined">Décliné</label>
-                    </div>
+            <div class="card-header px-5">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
+                        @if (!request()->filter or request()->filter === 'authorize') checked @endif>
+                    <label class="form-check-label" for="authorize">En attente</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
+                        @if (request()->filter === 'approuved') checked @endif>
+                    <label class="form-check-label" for="approuved">Approuvé</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"
+                        @if (request()->filter === 'declined') checked @endif>
+                    <label class="form-check-label" for="declined">Décliné</label>
+                </div>
+                @if (auth()->user()->isAdmin())
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
                             @if (request()->filter === 'delete') checked @endif>
                         <label class="form-check-label" for="delete">Supprimé</label>
                     </div>
-                </div>
-            @endif
+                @endif
+            </div>
         </form>
 
         <div class="card-body">
@@ -75,7 +75,7 @@
             <div class="modal-dialog">
                 <div class="modal-content bg-danger">
                     <div class="modal-header">
-                        <h4 class="modal-title">Success Modal</h4>
+                        <h4 class="modal-title">Confirmation</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -95,9 +95,9 @@
 
         <div class="modal fade" id="modal-approuved">
             <div class="modal-dialog">
-                <div class="modal-content bg-success">
+                <div class="modal-content bg-default">
                     <div class="modal-header">
-                        <h4 class="modal-title">Success Modal</h4>
+                        <h4 class="modal-title">Confirmation</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -107,7 +107,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-outline-light" id="confirmApprouvation">Oui</button>
+                        <button type="button" class="btn btn-outline-primary" id="confirmApprouvation">Oui</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -135,8 +135,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
-                        <button type="button"  class="btn btn-outline-light"
-                            id="confirmRefus">Oui</button>
+                        <button type="button" class="btn btn-outline-light" id="confirmRefus">Oui</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->

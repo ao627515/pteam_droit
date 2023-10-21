@@ -20,6 +20,7 @@
                 <form action="{{ route('articleAdmin.store') }}" method="post" enctype="multipart/form-data"
                     id="formCreate">
                     @csrf
+                    <input type="hidden" name="status">
                     <div class="row row-cols-1">
                         <div class="col mb-3">
                             <div class="form-group">
@@ -103,7 +104,7 @@
             <div class="modal-dialog">
                 <div class="modal-content bg-default">
                     <div class="modal-header">
-                        <h4 class="modal-title">Success Modal</h4>
+                        <h4 class="modal-title">Confimation</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -113,7 +114,8 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-outline-primary" id="confirmCreate">Enregistré</button>
+                        <button type="button" class="btn btn-outline-primary" id="confirmDraft">Créer un brouillons</button>
+                        <button type="button" class="btn btn-outline-primary" id="confirmPublish">Créer et Publier</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -152,8 +154,14 @@
                 ]
             });
 
-            $('#confirmCreate').on('click', function() {
-                // Soumettre le formulaire
+            $('#confirmDraft').on('click', function() {
+                $('input[name="status"]').val(5)
+
+                $('form').submit();
+            });
+
+            $('#confirmPublish').on('click', function() {
+                $('input[name="status"]').val(1)
                 $('form').submit();
             });
 

@@ -97,3 +97,5 @@ Route::delete('prestation/{prestation}/detach', [PrestationController::class, 'd
 
 Route::get('notification', [NotificationController::class, 'index'])->name('notifications');
 Route::post('domaine/change', [DomaineController::class, 'change'])->name('domaine.change');
+
+Route::post('article/{article}/publish', [ArticleAdminController::class, 'publish'])->name('articleAdmin.publish');

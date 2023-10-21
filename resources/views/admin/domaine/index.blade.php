@@ -131,7 +131,7 @@
                                 </ul>
                             </td>
                         </tr>
-                        @if (auth()->user()->role === 'administrateur')
+                        @if (auth()->user()->isAdmin())
                             <tr class="formUpdate"
                                 style="display: @if (
                                     $errors->has("icon.$domaine->id") or

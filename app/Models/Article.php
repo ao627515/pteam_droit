@@ -104,15 +104,100 @@ class Article extends Model
         return $carbone->format('j M Y à H\h i');
     }
 
-    /**
-     * Route notifications for the mail channel.
-     *
-     * @return  array<string, string>|string
-     */
-    public function routeNotificationForMail(Notification $notification): array|string
+    public static function date($date)
     {
-        // Return email address only...
-        return $this->author->email;
 
+        $carbone = new Carbon($date);
+
+        return $carbone->format('j M Y');
+    }
+
+    public static function dateTime($datetime)
+    {
+
+        $carbone = new Carbon($datetime);
+
+        return $carbone->format('j M Y à H\h i');
+    }
+
+
+    private function adminStatus()
+    {
+        // Si ce n'est pas approuvé mais décliné
+        switch ($this->status) {
+            case 1:
+                return 'Demande de publication';
+                break;
+            case 2:
+                return 'Article publier';
+                break;
+            case 3:
+                return 'Article decliné';
+                break;
+            case 4:
+                return 'Demande de suppression';
+                break;
+        }
+    }
+
+    private function partenaireStatus()
+    {
+        switch ($this->status) {
+            case 1:
+                return 'En attente';
+                break;
+            case 2:
+                return 'Article publier';
+                break;
+            case 3:
+                return 'Article decliné';
+                break;
+            case 4:
+                return 'En attente';
+                break;
+            case 5:
+                return 'Brouillons';
+                break;
+        }
+    }
+
+    public function getStatus()
+    {
+        if (auth()->user()->role == 'administrateur') {
+            return $this->adminStatus();
+        } else {
+            return $this->partenaireStatus();
+        }
+    }
+
+    public function isStandby()
+    {
+        return $this->status === 1;
+    }
+
+    public function isDraft()
+    {
+        return $this->status === 5;
+    }
+
+    public function isApprove()
+    {
+        return $this->status === 2;
+    }
+
+    public function getActionDate()
+    {
+        switch ($this->status) {
+            case 1:
+            case 5:
+                return 'Créer le : ' . Article::date($this->created_at);
+                break;
+            case 2:
+                return 'Publié le : ' . Article::date($this->created_at);
+                break;
+            case 3:
+                return 'Décliné le : ' . Article::date($this->created_at);
+                break;
+        }
     }
 }

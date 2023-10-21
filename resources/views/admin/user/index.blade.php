@@ -20,7 +20,7 @@
                     placeholder="Recherche 'nom' 'prenom' 'télephone' 'email' " class="form-control"
                     value="{{ old('search', request()->search) }}">
             </div>
-            @if (auth()->user()->role === 'administrateur')
+            @if (auth()->user()->isAdmin())
                 <div class="card-header px-5">
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="filter" id="administrators"

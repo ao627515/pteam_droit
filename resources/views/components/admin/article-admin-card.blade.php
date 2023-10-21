@@ -5,13 +5,16 @@
         <img src="{{ asset('admin/dist/img/user1-128x128.jpg') }}" class="card-img-top" alt="Image">
     @endif
     <div class="card-body">
-        <h6 class="card-subtitle font-weight-bold" style="font-size: 13.5px">{{ $article->titre }}.
+        <h6 class="card-subtitle font-weight-bold" style="font-size: 13.5px">
+            {{ $article->titre }}.
         </h6>
+        <small>{{ $article->getActionDate() }}</small><br>
+        <small><Span class="badge badge-info">Staut</Span> : {{ $article->getStatus() }}</small>
         <p class="card-text mt-2" style="font-size: 13px">
             {{ $article->description }}
         </p>
     </div>
-    @if (auth()->user()->role === 'administrateur')
+    @if (auth()->user()->isAdmin())
         <ul class="list-group list-group-flush article-author">
             <li class="list-group-item border-top px-3 py-1">
                 <div class="d-flex">
@@ -53,49 +56,73 @@
                 </li>
             @endif
         </ul>
-        @if (!$article->approuvedBy and !$article->declinedBy)
-            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                    <form action="{{ route('articleAdmin.declined', $article) }}" method="post" class="form-action w-50" id="declinedForm">
-                    @csrf
-                    <input type="hidden" name="motif" id="motifHidden">
-                    <button type="button" class="btn btn-danger w-100 action-btn" data-toggle="modal"
-                        data-target="#modal-declined">
-                        Decliné
-                    </button>
-                </form>
-                <form action="{{ route('articleAdmin.approuved', $article) }}" method="post" class="form-action w-50">
-                    @csrf
-                    <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
-                        data-target="#modal-approuved">
-                        Approuvé
-                    </button>
-                </form>
-            </div>
-        @endif
+
     @endif
-    <div class="card-footer">
-        <ul class="nav nav-fill">
-            <li class="nav-item">
-                <a class="nav-link active" href="{{ route('articleAdmin.edit', $article) }}" title="Modifer">
-                    <i class="nav-icon fa-solid fa-pen"></i>
-                    {{-- Modifer --}}
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('articleAdmin.show', $article) }}" title="Voir">
-                    <i class="nav-icon fa-solid fa-eye"></i>
-                    {{-- Voir --}}
-                </a>
-            </li>
-            <li class="nav-item">
-                <form action="{{ route('articleAdmin.destroy', $article) }}" method="post"
-                    class="form-action nav-link" title="Supprimer">
-                    @csrf
-                    @method('delete')
-                    <i class="nav-icon fa-solid fa-trash action-btn" style="color: red" data-target="#modal-destroy"
-                        data-toggle="modal"></i>
-                </form>
-            </li>
-        </ul>
+
+    <div class="card-footer d-flex justify-content-center">
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-info text-light fw-bold">Actions</button>
+            <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu" role="menu">
+                @if ($article->isDraft())
+                    <form action="{{ route('articleAdmin.publish', $article) }}" method="post"
+                        class="form-action dropdown-item">
+                        @csrf
+                        <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
+                            data-target="#modal-approuved">
+                            <i class="fas fa-check-circle"></i> Publier
+                        </button>
+                    </form>
+                @endif
+
+                @if (($article->isStandby()) and auth()->user()->isAdmin())
+                    <form action="{{ route('articleAdmin.declined', $article) }}" method="post"
+                        class="form-action dropdown-item" id="declinedForm">
+                        @csrf
+                        <input type="hidden" name="motif" id="motifHidden">
+                        <button type="button" class="btn btn-danger w-100 action-btn" data-toggle="modal"
+                            data-target="#modal-declined">
+                            <i class="fas fa-times-circle"></i> Refuser
+                        </button>
+                    </form>
+
+                    <form action="{{ route('articleAdmin.approuved', $article) }}" method="post"
+                        class="form-action dropdown-item">
+                        @csrf
+                        <button type="button" class="btn btn-primary w-100 action-btn" data-toggle="modal"
+                            data-target="#modal-approuved">
+                            <i class="fas fa-check-circle"></i> Approuver
+                        </button>
+                    </form>
+                @endif
+
+                <ul class="nav nav-fill">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ route('articleAdmin.edit', $article) }}" title="Modifer">
+                            <i class="nav-icon fa-solid fa-pen"></i>
+                            {{-- Modifer --}}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('articleAdmin.show', $article) }}" title="Voir">
+                            <i class="nav-icon fa-solid fa-eye"></i>
+                            {{-- Voir --}}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="{{ route('articleAdmin.destroy', $article) }}" method="post"
+                            class="form-action nav-link" title="Supprimer">
+                            @csrf
+                            @method('delete')
+                            <i class="nav-icon fa-solid fa-trash action-btn" style="color: red"
+                                data-target="#modal-destroy" data-toggle="modal"></i>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>

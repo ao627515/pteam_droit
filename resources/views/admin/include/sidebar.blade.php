@@ -27,7 +27,7 @@
                 data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
            with font-awesome or any other icon font library -->
-                @if (auth()->user()->role === 'administrateur')
+                @if (auth()->user()->isAdmin())
                     <li class="nav-item">
                         <a href="{{ route('dashboard') }}"
                             class="nav-link @if (Str::startsWith(request()->route()->getName(),
@@ -75,6 +75,12 @@
 
                         <p>
                             Articles
+                            @if (Request::routeIs('articleAdmin.edit'))
+                                <i class=" fa-solid fa-pen"></i>
+                            @endif
+                            @if (Request::routeIs('articleAdmin.show'))
+                                <i class=" fa-solid fa-eye"></i>
+                            @endif
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -103,6 +109,12 @@
                         <i class="nav-icon fa-solid fa-store"></i>
                         <p>
                             Produits
+                            @if (Request::routeIs('produitAdmin.edit'))
+                                <i class=" fa-solid fa-pen"></i>
+                            @endif
+                            @if (Request::routeIs('produitAdmin.show'))
+                                <i class=" fa-solid fa-eye"></i>
+                            @endif
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -123,7 +135,7 @@
                         </li>
                     </ul>
                 </li>
-                @if (auth()->user()->role === 'administrateur')
+                @if (auth()->user()->isAdmin())
                     {{-- <li class="nav-header">UTILISATEURS</li> --}}
                     <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
                             'user.')) menu-open @endif">
@@ -132,6 +144,12 @@
                             <i class="nav-icon fa-solid fa-users"></i>
                             <p>
                                 Uitilisateurs
+                                @if (Request::routeIs('user.edit'))
+                                    <i class=" fa-solid fa-pen"></i>
+                                @endif
+                                @if (Request::routeIs('user.show'))
+                                    <i class=" fa-solid fa-eye"></i>
+                                @endif
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -195,13 +213,13 @@
                             </a>
                         </li>
                         @if (auth()->user()->role == 'administrateur')
-                        <li class="nav-item">
-                            <a href="{{ route('typeCompte.index') }}"
-                                class="nav-link  @if (Request::routeIs('typeCompte.index')) active @endif">
-                                <i class="nav-icon fas fa-id-card"></i> <!-- FontAwesome 5 id-card icon -->
-                                <p>Type de comptes</p>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a href="{{ route('typeCompte.index') }}"
+                                    class="nav-link  @if (Request::routeIs('typeCompte.index')) active @endif">
+                                    <i class="nav-icon fas fa-id-card"></i> <!-- FontAwesome 5 id-card icon -->
+                                    <p>Type de comptes</p>
+                                </a>
+                            </li>
                         @endif
                     </ul>
                 </li>
@@ -211,7 +229,8 @@
                                 'notifications')) active @endif ">
                         <i class="nav-icon fas fa-bell"></i>
                         <p>
-                            Notifications  <span class="badge badge-light">{{ auth()->user()->unreadNotifications->count() }}</span>
+                            Notifications <span
+                                class="badge badge-light">{{ auth()->user()->unreadNotifications->count() }}</span>
                             <span class="sr-only">unread messages</span>
                         </p>
                     </a>

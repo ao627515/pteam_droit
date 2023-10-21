@@ -31,7 +31,7 @@
                 <input type="search" name="search" id="search" placeholder="Nom du produit" class="form-control"
                     value="{{ old('search', request()->search) }}">
             </div>
-            @if (auth()->user()->role === 'administrateur')
+            @if (auth()->user()->isAdmin())
                 <div class="card-header px-5">
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
@@ -74,7 +74,7 @@
                                     {{ $produit->short_desc }}
                                 </p>
                             </div>
-                            @if (auth()->user()->role === 'administrateur')
+                            @if (auth()->user()->isAdmin())
                                 <ul class="list-group list-group-flush produit-author">
                                     <li class="list-group-item border-top px-3 py-1">
                                         <div class="d-flex">
@@ -118,7 +118,7 @@
                                     @endif
                                 </ul>
                             @endif
-                            @if (auth()->user()->role === 'administrateur')
+                            @if (auth()->user()->isAdmin())
                                 @if (!$produit->approuvedBy and !$produit->declinedBy)
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                                         <form action="{{ route('produitAdmin.declined', $produit) }}" method="post"

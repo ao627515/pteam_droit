@@ -46,8 +46,7 @@ class ArticleAdminController extends Controller
                     ->when($isPartenaire, function ($query) use ($user) {
                         return $query->where('author_id', $user->id);
                     })
-                    ->whereNotNull('approuved_at')
-                    ->whereNotNull('approuved_by')
+                    ->where('status', 2)
                     ->when($search, function ($query) use ($search) {
                         return $query->where('titre', 'LIKE', "%$search%");
                     })
@@ -59,8 +58,7 @@ class ArticleAdminController extends Controller
                     ->when($isPartenaire, function ($query) use ($user) {
                         return $query->where('author_id', $user->id);
                     })
-                    ->whereNotNull('declined_at')
-                    ->whereNotNull('declined_by')
+                    ->where('status', 3)
                     ->when($search, function ($query) use ($search) {
                         return $query->where('titre', 'LIKE', "%$search%");
                     })
@@ -86,11 +84,7 @@ class ArticleAdminController extends Controller
                     ->when($search, function ($query) use ($search) {
                         return $query->where('titre', 'LIKE', "%$search%");
                     })
-                    ->where('author_id', 2)
-                    ->where('approuved_at')
-                    ->where('approuved_by')
-                    ->where('declined_at')
-                    ->where('declined_by')
+                    ->where('status', 1)
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
@@ -121,16 +115,20 @@ class ArticleAdminController extends Controller
             'image' => ['required', 'image',],
             'description' => ['required', 'string', 'max:245'],
             'contenu' => ['required', 'string'],
-            'categorie' => ['required', 'array']
+            'categorie' => ['required', 'array'],
+            'status' => ['required', 'integer',]
         ]);
 
 
         $categories = $dataValidated['categorie'];
 
+        $status = $dataValidated['status'] == 1 ? 1 : 5;
+
         // Création de l'article
         $article = Article::create(array_merge($dataValidated, [
             'slug' => Str::slug($dataValidated['titre']),
-            'author_id' => auth()->user()->id
+            'author_id' => auth()->user()->id,
+            'status' => $status
         ]));
 
         if (!$article) {
@@ -164,6 +162,8 @@ class ArticleAdminController extends Controller
         $article->save();
 
         $article->categories()->attach($categories);
+
+
 
         return redirect()->route('articleAdmin.index')->with('success', 'Article publié avec succès.');
     }
@@ -290,18 +290,19 @@ class ArticleAdminController extends Controller
 
         $approuveBy = auth()->user()->id;
 
+        // article en publié
         $article->update([
             'approuved_at' => now(),
-            'approuved_by' => $approuveBy
+            'approuved_by' => $approuveBy,
+            'status' => 2
         ]);
 
-        Notification::send($article->author, new MonitoringStatusNotification($article,'approved'));
+        Notification::send($article->author, new MonitoringStatusNotification($article, 'approved'));
         return back();
     }
 
     public function declined(Request $request, Article $article)
     {
-
 
         $data = $request->validate([
             'motif' => ['required', 'string']
@@ -309,13 +310,41 @@ class ArticleAdminController extends Controller
 
         $declinedBy = auth()->user()->id;
 
+        // article en decliné
         $article->update([
             'declined_at' => now(),
-            'declined_by' => $declinedBy
+            'declined_by' => $declinedBy,
+            'status' => 3,
         ]);
 
-        Notification::send($article->author, new MonitoringStatusNotification($article,'declined', $data['motif']));
+        Notification::send($article->author, new MonitoringStatusNotification($article, 'declined', $data['motif']));
 
         return back();
+    }
+
+    public function relaunch(Article $article)
+    {
+        // article en attente
+        $article->update([
+            'status' => 1,
+            'declined_at' => null,
+            'declined_by' => null,
+        ]);
+
+        return to_route('articleAdmin.index')->with('Article relancé !');
+    }
+
+    // private function drafts (Article $article) {
+    //     $article;
+    // }
+
+    private function publish(Article $article)
+    {
+        // article en attente
+        $article->update([
+            'status' => 1
+        ]);
+
+        return to_route('articleAdmin.index')->with('Article publié !, En attente de validation par les administrateurs');
     }
 }
