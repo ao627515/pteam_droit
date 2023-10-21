@@ -99,3 +99,4 @@ Route::get('notification', [NotificationController::class, 'index'])->name('noti
 Route::post('domaine/change', [DomaineController::class, 'change'])->name('domaine.change');
 
 Route::post('article/{article}/publish', [ArticleAdminController::class, 'publish'])->name('articleAdmin.publish');
+Route::post('produit/{produit}/publish', [ProduitAdminController::class, 'publish'])->name('produitAdmin.publish');

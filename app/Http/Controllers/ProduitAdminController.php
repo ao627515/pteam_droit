@@ -29,8 +29,9 @@ class ProduitAdminController extends Controller
         $filter = $request['filter'];
         $search = $request['search'];
 
-        $isPartenaire = auth()->user()->role === 'partenaire' ? true : false;
+        /** @var $user App\Model\User */
         $user = auth()->user();
+        $isPartenaire = $user->isPartenaire() ? true : false;
 
         switch ($filter) {
             case 'approuved':
@@ -38,8 +39,7 @@ class ProduitAdminController extends Controller
                     ->when($isPartenaire, function ($query) use ($user) {
                         return $query->where('author_id', $user->id);
                     })
-                    ->whereNotNull('approuved_at')
-                    ->whereNotNull('approuved_by')
+                    ->where('status', 2)
                     ->when($search, function ($query) use ($search) {
                         return $query->where('nom', 'LIKE', "%$search%");
                     })
@@ -51,23 +51,33 @@ class ProduitAdminController extends Controller
                     ->when($isPartenaire, function ($query) use ($user) {
                         return $query->where('author_id', $user->id);
                     })
-                    ->whereNotNull('declined_at')
-                    ->whereNotNull('declined_by')
+                    ->where('status', 3)
                     ->when($search, function ($query) use ($search) {
                         return $query->where('nom', 'LIKE', "%$search%");
                     })
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
+                case 'draft':
+                    $produits = Produit::where('active', true)
+                        ->when($isPartenaire, function ($query) use ($user) {
+                            return $query->where('author_id', $user->id);
+                        })
+                        ->where('status', 5)
+                        ->when($search, function ($query) use ($search) {
+                            return $query->where('nom', 'LIKE', "%$search%");
+                        })
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(25);
+                    break;
             case 'delete':
-                $produits = Produit::when($isPartenaire, function ($query) use ($user) {
-                    return $query->where('author_id', $user->id);
-                })
+                $produits = Produit::where('active', false)
+                    ->when($isPartenaire, function ($query) use ($user) {
+                        return $query->where('author_id', $user->id);
+                    })
                     ->when($search, function ($query) use ($search) {
                         return $query->where('nom', 'LIKE', "%$search%");
                     })
-
-                    ->where('active', false)
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
@@ -81,10 +91,7 @@ class ProduitAdminController extends Controller
                     })
                     // A supprimer
                     ->where('author_id', 2)
-                    ->where('approuved_at')
-                    ->where('approuved_by')
-                    ->where('declined_at')
-                    ->where('declined_by')
+                    ->where('status', 1)
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
@@ -112,12 +119,14 @@ class ProduitAdminController extends Controller
             'description' => ['required', 'string'],
             'stock' => ['required', 'integer'],
             'image' => ['nullable', 'image'],
+            'status' => ['required', 'integer',]
         ]);
 
-
+        $status = $data['status'] == 1 ? 1 : 5;
 
         $produit = Produit::create(array_merge($data, [
-            'author_id' => auth()->user()->id
+            'author_id' => auth()->user()->id,
+            'status' => $status
         ]));
 
         if ($request['image']) {
@@ -208,16 +217,17 @@ class ProduitAdminController extends Controller
 
         $produit->update([
             'approuved_at' => now(),
-            'approuved_by' => $approuveBy
+            'approuved_by' => $approuveBy,
+            'status' => 2
         ]);
 
-        Notification::send($produit->author, new MonitoringStatusNotification($produit,'approved'));
+        Notification::send($produit->author, new MonitoringStatusNotification($produit, 'approved'));
 
 
         return back();
     }
 
-    public function declined(Request $request,Produit $produit)
+    public function declined(Request $request, Produit $produit)
     {
 
 
@@ -229,11 +239,38 @@ class ProduitAdminController extends Controller
 
         $produit->update([
             'declined_at' => now(),
-            'declined_by' => $declinedBy
+            'declined_by' => $declinedBy,
+            'status' => 3,
         ]);
 
-        Notification::send($produit->author, new MonitoringStatusNotification($produit,'declined', $data['motif']));
+        Notification::send($produit->author, new MonitoringStatusNotification($produit, 'declined', $data['motif']));
 
         return back();
+    }
+
+    public function relaunch(Produit $produit)
+    {
+        // produit en attente
+        $produit->update([
+            'status' => 1,
+            'declined_at' => null,
+            'declined_by' => null,
+        ]);
+
+        return to_route('articleAdmin.index')->with('Produit relancé !');
+    }
+
+    // private function drafts (Produit $produit) {
+    //     $produit;
+    // }
+
+    private function publish(Produit $produit)
+    {
+        // produit en attente
+        $produit->update([
+            'status' => 1
+        ]);
+
+        return to_route('articleAdmin.index')->with('Produit publié !, En attente de validation par les administrateurs');
     }
 }

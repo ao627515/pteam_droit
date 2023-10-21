@@ -3,13 +3,11 @@
 namespace App\Models;
 
 use App\Models\User;
-use App\Models\Article;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -55,7 +53,7 @@ class Produit extends Model
 
     public static function produitsAprouved(int $paginate = null, int $limit = null): Collection|LengthAwarePaginator|null
     {
-        return Article::where('active', true)
+        return Produit::where('active', true)
             ->whereNotNull('approuved_at')
             ->whereNotNull('approuved_by')
             ->when($limit, function ($query) use ($limit){
@@ -70,12 +68,12 @@ class Produit extends Model
     }
 
     public static function produitsDelete(): Collection|null {
-        return Article::where('active', false)
+        return Produit::where('active', false)
                         ->get();
     }
 
     public static function produitsNonTraite(): Collection|null {
-        return Article::where('approuved_at', null, 'and', 'approuved_by', null)
+        return Produit::where('approuved_at', null, 'and', 'approuved_by', null)
                         ->get();
     }
 
@@ -93,15 +91,100 @@ class Produit extends Model
         return $carbone->format('j M Y à H\h i');
     }
 
-        /**
-     * Route notifications for the mail channel.
-     *
-     * @return  array<string, string>|string
-     */
-    public function routeNotificationForMail(Notification $notification): array|string
+    public static function date($date)
     {
-        // Return email address only...
-        return $this->author->email;
 
+        $carbone = new Carbon($date);
+
+        return $carbone->format('j M Y');
+    }
+
+    public static function dateTime($datetime)
+    {
+
+        $carbone = new Carbon($datetime);
+
+        return $carbone->format('j M Y à H\h i');
+    }
+
+
+    private function adminStatus()
+    {
+        // Si ce n'est pas approuvé mais décliné
+        switch ($this->status) {
+            case 1:
+                return 'Demande de publication';
+                break;
+            case 2:
+                return 'Produit publier';
+                break;
+            case 3:
+                return 'Produit decliné';
+                break;
+            case 4:
+                return 'Demande de suppression';
+                break;
+        }
+    }
+
+    private function partenaireStatus()
+    {
+        switch ($this->status) {
+            case 1:
+                return 'En attente';
+                break;
+            case 2:
+                return 'Produit publier';
+                break;
+            case 3:
+                return 'Produit decliné';
+                break;
+            case 4:
+                return 'En attente';
+                break;
+            case 5:
+                return 'Brouillons';
+                break;
+        }
+    }
+
+    public function getStatus()
+    {
+        if (auth()->user()->role == 'administrateur') {
+            return $this->adminStatus();
+        } else {
+            return $this->partenaireStatus();
+        }
+    }
+
+    public function isStandby()
+    {
+        return $this->status === 1;
+    }
+
+    public function isDraft()
+    {
+        return $this->status === 5;
+    }
+
+    public function isApprove()
+    {
+        return $this->status === 2;
+    }
+
+    public function getActionDate()
+    {
+        switch ($this->status) {
+            case 1:
+            case 5:
+                return 'Créer le : ' . Produit::date($this->created_at);
+                break;
+            case 2:
+                return 'Publié le : ' . Produit::date($this->created_at);
+                break;
+            case 3:
+                return 'Décliné le : ' . Produit::date($this->created_at);
+                break;
+        }
     }
 }

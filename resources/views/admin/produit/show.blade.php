@@ -3,7 +3,7 @@
 @section('titre', 'produit')
 
 @section('content')
-{{ $produit->imgInit() }}
+    {{ $produit->imgInit() }}
     <div class="card">
         <div class="card-body">
             <div class="row">
@@ -12,11 +12,11 @@
                         <div class="card">
                             {{-- <img src="{{ asset('assets/img/produit.jpg') }}" alt="logo" width="50%" class="card-img-top"> --}}
                             <img src="{{ $produit->image }}" class="card-img-top" alt="Image">
-                            <h3 class="card-title text-center mt-3">{{ $produit->nom }}</h3>
                         </div>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6">
+                    <h1 class="text-center">{{ $produit->nom }}</h1> <br>
                     <h3 class="my-3">Description</h3>
                     <p>
                         {{ $produit->description }}
@@ -53,29 +53,179 @@
                             @endif
                         </ul>
                     </div>
-                    @if (!$produit->approuvedBy && auth()->user()->role == 'administrateur')
-                        <div class="btn-group mt-3 w-100" role="group" aria-label="Basic mixed styles example">
-                            <form action="" method="get" class="form-action w-50">
-                                @csrf
-                                <button type="button" class="btn btn-danger w-100 action-btn">Décliné</button>
-                            </form>
-                            <form action="{{ route('produitAdmin.approuved', $produit) }}" method="get"
-                                class="form-action w-50">
-                                @csrf
-                                <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
-                                    data-target="#modal-approuve">
-                                    Approuvé
-                                </button>
-                            </form>
+                    <div class="d-flex justify-content-center mt-5">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-info text-light fw-bold">Actions</button>
+                            <button type="button" class="btn btn-info dropdown-toggle dropdown-icon"
+                                data-toggle="dropdown">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu" role="menu">
+                                @if ($produit->isDraft())
+                                    <form action="{{ route('produitAdmin.publish', $produit) }}" method="post"
+                                        class="form-action dropdown-item">
+                                        @csrf
+                                        <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
+                                            data-target="#modal-approuved">
+                                            <i class="fas fa-check-circle"></i> Publier
+                                        </button>
+                                    </form>
+                                @endif
+
+                                @if (
+                                    $produit->isStandby() and
+                                        auth()->user()->isAdmin())
+                                    <form action="{{ route('produitAdmin.declined', $produit) }}" method="post"
+                                        class="form-action dropdown-item" id="declinedForm">
+                                        @csrf
+                                        <input type="hidden" name="motif" id="motifHidden">
+                                        <button type="button" class="btn btn-danger w-100 action-btn" data-toggle="modal"
+                                            data-target="#modal-declined">
+                                            <i class="fas fa-times-circle"></i> Refuser
+                                        </button>
+                                    </form>
+
+                                    <form action="{{ route('produitAdmin.approuved', $produit) }}" method="post"
+                                        class="form-action dropdown-item">
+                                        @csrf
+                                        <button type="button" class="btn btn-primary w-100 action-btn" data-toggle="modal"
+                                            data-target="#modal-approuved">
+                                            <i class="fas fa-check-circle"></i> Approuver
+                                        </button>
+                                    </form>
+                                @endif
+
+                                <li class="dropdown-item">
+                                    <a class="btn btn-primary w-100" href="{{ route('produitAdmin.edit', $produit) }}"
+                                        title="Modifer">
+                                        <i class="nav-icon fa-solid fa-pen"></i>
+                                        Modifer
+                                    </a>
+                                </li>
+                                <form action="{{ route('produitAdmin.destroy', $produit) }}" method="post"
+                                    class="form-action dropdown-item" title="Supprimer">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="button" data-target="#modal-destroy" data-toggle="modal" class="btn btn-danger w-100">
+                                        <i class="nav-icon fa-solid fa-trash action-btn"></i>
+                                        Supprimer
+                                    </button>
+
+                                </form>
+                            </div>
                         </div>
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>
         <!-- /.card-body -->
     </div>
+    <div class="modal fade" id="modal-destroy">
+        <div class="modal-dialog">
+            <div class="modal-content bg-danger">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmation</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Voullez vous supprimé cette article ?</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-outline-light" id="confirmDestroy">Oui</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="modal-approuved">
+        <div class="modal-dialog">
+            <div class="modal-content bg-default">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmation</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Voullez vous Publier cette article ?</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-outline-primary" id="confirmApprouvation">Oui</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="modal-declined">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-danger">
+                <div class="modal-header">
+                    <h4 class="modal-title">Décliné un article</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="motif">Motif de refus</label>
+                        <textarea id="motifModal" id="motif" rows="15" id="motif" class="form-control">{{ old('motif') }}</textarea>
+                    </div>
+                    @error('motif')
+                        <span class="text-light">Erreur : {{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-outline-light" id="confirmRefus">Oui</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
 @endsection
 
 @section('script')
+    <script>
+        $(function() {
+            $('.action-btn').on('click', function() {
+                var form = $(this).closest('.form-action');
 
+                // $('#confirmDestroy').on('click', function() {
+                //     // Soumettre le formulaire
+                //     form.submit();
+                // });
+
+                $('#confirmApprouvation').on('click', function() {
+                    // Soumettre le formulaire
+                    form.submit();
+                });
+            });
+
+            $('#modal-declined').on('show.bs.modal', function(event) {
+
+                $('#confirmRefus').on('click', function() {
+                    let motif = $('#motifModal').val();
+
+                    $('#motifHidden').val(motif);
+
+                    $('#declinedForm').submit();
+                });
+            });
+
+            @if ($errors->has('motif'))
+                $('#modal-declined').modal('show')
+            @endif
+        });
+    </script>
 @endsection

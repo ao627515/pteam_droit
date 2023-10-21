@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->foreignId('author_id')->constrained('users');
             $table->boolean('active')->default(true);
+            $table->integer('status');
             $table->timestamp('approuved_at')->nullable();
             $table->foreignId('approuved_by')->nullable()->constrained('users');
             $table->timestamp('declined_at')->nullable();

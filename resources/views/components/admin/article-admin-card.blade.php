@@ -60,7 +60,6 @@
     @endif
 
     <div class="card-footer d-flex justify-content-center">
-
         <div class="btn-group">
             <button type="button" class="btn btn-info text-light fw-bold">Actions</button>
             <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown">

@@ -47,6 +47,11 @@
                         @if (request()->filter === 'declined') checked @endif>
                     <label class="form-check-label" for="declined">Décliné</label>
                 </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="draft" value="draft"
+                            @if (request()->filter === 'draft') checked @endif>
+                        <label class="form-check-label" for="draft">Brouillons</label>
+                    </div>
                 @if (auth()->user()->isAdmin())
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
@@ -56,7 +61,6 @@
                 @endif
             </div>
         </form>
-
         <div class="card-body">
             <div class="row row-cols-1 row-cols-sm-2  row-cols-md-2 row-cols-lg-2  row-cols-xl-4 row-cols-xll-6">
                 @foreach ($articles as $article)
@@ -161,8 +165,6 @@
                     form.submit();
                 });
             });
-
-
 
             $('#modal-declined').on('show.bs.modal', function(event) {
 

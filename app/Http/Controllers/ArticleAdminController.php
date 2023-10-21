@@ -38,8 +38,9 @@ class ArticleAdminController extends Controller
 
         $search = $request['search'];
 
-        $isPartenaire = auth()->user()->role === 'partenaire' ? true : false;
+        /** @var $user App\Model\User */
         $user = auth()->user();
+        $isPartenaire = $user->isPartenaire() ? true : false;
 
         switch ($filter) {
             case 'approuved':
@@ -60,6 +61,18 @@ class ArticleAdminController extends Controller
                         return $query->where('author_id', $user->id);
                     })
                     ->where('status', 3)
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('titre', 'LIKE', "%$search%");
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(25);
+                break;
+            case 'draft':
+                $articles = Article::where('active', true)
+                    ->when($isPartenaire, function ($query) use ($user) {
+                        return $query->where('author_id', $user->id);
+                    })
+                    ->where('status', 5)
                     ->when($search, function ($query) use ($search) {
                         return $query->where('titre', 'LIKE', "%$search%");
                     })

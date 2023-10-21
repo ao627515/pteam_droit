@@ -87,8 +87,7 @@
                     @endif
 
                     <li class="dropdown-item">
-                        <a class="btn btn-primary w-100" href="{{ route('articleAdmin.edit', $article) }}"
-                            title="Modifer">
+                        <a class="btn btn-primary w-100" href="{{ route('articleAdmin.edit', $article) }}" title="Modifer">
                             <i class="nav-icon fa-solid fa-pen"></i>
                             Modifer
                         </a>
@@ -195,7 +194,6 @@
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
-    </div>
     </div>
 @endsection
 

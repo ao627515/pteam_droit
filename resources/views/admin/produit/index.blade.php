@@ -28,33 +28,38 @@
         <form action="" method="get" id="search" class="search filter-form">
             @csrf
             <div class="card-header">
-                <input type="search" name="search" id="search" placeholder="Nom du produit" class="form-control"
+                <input type="search" name="search" id="search" placeholder="Nom de l'article" class="form-control"
                     value="{{ old('search', request()->search) }}">
             </div>
-            @if (auth()->user()->isAdmin())
-                <div class="card-header px-5">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
-                            @if (!request()->filter or request()->filter === 'authorize') checked @endif>
-                        <label class="form-check-label" for="authorize">En attente</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
-                            @if (request()->filter === 'approuved') checked @endif>
-                        <label class="form-check-label" for="approuved">Approuvé</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"
-                            @if (request()->filter === 'declined') checked @endif>
-                        <label class="form-check-label" for="declined">Décliné</label>
-                    </div>
+            <div class="card-header px-5">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filter" id="authorize" value="authorize"
+                        @if (!request()->filter or request()->filter === 'authorize') checked @endif>
+                    <label class="form-check-label" for="authorize">En attente</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filter" id="approuved" value="approuved"
+                        @if (request()->filter === 'approuved') checked @endif>
+                    <label class="form-check-label" for="approuved">Approuvé</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filter" id="declined" value="declined"
+                        @if (request()->filter === 'declined') checked @endif>
+                    <label class="form-check-label" for="declined">Décliné</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filter" id="draft" value="draft"
+                        @if (request()->filter === 'draft') checked @endif>
+                    <label class="form-check-label" for="draft">Brouillons</label>
+                </div>
+                @if (auth()->user()->isAdmin())
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
                             @if (request()->filter === 'delete') checked @endif>
                         <label class="form-check-label" for="delete">Supprimé</label>
                     </div>
-                </div>
-            @endif
+                @endif
+            </div>
         </form>
         <div class="card-body">
             <div class="row row-cols-1 row-cols-sm-2  row-cols-md-2 row-cols-lg-2  row-cols-xl-4 row-cols-xll-6">
@@ -67,7 +72,9 @@
                                 <h6 class="card-subtitle font-weight-bold mb-2" style="font-size: 13.5px">
                                     {{ $produit->nom }}
                                 </h6>
-                                <h6 class="card-subtitle" style="font-size: 13.5px">
+                                <small><Span class="badge badge-info">Staut</Span> : {{ $produit->getStatus() }}</small><br>
+                                <small>{{ $produit->getActionDate() }}</small>
+                                <h6 class="card-subtitle mt-2" style="font-size: 13.5px">
                                     stock : {{ $produit->stock }}
                                 </h6>
                                 <p class="card-text mt-1" style="font-size: 13px">
@@ -118,59 +125,75 @@
                                     @endif
                                 </ul>
                             @endif
-                            @if (auth()->user()->isAdmin())
-                                @if (!$produit->approuvedBy and !$produit->declinedBy)
-                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                        <form action="{{ route('produitAdmin.declined', $produit) }}" method="post"
-                                            class="form-action w-50" id="declinedForm">
-                                            @csrf
-                                            <input type="hidden" name="motif" id="motifHidden">
-                                            <button type="button" class="btn btn-danger w-100 action-btn"
-                                                data-toggle="modal" data-target="#modal-declined">
-                                                Decliné
-                                            </button>
-                                        </form>
-                                        <form action="{{ route('produitAdmin.approuved', $produit) }}" method="post"
-                                            class="form-action w-50">
-                                            @csrf
-                                            <button type="button" class="btn btn-success w-100 action-btn"
-                                                data-toggle="modal" data-target="#modal-approuved">
-                                                Approuvé
-                                            </button>
-                                        </form>
+                            <div class="card-footer d-flex justify-content-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-info text-light fw-bold">Actions</button>
+                                    <button type="button" class="btn btn-info dropdown-toggle dropdown-icon"
+                                        data-toggle="dropdown">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu" role="menu">
+                                        @if ($produit->isDraft())
+                                            <form action="{{ route('produitAdmin.publish', $produit) }}" method="post"
+                                                class="form-action dropdown-item">
+                                                @csrf
+                                                <button type="button" class="btn btn-success w-100 action-btn"
+                                                    data-toggle="modal" data-target="#modal-approuved">
+                                                    <i class="fas fa-check-circle"></i> Publier
+                                                </button>
+                                            </form>
+                                        @endif
+
+                                        @if (
+                                            $produit->isStandby() and
+                                                auth()->user()->isAdmin())
+                                            <form action="{{ route('produitAdmin.declined', $produit) }}" method="post"
+                                                class="form-action dropdown-item" id="declinedForm">
+                                                @csrf
+                                                <input type="hidden" name="motif" id="motifHidden">
+                                                <button type="button" class="btn btn-danger w-100 action-btn"
+                                                    data-toggle="modal" data-target="#modal-declined">
+                                                    <i class="fas fa-times-circle"></i> Refuser
+                                                </button>
+                                            </form>
+
+                                            <form action="{{ route('produitAdmin.approuved', $produit) }}" method="post"
+                                                class="form-action dropdown-item">
+                                                @csrf
+                                                <button type="button" class="btn btn-primary w-100 action-btn"
+                                                    data-toggle="modal" data-target="#modal-approuved">
+                                                    <i class="fas fa-check-circle"></i> Approuver
+                                                </button>
+                                            </form>
+                                        @endif
+
+                                        <ul class="nav nav-fill">
+                                            <li class="nav-item">
+                                                <a class="nav-link active"
+                                                    href="{{ route('produitAdmin.edit', $produit) }}" title="Modifer">
+                                                    <i class="nav-icon fa-solid fa-pen"></i>
+                                                    {{-- Modifer --}}
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="{{ route('produitAdmin.show', $produit) }}"
+                                                    title="Voir">
+                                                    <i class="nav-icon fa-solid fa-eye"></i>
+                                                    {{-- Voir --}}
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <form action="{{ route('produitAdmin.destroy', $produit) }}"
+                                                    method="post" class="form-action nav-link" title="Supprimer">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <i class="nav-icon fa-solid fa-trash action-btn" style="color: red"
+                                                        data-target="#modal-destroy" data-toggle="modal"></i>
+                                                </form>
+                                            </li>
+                                        </ul>
                                     </div>
-                                @endif
-                            @else
-                                @if (!$produit->approuvedBy)
-                                    <p class="lead text-center badge badge-danger p-2">En attente de validation</p>
-                                @endif
-                            @endif
-                            <div class="card-footer">
-                                <ul class="nav nav-fill">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" href="{{ route('produitAdmin.edit', $produit) }}"
-                                            title="Modifer">
-                                            <i class="nav-icon fa-solid fa-pen"></i>
-                                            {{-- Modifer --}}
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('produitAdmin.show', $produit) }}"
-                                            title="Voir">
-                                            <i class="nav-icon fa-solid fa-eye"></i>
-                                            {{-- Voir --}}
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <form action="{{ route('produitAdmin.destroy', $produit) }}" method="post"
-                                            class="form-action nav-link" title="Supprimer">
-                                            @csrf
-                                            @method('delete')
-                                            <i class="nav-icon fa-solid fa-trash action-btn" style="color: red"
-                                                data-target="#modal-destroy" data-toggle="modal"></i>
-                                        </form>
-                                    </li>
-                                </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -185,7 +208,7 @@
             <div class="modal-dialog">
                 <div class="modal-content bg-danger">
                     <div class="modal-header">
-                        <h4 class="modal-title">Success Modal</h4>
+                        <h4 class="modal-title">Confirmation</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -205,9 +228,9 @@
 
         <div class="modal fade" id="modal-approuved">
             <div class="modal-dialog">
-                <div class="modal-content bg-success">
+                <div class="modal-content bg-default">
                     <div class="modal-header">
-                        <h4 class="modal-title">Success Modal</h4>
+                        <h4 class="modal-title">Confirmation</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -217,7 +240,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-outline-light" id="confirmApprouvation">Oui</button>
+                        <button type="button" class="btn btn-outline-primary" id="confirmApprouvation">Oui</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -282,6 +305,10 @@
                 });
             });
 
+            @if ($errors->has('motif'))
+                $('#modal-declined').modal('show')
+            @endif
+
         });
     </script>
     <script>
@@ -308,22 +335,6 @@
                     filterForm.submit();
                 });
             });
-
-            // Recherche vide
-
-            // const form = document.querySelector(
-            //     'form#search'); // Sélectionnez le formulaire que vous souhaitez gérer
-
-            // form.addEventListener('submit', function(event) {
-            //     const inputSearch = document.getElementsByName('search')[0];
-            //     const searchValue = inputSearch.value;
-
-            //     if (searchValue === '') {
-            //         event.preventDefault();
-
-            //         window.location.href = "{{ route('produitAdmin.index') }}";
-            //     }
-            // });
         })
     </script>
     {{-- <script src="{{ asset('admin/dist/js/adminproduit.js') }}"></script> --}}
