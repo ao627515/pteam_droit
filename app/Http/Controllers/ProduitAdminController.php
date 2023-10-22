@@ -265,7 +265,7 @@ class ProduitAdminController extends Controller
     //     $produit;
     // }
 
-    private function publish(Produit $produit)
+    public function publish(Produit $produit)
     {
         // produit en attente
         $produit->update([

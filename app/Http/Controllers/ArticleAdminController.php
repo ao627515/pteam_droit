@@ -353,7 +353,7 @@ class ArticleAdminController extends Controller
     //     $article;
     // }
 
-    private function publish(Article $article)
+    public function publish(Article $article)
     {
         // article en attente
         $article->update([
