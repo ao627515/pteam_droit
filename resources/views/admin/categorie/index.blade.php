@@ -90,9 +90,6 @@
                                         <i class="nav-icon fa-solid fa-pen btnEdit" title="Modifer"></i>
                                     </li>
                                     <li class="nav-item">
-                                        <i class="nav-icon fa-solid fa-eye" title="Voir" style="color: blue"></i>
-                                    </li>
-                                    <li class="nav-item">
                                         <form action="{{ route('categorie.destroy', $categorie) }}" method="post"
                                             class="form-action nav-link" title="Supprimer">
                                             @csrf

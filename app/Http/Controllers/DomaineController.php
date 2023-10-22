@@ -37,6 +37,7 @@ class DomaineController extends Controller
         $domaines = [$user->organisation->domaine,];
 
         $allDomaines = Domaine::where('active', true)
+            ->where('estPartenaire', 1)
             ->orderBy('created_at', 'desc')
             ->paginate(25);
 

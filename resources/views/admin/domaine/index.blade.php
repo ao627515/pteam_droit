@@ -90,7 +90,9 @@
                 <thead>
                     <th></th>
                     <th>Nom</th>
-                    <th>Partenaire ?</th>
+                    @if (auth()->user()->isAdmin())
+                        <th>Partenaire ?</th>
+                    @endif
                     <th>Actions</th>
                 </thead>
                 <tbody>
@@ -106,18 +108,23 @@
                             <td>
                                 {{ $domaine->nom }}
                             </td>
-                            <td>
-                                {{ $domaine->estPartenaire }}
-                            </td>
+                            @if (auth()->user()->isAdmin())
+                                <td>
+                                    @if ($domaine->estPartenaire)
+                                        {{-- <i class="fa-regular fa-circle-check" style="color: #00ff00;"></i> --}}
+                                        Oui
+                                    @else
+                                        {{-- <i class="fa-regular fa-circle-xmark" style="color: #ff0000;"></i> --}}
+                                        Non
+                                    @endif
+                                </td>
+                            @endif
                             <td>
                                 <ul class="nav nav-fill">
                                     <li class="nav-item">
                                         <i class="nav-icon fa-solid fa-pen btnEdit" title="Modifer"></i>
                                     </li>
                                     @if (auth()->user()->role == 'administrateur')
-                                        <li class="nav-item">
-                                            <i class="nav-icon fa-solid fa-eye" title="Voir" style="color: blue"></i>
-                                        </li>
                                         <li class="nav-item">
                                             <form action="{{ route('domaine.destroy', $domaine) }}" method="post"
                                                 class="form-action nav-link" title="Supprimer">
@@ -143,8 +150,8 @@
                                     <td>
                                         <div class="form-group">
                                             <input type="file"
-                                                class="form-control-file @error('icon') is-invalid @enderror" id="icon"
-                                                name="{{ "icon.$domaine->id" }}">
+                                                class="form-control-file @error('icon') is-invalid @enderror"
+                                                id="icon" name="{{ "icon.$domaine->id" }}">
                                             @error('icon')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -188,10 +195,11 @@
                                 </form>
                             </tr>
                         @else
-                            <tr class="formUpdate" style="display: @if($errors->has("domaine")) block @else none @endif">
-                                <form action="{{ route("domaine.change") }}" method="post">
+                            <tr class="formUpdate"
+                                style="display: @if ($errors->has('domaine')) block @else none @endif">
+                                <form action="{{ route('domaine.change') }}" method="post">
                                     @csrf
-                                    <td colspan="3">
+                                    <td colspan="2">
                                         <div class="form-group">
                                             <select class="form-control @error('domaine') is-invalid @enderror"
                                                 name="domaine" id="domaine" value="{{ old('domaine') }}">
