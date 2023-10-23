@@ -51,15 +51,17 @@
 </head>
 
 <body>
-    @if(!auth()->user()->isUser())
-        <a href="{{ route('articleAdmin.index') }}" class="text-decoration-none  text-light fw-bold">
-            <div class="btn-group fixed-top " id="btn-action" style="">
-                <button type="button" class="btn btn-primary rounded-circle p-3">
-                    Admin
-                </button>
-            </div>
-        </a>
-    @endif
+    @auth
+        @if (!auth()->user()->isUser())
+            <a href="{{ route('articleAdmin.index') }}" class="text-decoration-none  text-light fw-bold">
+                <div class="btn-group fixed-top " id="btn-action" style="">
+                    <button type="button" class="btn btn-primary rounded-circle p-3">
+                        Admin
+                    </button>
+                </div>
+            </a>
+        @endif
+    @endauth
     <!-- <div class="container"> -->
 
     <!-- Preloader -->

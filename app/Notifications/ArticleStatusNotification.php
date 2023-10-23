@@ -52,14 +52,15 @@ class ArticleStatusNotification extends Notification
         ->action('Voir l\'article', route('articleAdmin.show', $this->article))
         ->line('Merci d\'utiliser notre site !');
     }
-
+    
     public function toDatabase($notifiable)
     {
         $actionText = $this->status ? 'approuvé' : 'décliné';
         $data = [
             'type' => "Article",
+            'article_id' => $this->article->id,
             'message' => "Votre article << {$this->article->titre} >> a été $actionText.",
-            'object_show' => route('articleAdmin.show', $this->article)
+            'object_show' => route('articleAdmin.show', $this->article->slug)
         ];
 
         if (!$this->status) {

@@ -47,11 +47,11 @@
                         @if (request()->filter === 'declined') checked @endif>
                     <label class="form-check-label" for="declined">Décliné</label>
                 </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="draft" value="draft"
-                            @if (request()->filter === 'draft') checked @endif>
-                        <label class="form-check-label" for="draft">Brouillons</label>
-                    </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filter" id="draft" value="draft"
+                        @if (request()->filter === 'draft') checked @endif>
+                    <label class="form-check-label" for="draft">Brouillons</label>
+                </div>
                 @if (auth()->user()->isAdmin())
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"

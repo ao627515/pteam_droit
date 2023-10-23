@@ -7,12 +7,11 @@ use App\Models\Article;
 use App\Models\Categorie;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\CategorieArticle;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Notifications\ArticleStatusNotification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\MonitoringStatusNotification;
+use App\Notifications\ArticleStatusNotification;
 
 class ArticleAdminController extends Controller
 {
@@ -188,12 +187,22 @@ class ArticleAdminController extends Controller
      */
     public function show(string $articleAdmin)
     {
-        $articleAdmin = Article::where('slug', $articleAdmin)->get();
+        /** @var $user App\Model\User  */
+        $user = auth()->user();
+
+        $articleAdmin = Article::where('slug', $articleAdmin)->first();
+
+        $notifications = $user->notifications()
+        ->whereJsonContains('data->article_id', $articleAdmin->id)
+        ->get();
+
 
         return view('admin.article.show', [
-            'article' => $articleAdmin->first()
+            'article' => $articleAdmin,
+            'notifications' => $notifications,
         ]);
     }
+
 
     /**
      * Show the form for editing the specified resource.

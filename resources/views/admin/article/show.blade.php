@@ -7,35 +7,53 @@
 
 @section('css')
     <style>
-        #btn-action {
+        .notification {
+            height: 10px;
+            width: 10px;
+            opacity: 1;
+            position: relative;
+            left: 55px;
+            padding: 5px;
+            background-color: red;
+            border: red solid 5px;
+            border-radius: 100%;
+            z-index: 2;
+            bottom: 10px
+        }
+
+        #btn-card {
             height: 75px;
             width: 75px;
             top: 80vh;
             left: 70vw;
+        }
+
+        #btn-action {
             opacity: 0.3;
         }
 
         #btn-action:hover {
             opacity: 1;
+
         }
 
         /* // Small devices (landscape phones, 576px and up) */
         @media (min-width: 576px) {
-            #btn-action {
+            #btn-card {
                 left: 85vw;
             }
         }
 
         /* Extra large devices (large desktops, 1200px and up) */
         @media (min-width: 1200px) {
-            #btn-action {
+            #btn-card {
                 left: 90vw;
             }
         }
 
         // Large devices (desktops, less than 1200px)
         @media (max-width: 1199.98px) {
-            #btn-action {
+            #btn-card {
                 left: 95vw;
             }
         }
@@ -48,20 +66,29 @@
     <div class="container">
         <div class="py-3">
 
-            <div class="btn-group fixed-top" id="btn-action" style="">
-                <button type="button" class="btn btn-info  rounded-circle text-light fw-bold"
-                    data-toggle="dropdown">Actions</button>
-                <div class="dropdown-menu" role="menu">
-                    @if ($article->isDeclined())
-                    <form action="{{ route('articleAdmin.relaunch', $article) }}" method="post"
-                        class="form-action dropdown-item">
-                        @csrf
-                        <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
-                            data-target="#modal-relaunch">
-                            <i class="fas fa-check-circle"></i> Relancé
-                        </button>
-                    </form>
+            <div class="btn-group fixed-top" id="btn-card" style="">
+                @if ($article->isDeclined())
+                    <span class="notification"></span>
                 @endif
+                <button type="button" class="btn btn-info  rounded-circle text-light fw-bold" data-toggle="dropdown"
+                    id="btn-action">Actions</button>
+                <div class="dropdown-menu" role="menu">
+                    <div class="dropdown-item">
+                        <button class="btn btn-primary w-100 action-btn" data-toggle="modal" data-target="#motif-modal">
+                            Motif(s)
+                            <span class="badge badge-danger">{{ $notifications->count() }}</span>
+                        </button>
+                    </div>
+                    @if ($article->isDeclined())
+                        <form action="{{ route('articleAdmin.relaunch', $article) }}" method="post"
+                            class="form-action dropdown-item">
+                            @csrf
+                            <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
+                                data-target="#modal-relaunch">
+                                <i class="fas fa-check-circle"></i> Relancé
+                            </button>
+                        </form>
+                    @endif
                     @if ($article->isDraft())
                         <form action="{{ route('articleAdmin.publish', $article) }}" method="post"
                             class="form-action dropdown-item">
@@ -106,7 +133,8 @@
                         class="form-action dropdown-item" title="Supprimer">
                         @csrf
                         @method('delete')
-                        <button type="button" data-target="#modal-destroy" data-toggle="modal" class="btn btn-danger w-100">
+                        <button type="button" data-target="#modal-destroy" data-toggle="modal"
+                            class="btn btn-danger w-100">
                             <i class="nav-icon fa-solid fa-trash action-btn"></i>
                             Supprimer
                         </button>
@@ -226,6 +254,35 @@
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="motif-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"> Motif de refus</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @forelse ($notifications as $notification)
+                        @if (isset($notification->data['motif']))
+                            <div>
+                                <span>{{ $article->getActionDate() }}</span>
+                                <p class="lead">{{ $notification->data['motif'] }}</p>
+                            </div>
+                            <hr>
+                        @endif
+                    @empty
+                            <p>Votre article n'a jamais été décliné</p>
+                    @endforelse
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 

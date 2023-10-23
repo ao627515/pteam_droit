@@ -66,6 +66,7 @@
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu" role="menu">
+
                 @if ($article->isDeclined())
                     <form action="{{ route('articleAdmin.relaunch', $article) }}" method="post"
                         class="form-action dropdown-item">
@@ -88,7 +89,9 @@
                     </form>
                 @endif
 
-                @if (($article->isStandby()) and auth()->user()->isAdmin())
+                @if (
+                    $article->isStandby() and
+                        auth()->user()->isAdmin())
                     <form action="{{ route('articleAdmin.declined', $article) }}" method="post"
                         class="form-action dropdown-item" id="declinedForm">
                         @csrf
@@ -117,7 +120,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('articleAdmin.show', ['articleAdmin' => $article->slug]) }}" title="Voir">
+                        <a class="nav-link" href="{{ route('articleAdmin.show', ['articleAdmin' => $article->slug]) }}"
+                            title="Voir">
                             <i class="nav-icon fa-solid fa-eye"></i>
                             {{-- Voir --}}
                         </a>

@@ -2,10 +2,10 @@
 
 namespace App\View\Components\Admin;
 
-use App\Models\Article;
 use Closure;
-use Illuminate\Contracts\View\View;
+use App\Models\Article;
 use Illuminate\View\Component;
+use Illuminate\Contracts\View\View;
 
 class ArticleAdminCard extends Component
 {
@@ -13,7 +13,7 @@ class ArticleAdminCard extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public Article $article
+        public Article $article,
     )
     {
         //
@@ -24,6 +24,7 @@ class ArticleAdminCard extends Component
      */
     public function render(): View|Closure|string
     {
+
         return view('components.admin.article-admin-card');
     }
 }
