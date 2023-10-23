@@ -186,10 +186,12 @@ class ArticleAdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Article $articleAdmin)
+    public function show(string $articleAdmin)
     {
+        $articleAdmin = Article::where('slug', $articleAdmin)->get();
+
         return view('admin.article.show', [
-            'article' => $articleAdmin
+            'article' => $articleAdmin->first()
         ]);
     }
 

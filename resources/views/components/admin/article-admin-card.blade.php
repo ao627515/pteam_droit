@@ -117,7 +117,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('articleAdmin.show', $article) }}" title="Voir">
+                        <a class="nav-link" href="{{ route('articleAdmin.show', ['articleAdmin' => $article->slug]) }}" title="Voir">
                             <i class="nav-icon fa-solid fa-eye"></i>
                             {{-- Voir --}}
                         </a>

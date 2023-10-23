@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produit;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\MonitoringStatusNotification;
 use App\Notifications\ProduitStatusNotification;
+use App\Notifications\MonitoringStatusNotification;
 
 class ProduitAdminController extends Controller
 {
@@ -146,6 +147,9 @@ class ProduitAdminController extends Controller
      */
     public function show(Produit $produitAdmin)
     {
+
+        // $produitAdmin = Produit::where('nom', str_replace('-', ' ', $produitAdmin))->get();
+
         return view('admin.produit.show', [
             'produit' => $produitAdmin
         ]);
