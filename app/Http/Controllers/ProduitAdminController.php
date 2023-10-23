@@ -60,18 +60,18 @@ class ProduitAdminController extends Controller
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
-                case 'draft':
-                    $produits = Produit::where('active', true)
-                        ->when($isPartenaire, function ($query) use ($user) {
-                            return $query->where('author_id', $user->id);
-                        })
-                        ->where('status', 5)
-                        ->when($search, function ($query) use ($search) {
-                            return $query->where('nom', 'LIKE', "%$search%");
-                        })
-                        ->orderBy('created_at', 'desc')
-                        ->paginate(25);
-                    break;
+            case 'draft':
+                $produits = Produit::where('active', true)
+                    ->when($isPartenaire, function ($query) use ($user) {
+                        return $query->where('author_id', $user->id);
+                    })
+                    ->where('status', 5)
+                    ->when($search, function ($query) use ($search) {
+                        return $query->where('nom', 'LIKE', "%$search%");
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(25);
+                break;
             case 'delete':
                 $produits = Produit::where('active', false)
                     ->when($isPartenaire, function ($query) use ($user) {
@@ -148,10 +148,16 @@ class ProduitAdminController extends Controller
     public function show(Produit $produitAdmin)
     {
 
-        // $produitAdmin = Produit::where('nom', str_replace('-', ' ', $produitAdmin))->get();
+        /** @var $user App\Model\User  */
+        $user = auth()->user();
+
+        $notifications = $user->notifications()
+            ->whereJsonContains('data->produit_id', $produitAdmin->id)
+            ->get();
 
         return view('admin.produit.show', [
-            'produit' => $produitAdmin
+            'produit' => $produitAdmin,
+            'notifications' => $notifications,
         ]);
     }
 

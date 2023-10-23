@@ -58,6 +58,7 @@ class ProduitStatusNotification extends Notification
         $actionText = $this->status ? 'approuvé' : 'décliné';
         $data = [
             'type' => "Produit",
+            'produit_id' => $this->produit->id,
             'message' => "Votre produit << {$this->produit->nom} >> a été $actionText.",
             'object_show' => route('produitAdmin.show', $this->produit)
         ];

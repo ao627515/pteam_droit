@@ -2,6 +2,25 @@
 
 @section('titre', 'produit')
 
+@section('css')
+    <style>
+        .notification {
+            height: 10px;
+            width: 10px;
+            opacity: 1;
+            position: relative;
+            left: 30px;
+            bottom: 18px;
+            /* padding: 1px; */
+            background-color: red;
+            border: red solid 1px;
+            border-radius: 100%;
+            z-index: 2;
+            display: inline-block;
+        }
+    </style>
+@endsection
+
 @section('content')
     {{ $produit->imgInit() }}
     <div class="card">
@@ -55,12 +74,23 @@
                     </div>
                     <div class="d-flex justify-content-center mt-5">
                         <div class="btn-group">
+
                             <button type="button" class="btn btn-info text-light fw-bold">Actions</button>
                             <button type="button" class="btn btn-info dropdown-toggle dropdown-icon"
                                 data-toggle="dropdown">
+                                @if ($produit->isDeclined())
+                                    <span class="notification"></span>
+                                @endif
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <div class="dropdown-menu" role="menu">
+                                <div class="dropdown-item">
+                                    <button class="btn btn-primary w-100 action-btn" data-toggle="modal"
+                                        data-target="#motif-modal">
+                                        Motif(s)
+                                        <span class="badge badge-danger">{{ $notifications->count() }}</span>
+                                    </button>
+                                </div>
                                 @if ($produit->isDeclined())
                                     <form action="{{ route('produitAdmin.relaunch', $produit) }}" method="post"
                                         class="form-action dropdown-item">
@@ -223,6 +253,35 @@
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="motif-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"> Motif de refus</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @forelse ($notifications as $notification)
+                        @if (isset($notification->data['motif']))
+                            <div>
+                                <span>{{ $produit->getActionDate() }}</span>
+                                <p class="lead">{{ $notification->data['motif'] }}</p>
+                            </div>
+                            <hr>
+                        @endif
+                    @empty
+                        <p>Votre produit n'a jamais été décliné</p>
+                    @endforelse
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 
