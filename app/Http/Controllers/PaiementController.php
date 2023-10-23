@@ -23,7 +23,7 @@ class PaiementController extends Controller
      */
     public function create()
     {
-        //
+        return view('payerlivre');
     }
 
     /**
