@@ -56,6 +56,32 @@ class UserSeeder extends Seeder
         ]);
 
         // Générez ensuite des enregistrements à l'aide de la factory
-        User::factory(100)->create();
+        User::factory(25)->create(
+            [
+                'type_compte' => 'physique',
+                'role' => 'utilisateur'
+            ]
+        );
+
+        User::factory(25)->create(
+            [
+                'type_compte' => 'physique',
+                'role' => 'administrateur'
+            ]
+        );
+
+        User::factory(25)->create(
+            [
+                'type_compte' => 'morale',
+                'role' => 'partenaire'
+            ]
+        );
+
+        User::factory(25)->create(
+            [
+                'type_compte' => 'morale',
+                'role' => 'utilisateur'
+            ]
+        );
     }
 }

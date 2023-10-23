@@ -33,9 +33,14 @@
                         <label class="form-check-label" for="partenaires">Partenaires</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="followers" value="followers"
-                            @if (request()->filter === 'followers') checked @endif>
-                        <label class="form-check-label" for="followers">Abonnés</label>
+                        <input class="form-check-input" type="radio" name="filter" id="followers_physical" value="followers_physical"
+                            @if (request()->filter === 'followers_physical') checked @endif>
+                        <label class="form-check-label" for="followers_physical">Abonnés Physique</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter" id="followers_moral" value="followers_moral"
+                            @if (request()->filter === 'followers_moral') checked @endif>
+                        <label class="form-check-label" for="followers_moral">Abonnés Moral</label>
                     </div>
                 </div>
             @endif

@@ -27,7 +27,7 @@ class OrganisationFactory extends Factory
             'short_description' => fake()->sentence,
             // 'active' => fake()->boolean,
             'user_id' => function () {
-                return User::inRandomOrder()->first()->id;
+                return User::where('type_compte', 'morale')->orWhere('role', 'partenaire')->inRandomOrder()->first()->id;
             },
             'approuved_by' => null, // Vous pouvez définir l'ID de l'utilisateur qui approuve ici
             'approuved_at' => now(),

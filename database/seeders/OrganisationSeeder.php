@@ -66,7 +66,7 @@ class OrganisationSeeder extends Seeder
 
         ]);
 
-        Organisation::factory(10)->create();
+        Organisation::factory(49)->create();
 
     }
 }

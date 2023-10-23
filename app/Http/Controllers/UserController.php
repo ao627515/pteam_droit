@@ -71,7 +71,8 @@ class UserController extends Controller
 
         if ($request->type == 'partenaire') {
             $role = "partenaire";
-        } else {
+        } else
+        {
             $role = "utilisateur";
         }
 
@@ -187,8 +188,24 @@ class UserController extends Controller
         $search = $request['search'];
 
         switch ($filter) {
-            case 'followers':
+            case 'followers_moral':
                 $users = User::where('active', true)
+                    ->where('type_compte', 'morale')
+                    ->where('role', 'utilisateur')
+                    ->when($search, function ($query) use ($search) {
+                        $query->where('nom', 'LIKE', "%$search%")
+                            ->orWhere('prenom', 'LIKE', "%$search%")
+                            ->orWhere('phone', 'LIKE', "%$search%")
+                            ->orWhere('email', 'LIKE', "%$search%");
+
+                        return $query;
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(25);
+                break;
+            case 'followers_physical':
+                $users = User::where('active', true)
+                    ->where('type_compte', 'physique')
                     ->where('role', 'utilisateur')
                     ->when($search, function ($query) use ($search) {
                         $query->where('nom', 'LIKE', "%$search%")
