@@ -28,6 +28,8 @@ class UserSeeder extends Seeder
                 'role' => 'administrateur',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'approuved_at' => now(),
+                'approuved_by' => 1
             ],
             [
                 'nom' => 'Ouedraogo',
@@ -35,11 +37,13 @@ class UserSeeder extends Seeder
                 'phone' => '74289890',
                 'email' => 'abdo.ouedraogo.03@gmail.com',
                 'password' => Hash::make('1234'),
-                'type_compte' => 'physique',
+                'type_compte' => 'partenaire',
                 'active' => 1,
                 'role' => 'partenaire',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'approuved_at' => now(),
+                'approuved_by' => 1
             ],
             [
                 'nom' => 'Ouedraogo',
@@ -52,6 +56,8 @@ class UserSeeder extends Seeder
                 'role' => 'utilisateur',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'approuved_at' => now(),
+                'approuved_by' => 1
             ],
         ]);
 
@@ -72,7 +78,7 @@ class UserSeeder extends Seeder
 
         User::factory(25)->create(
             [
-                'type_compte' => 'morale',
+                'type_compte' => 'partenaire',
                 'role' => 'partenaire'
             ]
         );

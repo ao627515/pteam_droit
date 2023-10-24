@@ -72,7 +72,7 @@
                                 <h6 class="card-subtitle font-weight-bold mb-2" style="font-size: 13.5px">
                                     {{ $produit->nom }}
                                 </h6>
-                                <small><Span class="badge badge-info">Staut</Span> : {{ $produit->getStatus() }}</small><br>
+                                <small><Span class="badge badge-info">Staut</Span> : {{ $produit->getProduitStatus() }}</small><br>
                                 <small>{{ $produit->getActionDate() }}</small>
                                 <h6 class="card-subtitle mt-2" style="font-size: 13.5px">
                                     stock : {{ $produit->stock }}

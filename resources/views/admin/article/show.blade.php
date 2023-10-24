@@ -144,7 +144,7 @@
             <article class="article">
                 <h1 class="article-titre text-center fw-bold ">{{ $article->titre }}</h1>
 
-                <p class="lead text-center"> <span>Statut</span> : {{ $article->getStatus() }}</p>
+                <p class="lead text-center"> <span>Statut</span> : {{ $article->getArticleStatus() }}</p>
                 <p class="article-date text-center">{{ $article->getActionDate() }}</p>
 
                 <div class="article-image mb-3 d-flex justify-content-center">
