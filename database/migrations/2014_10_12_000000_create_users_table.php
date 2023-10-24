@@ -19,11 +19,14 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('type_compte');
+            $table->integer('status')->nullable();
             $table->string('role')->default('utilisateur')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('approuved_by')->nullable()->constrained('users');
             $table->timestamp('approuved_at')->nullable();
+            $table->foreignId('declined_by')->nullable()->constrained('users');
+            $table->timestamp('declined_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -71,9 +71,12 @@ class UserController extends Controller
 
         if ($request->type == 'partenaire') {
             $role = "partenaire";
+            $status = 1;
         } else
         {
             $role = "utilisateur";
+            $status = 2;
+
         }
 
         $user = User::create([
@@ -81,6 +84,7 @@ class UserController extends Controller
             'prenom' => $request->prenom,
             'phone' => $request->telephone,
             'role' => $role,
+            'status' => $status,
             'email' => $request->email,
             'type_compte' => $request->type,
             'password' => Hash::make($request->password),

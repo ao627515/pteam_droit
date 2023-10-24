@@ -9,7 +9,7 @@
             {{ $article->titre }}.
         </h6>
         <small>{{ $article->getActionDate() }}</small><br>
-        <small><Span class="badge badge-info">Staut</Span> : {{ $article->getStatus() }}</small>
+        <small><Span class="badge badge-info">Staut</Span> : {{ $article->getArticleStatus() }}</small>
         <p class="card-text mt-2" style="font-size: 13px">
             {{ $article->description }}
         </p>

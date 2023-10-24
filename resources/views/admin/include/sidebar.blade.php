@@ -138,9 +138,13 @@
                 @if (auth()->user()->isAdmin())
                     {{-- <li class="nav-header">UTILISATEURS</li> --}}
                     <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
-                            'user.')) menu-open @endif">
+                            'user.') or
+                            Str::startsWith(request()->route()->getName(),
+                                'partenaireAdmin.')) menu-open @endif">
                         <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
-                                'user.')) active @endif">
+                                'user.') or
+                                Str::startsWith(request()->route()->getName(),
+                                    'partenaireAdmin.')) active @endif">
                             <i class="nav-icon fa-solid fa-users"></i>
                             <p>
                                 Uitilisateurs
@@ -159,6 +163,13 @@
                                     class="nav-link @if (Request::routeIs('user.create')) active @endif">
                                     <i class="fa-solid fa-user-plus nav-icon"></i>
                                     <p>Créer</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('partenaireAdmin.index') }}"
+                                    class="nav-link @if (Request::routeIs('partenaireAdmin.index')) active @endif">
+                                    <i class="fa-solid fa-user-tie nav-icon"></i>
+                                    <p>Partenaires en attente</p>
                                 </a>
                             </li>
                             <li class="nav-item">

@@ -2,8 +2,9 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -19,6 +20,9 @@ class UserFactory extends Factory
     {
         $type_compte = fake()->randomElement(['physique', 'morale', 'partenaire']);
         $bool = fake()->boolean(40);
+        $approuve = fake()->randomNumber() % 2 != 0 ? true : false;
+        $declined = !$approuve;
+        $nullish = fake()->randomNumber() % 2 != 0 ? true : false;
         return [
             'nom' => fake()->lastName,
             'prenom' => fake()->firstName,
@@ -31,8 +35,26 @@ class UserFactory extends Factory
             'role' => function () use ($type_compte, $bool){
                 return $bool ? 'administrateur' : $type_compte == 'morale' or $type_compte == 'physique' ? 'utilisateur' : 'partenaire';
             },
+            'status' => function () use ($approuve, $nullish) {
+                return $nullish == true ? 1 : ($approuve == true ? 2 : 3);
+            },
             'created_at' => now(),
             'updated_at' => now(),
+            'approuved_at' => function () use ($approuve, $nullish) {
+                return $nullish == true ? null : ($approuve == true ? now() : null);
+            },
+
+            'approuved_by' => function () use ($approuve, $nullish){
+                return $nullish == true ? null : ($approuve == true ? 1 : null);
+            },
+
+            'declined_at' => function () use ($declined, $nullish) {
+                return $nullish == true ? null : ($declined == true ? now() : null);
+            },
+
+            'declined_by' => function () use ($declined, $nullish){
+                return $nullish == true ? null  : ($declined == true ?  1 : null);
+            },
         ];
     }
 

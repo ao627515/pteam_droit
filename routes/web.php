@@ -9,6 +9,7 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\DomaineController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\PaiementController;
@@ -16,13 +17,13 @@ use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PartenaireController;
 use App\Http\Controllers\PrestationController;
+use App\Http\Controllers\TypeCompteController;
 use App\Http\Controllers\ArticleAdminController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\ProduitAdminController;
+use App\Http\Controllers\PartenaireAdminController;
 use App\Http\Controllers\CategorieArticleController;
-use App\Http\Controllers\DomaineController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\TypeCompteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,7 @@ Route::resources([
 
 Route::resources([
     'partenaire' => PartenaireController::class,
+    'partenaireAdmin' => PartenaireAdminController::class,
     'article' => ArticleController::class,
     'articleAdmin'=>ArticleAdminController::class,
     'categorie' => CategorieController::class,
