@@ -90,9 +90,11 @@ Route::get('detail', [ProduitController::class, 'detail'])->name('detail');
 
 Route::post('article/{article}/admin/approuved', [ArticleAdminController::class, 'approuved'])->name('articleAdmin.approuved');
 Route::post('produit/{produit}/admin/approuved', [ProduitAdminController::class, 'approuved'])->name('produitAdmin.approuved');
+Route::post('partenaire/{partenaire}/admin/approuved', [ProduitAdminController::class, 'approuved'])->name('partenaireAdmin.approuved');
 
-Route::post('article/{article}/admin/declined', [ArticleAdminController::class, 'declined'])->name('articleAdmin.declined');
 Route::post('produit/{produit}/admin/declinded', [ProduitAdminController::class, 'declined'])->name('produitAdmin.declined');
+Route::post('article/{article}/admin/declined', [PartenaireAdminController::class, 'declined'])->name('articleAdmin.declined');
+Route::post('partenaire/{partenaire}/admin/declined', [PartenaireAdminController::class, 'declined'])->name('partenaireAdmin.declined');
 
 Route::delete('prestation/{prestation}/detach', [PrestationController::class, 'detach'])->name('prestation.detach');
 

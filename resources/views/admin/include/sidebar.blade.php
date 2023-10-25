@@ -16,7 +16,7 @@
                     alt="User Image">
             </div>
             <div class="info">
-                <a href="" class="d-block">{{ auth()->user()->nom . ' ' . auth()->user()->prenom }}</a>
+                <a href="{{ route('user.show', auth()->user()) }}" class="d-block">{{ auth()->user()->nom . ' ' . auth()->user()->prenom }}</a>
                 <small class="d-block text-light">Rôle : {{ auth()->user()->role }}</small>
             </div>
         </div>

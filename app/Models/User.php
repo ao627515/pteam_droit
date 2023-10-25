@@ -4,11 +4,12 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use Carbon\Carbon;
 use App\Traits\StatusTrait;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -19,17 +20,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'nom',
-        'prenom',
-        'phone',
-        'email',
-        'password',
-        'role',
-        'type_compte',
-        'approuved_by',
-        'approuved_at',
-    ];
+    protected $guarded = [''];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -65,6 +56,15 @@ class User extends Authenticatable
         return $this->hasOne(Organisation::class, 'user_id');
     }
 
+    public function articles(){
+        return $this->hasMany(Article::class, 'author_id');
+    }
+
+    public function produits(){
+        return $this->hasMany(Produit::class, 'author_id');
+    }
+
+
     public function isPartenaire(){
         return $this->role === "partenaire";
     }
@@ -75,5 +75,39 @@ class User extends Authenticatable
 
     public function isUser(){
         return $this->role === "utilisateur";
+    }
+
+
+
+    public static function date($date)
+    {
+
+        $carbone = new Carbon($date);
+
+        return $carbone->format('j M Y');
+    }
+
+    public static function dateTime($datetime)
+    {
+
+        $carbone = new Carbon($datetime);
+
+        return $carbone->format('j M Y à H\h i');
+    }
+
+    public function getActionDate()
+    {
+        switch ($this->status) {
+            case 1:
+            case 5:
+                return 'Créer le : ' . User::date($this->created_at);
+                break;
+            case 2:
+                return 'Inscrit le : ' . User::date($this->created_at);
+                break;
+            case 3:
+                return 'Décliné le : ' . User::date($this->created_at);
+                break;
+        }
     }
 }

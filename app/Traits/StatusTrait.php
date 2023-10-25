@@ -102,7 +102,8 @@ trait StatusTrait
         }
     }
 
-    public function partenaireStatus(){
+    public function partenaireStatus()
+    {
         switch ($this->status) {
             case 1:
                 return "Demande d'inscription";
@@ -112,6 +113,9 @@ trait StatusTrait
                 break;
             case 3:
                 return 'Décliner';
+                break;
+            default:
+                return 'Statut inconnue';
                 break;
         }
     }

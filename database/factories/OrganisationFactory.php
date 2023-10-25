@@ -31,8 +31,8 @@ class OrganisationFactory extends Factory
             },
             'approuved_by' => null, // Vous pouvez définir l'ID de l'utilisateur qui approuve ici
             'approuved_at' => now(),
-            'lib_doc_1' => fake()->word,
-            'lib_doc_2' => fake()->word,
+            'lib_doc_1' => 'RCCM',
+            'lib_doc_2' => 'DOC2',
             'lib_doc_3' => fake()->word,
             'lib_doc_4' => fake()->word,
             'val_doc_1' => fake()->word,

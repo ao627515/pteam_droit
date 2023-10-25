@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Filesystem\Filesystem;
 
 class UserController extends Controller
 {
@@ -72,11 +74,9 @@ class UserController extends Controller
         if ($request->type == 'partenaire') {
             $role = "partenaire";
             $status = 1;
-        } else
-        {
+        } else {
             $role = "utilisateur";
             $status = 2;
-
         }
 
         $user = User::create([
@@ -90,33 +90,69 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // $destination_path = 'uploads/docs/';
+        // $img_destination_path = 'uploads/images/';
+
+        // if ($request->hasFile('val_doc_1')) {
+        //     $fileExt = $request->file('val_doc_1')->getClientOriginalExtension();
+        //     $fileName = uniqid('u_' . $user->id . 'rccm_') . '.' . $fileExt;
+
+        //     if ($request->file('val_doc_1')->move($destination_path, $fileName)) {
+        //         $doc_name = $destination_path . $fileName;
+        //     }
+        // }
+        // if ($request->hasFile('val_doc_2')) {
+        //     $fileExt = $request->file('val_doc_2')->getClientOriginalExtension();
+        //     $fileName = uniqid('u_' . $user->id . 'doc_') . '.' . $fileExt;
+
+        //     if ($request->file('val_doc_2')->move($destination_path, $fileName)) {
+        //         $doc_2name = $destination_path . $fileName;
+        //     }
+        // }
+        // if ($request->hasFile('logo')) {
+        //     $fileExt = $request->file('logo')->getClientOriginalExtension();
+        //     $fileName = uniqid('u_' . $user->id . '_logo') . '.' . $fileExt;
+
+        //     if ($request->file('logo')->move($img_destination_path, $fileName)) {
+        //         $logo = $img_destination_path . $fileName;
+        //     }
+        // }
+
+
+
         $destination_path = 'uploads/docs/';
         $img_destination_path = 'uploads/images/';
+
+        /** @var $publicDisk  Filesystem */
+        $publicDisk = Storage::disk('public');
 
         if ($request->hasFile('val_doc_1')) {
             $fileExt = $request->file('val_doc_1')->getClientOriginalExtension();
             $fileName = uniqid('u_' . $user->id . 'rccm_') . '.' . $fileExt;
 
-            if ($request->file('val_doc_1')->move($destination_path, $fileName)) {
+            if ($publicDisk->putFileAs($destination_path, $request->file('val_doc_1'), $fileName)) {
                 $doc_name = $destination_path . $fileName;
             }
         }
+
         if ($request->hasFile('val_doc_2')) {
             $fileExt = $request->file('val_doc_2')->getClientOriginalExtension();
             $fileName = uniqid('u_' . $user->id . 'doc_') . '.' . $fileExt;
 
-            if ($request->file('val_doc_2')->move($destination_path, $fileName)) {
+            if ($publicDisk->putFileAs($destination_path, $request->file('val_doc_2'), $fileName)) {
                 $doc_2name = $destination_path . $fileName;
             }
         }
+
         if ($request->hasFile('logo')) {
             $fileExt = $request->file('logo')->getClientOriginalExtension();
             $fileName = uniqid('u_' . $user->id . '_logo') . '.' . $fileExt;
 
-            if ($request->file('logo')->move($img_destination_path, $fileName)) {
+            if ($publicDisk->putFileAs($img_destination_path, $request->file('logo'), $fileName)) {
                 $logo = $img_destination_path . $fileName;
             }
         }
+
 
         if ($request->type == 'morale' || $request->type == 'partenaire') {
             Organisation::create([
@@ -124,7 +160,7 @@ class UserController extends Controller
                 'phone' => $request->phone_pro,
                 'email' => $request->email_pro,
                 // 'domaine' => $request->domaine,
-                'short_description' => $request->description,
+                'description' => $request->description,
                 'lib_doc_1' => 'RCCM',
                 'val_doc_1' => $doc_name,
                 'lib_doc_2' => 'DOC2',
@@ -161,6 +197,7 @@ class UserController extends Controller
         } else if ($t == 'morale') {
             $domaines = Domaine::where('estPartenaire', 0)->get();
         }
+
         return view('register', compact('t', 'domaines', 'type'));
     }
 
@@ -273,11 +310,13 @@ class UserController extends Controller
             'prenom' => 'required',
             'phone' => 'required|unique:users,phone,id',
             'email' => 'required|email|unique:users,email,id',
+            'password' => 'required|string'
         ]);
 
         User::create(array_merge($data, [
             'type_compte' => 'physique',
-            'password' => Hash::make('#monDroit2023'),
+            // 'password' => Hash::make('#monDroit2023'),
+            'password' => Hash::make($data['password']),
             'role' => 'administrateur'
         ]));
 
@@ -291,6 +330,8 @@ class UserController extends Controller
     {
         if ($user->role == "administrateur") {
             return view('admin.user.show', compact('user'));
+        } elseif ($user->isPartenaire()) {
+            return  to_route('partenaireAdmin.show', $user);
         } else {
             $user = auth()->user();
             $tickets = Ticket::where('user_id', $user->id)->get();
@@ -301,35 +342,22 @@ class UserController extends Controller
 
     public function update_password(Request $request)
     {
-        try {
-            $request->validate([
-                'old_password' => 'required',
-                'new_password' => 'required|string|min:6|confirmed',
-                'new_password_confirmation' => 'required|string|min:6',
-            ]);
+        $request->validate([
+            'old_password' => ['nullable', 'string', 'current_password'],
+            'new_password' => ['nullable', 'string', Rule::requiredIf(function () use ($request) {
+                return !empty($request->input('old_password'));
+            }), 'min:6'],
+        ]);
 
-            /** @var $user App\Model\User */
+        /** @var $user User */
+        $user = Auth::user();
 
-            $user = Auth::user();
+        $user->password = Hash::make($request->new_password);
+        $user->save();
 
-            if (Hash::check($request->old_password, $user->password)) {
-                if ($request->new_password === $request->new_password_confirmation) {
-                    $user->password = Hash::make($request->new_password);
-                    // dd($user);
-                    $user->save();
-                    return redirect()->back()->with('success', 'Mot de passe mis à jour avec succès.');
-                } else {
-                    echo "La confirmation du nouveau mot de passe ne correspond pas.";
-                    // return redirect()->back()->withErrors(['new_password_confirmation' => 'La confirmation du nouveau mot de passe ne correspond pas.'])->withInput();
-                }
-            } else {
-                echo "Ancien mot de passe incorrect.";
-                // return redirect()->back()->withErrors(['old_password' => 'Ancien mot de passe incorrect.'])->withInput();
-            }
-        } catch (\Exception $e) {
-            dd($e);
-        }
+        return redirect()->back()->with('success', 'Mot de passe mis à jour avec succès.');
     }
+
 
     /**
      * Show the form for editing the specified resource.
