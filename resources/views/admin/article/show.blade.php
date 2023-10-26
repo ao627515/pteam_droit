@@ -79,7 +79,7 @@
                             <span class="badge badge-danger">{{ $notifications->count() }}</span>
                         </button>
                     </div>
-                    @if ($article->isDeclined())
+                    @if ($article->isDeclined() and auth()->user()->id == $article->author_id)
                         <form action="{{ route('articleAdmin.relaunch', $article) }}" method="post"
                             class="form-action dropdown-item">
                             @csrf
@@ -89,7 +89,7 @@
                             </button>
                         </form>
                     @endif
-                    @if ($article->isDraft())
+                    @if ($article->isDraft() and auth()->user()->id == $article->author_id)
                         <form action="{{ route('articleAdmin.publish', $article) }}" method="post"
                             class="form-action dropdown-item">
                             @csrf

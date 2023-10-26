@@ -67,7 +67,7 @@
             </button>
             <div class="dropdown-menu" role="menu">
 
-                @if ($article->isDeclined())
+                @if ($article->isDeclined() and auth()->user()->id == $article->author_id)
                     <form action="{{ route('articleAdmin.relaunch', $article) }}" method="post"
                         class="form-action dropdown-item">
                         @csrf
@@ -78,7 +78,7 @@
                     </form>
                 @endif
 
-                @if ($article->isDraft())
+                @if ($article->isDraft() and auth()->user()->id == $article->author_id)
                     <form action="{{ route('articleAdmin.publish', $article) }}" method="post"
                         class="form-action dropdown-item">
                         @csrf

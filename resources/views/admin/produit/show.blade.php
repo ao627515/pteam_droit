@@ -91,7 +91,7 @@
                                         <span class="badge badge-danger">{{ $notifications->count() }}</span>
                                     </button>
                                 </div>
-                                @if ($produit->isDeclined())
+                                @if ($produit->isDeclined() and auth()->user()->id == $article->author_id)
                                     <form action="{{ route('produitAdmin.relaunch', $produit) }}" method="post"
                                         class="form-action dropdown-item">
                                         @csrf
@@ -101,7 +101,7 @@
                                         </button>
                                     </form>
                                 @endif
-                                @if ($produit->isDraft())
+                                @if ($produit->isDraft() and auth()->user()->id == $article->author_id)
                                     <form action="{{ route('produitAdmin.publish', $produit) }}" method="post"
                                         class="form-action dropdown-item">
                                         @csrf
