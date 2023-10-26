@@ -72,7 +72,8 @@
                                 <h6 class="card-subtitle font-weight-bold mb-2" style="font-size: 13.5px">
                                     {{ $produit->nom }}
                                 </h6>
-                                <small><Span class="badge badge-info">Staut</Span> : {{ $produit->getProduitStatus() }}</small><br>
+                                <small><Span class="badge badge-info">Staut</Span> :
+                                    {{ $produit->getProduitStatus() }}</small><br>
                                 <small>{{ $produit->getActionDate() }}</small>
                                 <h6 class="card-subtitle mt-2" style="font-size: 13.5px">
                                     stock : {{ $produit->stock }}
@@ -134,15 +135,15 @@
                                     </button>
                                     <div class="dropdown-menu" role="menu">
                                         @if ($produit->isDeclined())
-                                        <form action="{{ route('produitAdmin.relaunch', $produit) }}" method="post"
-                                            class="form-action dropdown-item">
-                                            @csrf
-                                            <button type="button" class="btn btn-success w-100 action-btn" data-toggle="modal"
-                                                data-target="#modal-relaunch">
-                                                <i class="fas fa-check-circle"></i> Relancé
-                                            </button>
-                                        </form>
-                                    @endif
+                                            <form action="{{ route('produitAdmin.relaunch', $produit) }}" method="post"
+                                                class="form-action dropdown-item">
+                                                @csrf
+                                                <button type="button" class="btn btn-success w-100 action-btn"
+                                                    data-toggle="modal" data-target="#modal-relaunch">
+                                                    <i class="fas fa-check-circle"></i> Relancé
+                                                </button>
+                                            </form>
+                                        @endif
                                         @if ($produit->isDraft())
                                             <form action="{{ route('produitAdmin.publish', $produit) }}" method="post"
                                                 class="form-action dropdown-item">
@@ -311,38 +312,9 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('admin/dist/js/modalScript.js') }}"></script>
     <script>
         $(function() {
-            $('.action-btn').on('click', function() {
-                var form = $(this).closest('.form-action');
-
-                $('#confirmDestroy').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-
-                $('#confirmApprouvation').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-
-                $('#confirmRelaunch').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-            });
-
-            $('#modal-declined').on('show.bs.modal', function(event) {
-
-                $('#confirmRefus').on('click', function() {
-                    let motif = $('#motifModal').val();
-
-                    $('#motifHidden').val(motif);
-
-                    $('#declinedForm').submit();
-                });
-            });
-
             @if ($errors->has('motif'))
                 $('#modal-declined').modal('show')
             @endif

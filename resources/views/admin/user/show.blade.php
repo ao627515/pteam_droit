@@ -14,8 +14,8 @@
                 <div class="card card-primary card-outline">
                     <div class="card-body box-profile">
                         <div class="text-center">
-                            <img class="profile-user-img img-fluid img-circle"
-                                src="{{ asset('admin/dist/img/user4-128x128.jpg') }}" alt="User profile picture">
+                            <img class="profile-user-img img-fluid img-circle" src="{{ asset('admin/dist/img/avatar.png') }}"
+                                alt="User profile picture">
                         </div>
 
                         <h3 class="profile-username text-center">{{ $user->nom . ' ' . $user->prenom }}</h3>
@@ -342,16 +342,5 @@
 @endsection
 
 @section('script')
-    <script>
-        $(function() {
-            $('.action-btn').on('click', function() {
-                var form = $(this).closest('.form-action');
-
-                $('#confirmUpdate').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-            });
-        });
-    </script>
+    <script src="{{ asset('admin/dist/js/modalScript.js') }}"></script>
 @endsection

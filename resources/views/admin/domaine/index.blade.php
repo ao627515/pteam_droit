@@ -150,8 +150,8 @@
                                     <td>
                                         <div class="form-group">
                                             <input type="file"
-                                                class="form-control-file @error('icon') is-invalid @enderror"
-                                                id="icon" name="{{ "icon.$domaine->id" }}">
+                                                class="form-control-file @error('icon') is-invalid @enderror" id="icon"
+                                                name="{{ "icon.$domaine->id" }}">
                                             @error('icon')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -263,16 +263,5 @@
 @section('script')
     <script src="{{ asset('admin/dist/js/parameterSearchBar.js') }}"></script>
     <script src="{{ asset('admin/dist/js/parameterEditBtnV2.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('.action-btn').on('click', function() {
-                var form = $(this).closest('.form-action');
-
-                $('#confirmDestroy').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-            });
-        });
-    </script>
+    <script src="{{ asset('admin/dist/js/modalScript.js') }}"></script>
 @endsection

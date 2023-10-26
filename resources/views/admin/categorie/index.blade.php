@@ -139,22 +139,11 @@
 @section('script')
     <script src="{{ asset('admin/dist/js/parameterSearchBar.js') }}"></script>
     <script src="{{ asset('admin/dist/js/parameterEditBtnV1.js') }}"></script>
+    <script src="{{ asset('admin/dist/js/modalScript.js') }}"></script>
     <script>
-        $(document).ready(function() {
-            $('.action-btn').on('click', function() {
-                var form = $(this).closest('.form-action');
-
-                $('#confirmDestroy').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-            });
-        });
+        enableEditButtons(
+            '.btnEdit',
+            "input[type='text']",
+        );
     </script>
-        <script>
-            enableEditButtons(
-                '.btnEdit',
-                "input[type='text']",
-            );
-        </script>
 @endsection

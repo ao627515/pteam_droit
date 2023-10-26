@@ -30,7 +30,7 @@
                 </div>
             </form>
 
-            <form action="{{ route('produitAdmin.update',$produit) }}" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+            <form action="{{ route('produitAdmin.update',$produit) }}" method="post" enctype="multipart/form-data" accept-charset="UTF-8" id="form-update">
                 @csrf
                 @method('put')
                 <div class="row row-cols-1">
@@ -123,7 +123,7 @@
 
             $('#confirmUpdate').on('click', function() {
                 // Soumettre le formulaire
-                $('form').submit();
+                $('#form-update').submit();
             });
         })
     </script>

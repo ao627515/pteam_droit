@@ -275,7 +275,7 @@
                             <hr>
                         @endif
                     @empty
-                            <p>Votre article n'a jamais été décliné</p>
+                        <p>Votre article n'a jamais été décliné</p>
                     @endforelse
                 </div>
                 <div class="modal-footer">
@@ -287,38 +287,10 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('admin/dist/js/modalScript.js') }}"></script>
+
     <script>
         $(function() {
-            $('.action-btn').on('click', function() {
-                var form = $(this).closest('.form-action');
-
-                $('#confirmDestroy').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-
-                $('#confirmApprouvation').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-
-                $('#confirmRelaunch').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-            });
-
-            $('#modal-declined').on('show.bs.modal', function(event) {
-
-                $('#confirmRefus').on('click', function() {
-                    let motif = $('#motifModal').val();
-
-                    $('#motifHidden').val(motif);
-
-                    $('#declinedForm').submit();
-                });
-            });
-
             @if ($errors->has('motif'))
                 $('#modal-declined').modal('show')
             @endif

@@ -151,7 +151,7 @@
                                 @if (Request::routeIs('user.edit'))
                                     <i class=" fa-solid fa-pen"></i>
                                 @endif
-                                @if (Request::routeIs('user.show'))
+                                @if (Request::routeIs('user.show') or Request::routeIs('partenaireAdmin.show'))
                                     <i class=" fa-solid fa-eye"></i>
                                 @endif
                                 <i class="right fas fa-angle-left"></i>
