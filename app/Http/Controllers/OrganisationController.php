@@ -38,7 +38,7 @@ class OrganisationController extends Controller
      */
     public function show(Organisation $organisation)
     {
-        $domaine = Domaine::find($organisation->id);
+        $domaine = Domaine::find($organisation->domaine_id);
         return view('partenaire-detail', compact('organisation', 'domaine'));
     }
 

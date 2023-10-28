@@ -60,6 +60,18 @@
                     </div>
                     <div class="col mb-3">
                         <div class="form-group">
+                            <label for="prix">Prix</label>
+                            <input type="number" class="form-control @error('prix') is-invalid @enderror"
+                                id="prix" name="prix" value="{{ old('prix', $produit->prix) }}" required>
+                            @error('prix')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col mb-3">
+                        <div class="form-group">
                             <label for="short_desc">Description Court</label>
                             <textarea class="form-control @error('short_desc') is-invalid @enderror" id="short_desc" name="short_desc"
                                 rows="4" required>{{ old('short_desc', $produit->short_desc) }}</textarea>

@@ -24,17 +24,12 @@ class ProduitController extends Controller
     {
         //
     }
-    public function detail()
-    {
-        return view('detaile-produit');
-    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -42,7 +37,7 @@ class ProduitController extends Controller
      */
     public function show(Produit $produit)
     {
-        //
+        return view('detaile-produit', compact('produit'));
     }
 
     /**

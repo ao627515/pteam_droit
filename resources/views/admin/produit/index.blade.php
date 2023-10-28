@@ -52,13 +52,13 @@
                         @if (request()->filter === 'draft') checked @endif>
                     <label class="form-check-label" for="draft">Brouillons</label>
                 </div>
-                @if (auth()->user()->isAdmin())
+                {{-- @if (auth()->user()->isAdmin())
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
                             @if (request()->filter === 'delete') checked @endif>
                         <label class="form-check-label" for="delete">Supprimé</label>
                     </div>
-                @endif
+                @endif --}}
             </div>
         </form>
         <div class="card-body">
@@ -77,6 +77,9 @@
                                 <small>{{ $produit->getActionDate() }}</small>
                                 <h6 class="card-subtitle mt-2" style="font-size: 13.5px">
                                     stock : {{ $produit->stock }}
+                                </h6>
+                                <h6 class="card-subtitle mt-2" style="font-size: 13.5px">
+                                    Prix : {{ $produit->prix fcfa }}
                                 </h6>
                                 <p class="card-text mt-1" style="font-size: 13px">
                                     {{ $produit->short_desc }}

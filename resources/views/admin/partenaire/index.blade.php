@@ -35,11 +35,11 @@
                         @if (request()->filter === 'declined') checked @endif>
                     <label class="form-check-label" for="declined">Décliné</label>
                 </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
-                            @if (request()->filter === 'delete') checked @endif>
-                        <label class="form-check-label" for="delete">Supprimé</label>
-                    </div>
+                {{-- <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
+                        @if (request()->filter === 'delete') checked @endif>
+                    <label class="form-check-label" for="delete">Supprimé</label>
+                </div> --}}
             </div>
         </form>
         <div class="card-body">
@@ -75,7 +75,8 @@
                             <td>
                                 <ul class="nav nav-fill">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('partenaireAdmin.show', $partenaire) }}" title="Voir">
+                                        <a class="nav-link" href="{{ route('partenaireAdmin.show', $partenaire) }}"
+                                            title="Voir">
                                             <i class="nav-icon fa-solid fa-eye"></i>
                                             {{-- Voir --}}
                                         </a>
