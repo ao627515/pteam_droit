@@ -3,6 +3,8 @@
 @section('title', 'LIste des articles')
 
 @section('content')
+    <x-message-flash />
+
     <style>
         .article-card .article-author {
             display: none;

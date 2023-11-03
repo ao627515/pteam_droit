@@ -28,7 +28,7 @@
         <form action="" method="get" id="search" class="search filter-form">
             @csrf
             <div class="card-header">
-                <input type="search" name="search" id="search" placeholder="Nom de l'article" class="form-control"
+                <input type="search" name="search" id="search" placeholder="Nom du produit" class="form-control"
                     value="{{ old('search', request()->search) }}">
             </div>
             <div class="card-header px-5">
@@ -79,7 +79,7 @@
                                     stock : {{ $produit->stock }}
                                 </h6>
                                 <h6 class="card-subtitle mt-2" style="font-size: 13.5px">
-                                    Prix : {{ $produit->prix fcfa }}
+                                    Prix : {{ $produit->prix.' Franc cfa' }}
                                 </h6>
                                 <p class="card-text mt-1" style="font-size: 13px">
                                     {{ $produit->short_desc }}
@@ -272,7 +272,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Voullez vous Relancé cette article ?</p>
+                        <p>Voullez vous Relancé ce produit ?</p>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
@@ -288,7 +288,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content bg-danger">
                     <div class="modal-header">
-                        <h4 class="modal-title">Décliné un article</h4>
+                        <h4 class="modal-title">Décliné un produit</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
