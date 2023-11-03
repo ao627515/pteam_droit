@@ -94,11 +94,10 @@ class ArticleAdminController extends Controller
                     ->when($isPartenaire, function ($query) use ($user) {
                         return $query->where('author_id', $user->id);
                     })
+                    ->where('status', 1)
                     ->when($search, function ($query) use ($search) {
                         return $query->where('titre', 'LIKE', "%$search%");
                     })
-                    ->where('author_id', 2)
-                    ->where('status', 1)
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;

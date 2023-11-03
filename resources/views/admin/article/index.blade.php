@@ -52,13 +52,13 @@
                         @if (request()->filter === 'draft') checked @endif>
                     <label class="form-check-label" for="draft">Brouillons</label>
                 </div>
-                @if (auth()->user()->isAdmin())
+                {{-- @if (auth()->user()->isAdmin())
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
                             @if (request()->filter === 'delete') checked @endif>
                         <label class="form-check-label" for="delete">Supprimé</label>
                     </div>
-                @endif
+                @endif --}}
             </div>
         </form>
         <div class="card-body">
@@ -173,38 +173,9 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('admin/dist/js/modalScript.js') }}"></script>
     <script>
         $(function() {
-            $('.action-btn').on('click', function() {
-                var form = $(this).closest('.form-action');
-
-                $('#confirmDestroy').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-
-                $('#confirmApprouvation').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-
-                $('#confirmRelaunch').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-            });
-
-            $('#modal-declined').on('show.bs.modal', function(event) {
-
-                $('#confirmRefus').on('click', function() {
-                    let motif = $('#motifModal').val();
-
-                    $('#motifHidden').val(motif);
-
-                    $('#declinedForm').submit();
-                });
-            });
-
             @if ($errors->has('motif'))
                 $('#modal-declined').modal('show')
             @endif

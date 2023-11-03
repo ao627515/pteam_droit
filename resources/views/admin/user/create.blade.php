@@ -59,6 +59,18 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="col mb-3">
+                        <div class="form-group">
+                            <label for="password">Mot de passe</label>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
+                                name="password" required value="{{ old('password') }}">
+                            @error('password')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
 
                 </div>
                 <button type="button" class="btn btn-primary w-100 " data-toggle="modal" data-target="#modal-default">

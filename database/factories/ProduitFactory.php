@@ -30,6 +30,8 @@ class ProduitFactory extends Factory
             'image' => fake()->imageUrl(category: 'Produit'), // Exemple d'URL d'image générée aléatoirement
             'author_id' => $author->random()->id,
             'active' => fake()->boolean,
+            'stock' => fake()->numberBetween(1, 100),
+            'prix' => fake()->numberBetween(500, 100000),
             'status' => function () use ($approuve, $nullish) {
                 return $nullish == true ? 1 : ($approuve == true ? 2 : 3);
             },

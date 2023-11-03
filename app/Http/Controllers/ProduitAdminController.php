@@ -88,12 +88,10 @@ class ProduitAdminController extends Controller
                     ->when($isPartenaire, function ($query) use ($user) {
                         return $query->where('author_id', $user->id);
                     })
+                    ->where('status', 1)
                     ->when($search, function ($query) use ($search) {
                         return $query->where('nom', 'LIKE', "%$search%");
                     })
-                    // A supprimer
-                    ->where('author_id', 2)
-                    ->where('status', 1)
                     ->orderBy('created_at', 'desc')
                     ->paginate(25);
                 break;
@@ -121,7 +119,8 @@ class ProduitAdminController extends Controller
             'description' => ['required', 'string'],
             'stock' => ['required', 'integer'],
             'image' => ['nullable', 'image'],
-            'status' => ['required', 'integer',]
+            'status' => ['required', 'integer',],
+            'prix' => ['required', 'integer',]
         ]);
 
         $status = $data['status'] == 1 ? 1 : 5;
@@ -181,6 +180,7 @@ class ProduitAdminController extends Controller
             'short_desc' => ['required', 'string'],
             'description' => ['required', 'string'],
             'stock' => ['required', 'integer'],
+            'prix' => ['required', 'integer',]
         ]);
 
         $produitAdmin->update($data);

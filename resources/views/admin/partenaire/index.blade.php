@@ -35,11 +35,11 @@
                         @if (request()->filter === 'declined') checked @endif>
                     <label class="form-check-label" for="declined">Décliné</label>
                 </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
-                            @if (request()->filter === 'delete') checked @endif>
-                        <label class="form-check-label" for="delete">Supprimé</label>
-                    </div>
+                {{-- <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="filter" id="delete" value="delete"
+                        @if (request()->filter === 'delete') checked @endif>
+                    <label class="form-check-label" for="delete">Supprimé</label>
+                </div> --}}
             </div>
         </form>
         <div class="card-body">
@@ -75,7 +75,8 @@
                             <td>
                                 <ul class="nav nav-fill">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('partenaireAdmin.show', $partenaire) }}" title="Voir">
+                                        <a class="nav-link" href="{{ route('partenaireAdmin.show', $partenaire) }}"
+                                            title="Voir">
                                             <i class="nav-icon fa-solid fa-eye"></i>
                                             {{-- Voir --}}
                                         </a>
@@ -91,46 +92,9 @@
             {{ $partenaires->appends($query)->links() }}
         </div>
     </div>
-
-
-    <div class="modal fade" id="modal-destroy">
-        <div class="modal-dialog">
-            <div class="modal-content bg-danger">
-                <div class="modal-header">
-                    <h4 class="modal-title">Confirmation</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Voullez vous supprimé cet utilisateur ?</p>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-outline-light" id="confirmDestroy">Oui</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
-
 @endsection
 
 @section('script')
-    <script>
-        $(document).ready(function() {
-            $('.action-btn').on('click', function() {
-                var form = $(this).closest('.form-action');
-
-                $('#confirmDestroy').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-            });
-        });
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Filtre

@@ -36,6 +36,11 @@
                 </div>
                 <div class="col-12 col-sm-6">
                     <h1 class="text-center">{{ $produit->nom }}</h1> <br>
+                    <div>
+                        <h6>Stock : {{ $produit->stock }}</h6>
+                        <h6>Prix : {{ $produit->prix }}</h6>
+                        <h6>{{ $produit->getActionDate() }}</h6>
+                    </div>
                     <h3 class="my-3">Description</h3>
                     <p>
                         {{ $produit->description }}
@@ -91,7 +96,7 @@
                                         <span class="badge badge-danger">{{ $notifications->count() }}</span>
                                     </button>
                                 </div>
-                                @if ($produit->isDeclined())
+                                @if ($produit->isDeclined() and auth()->user()->id == $article->author_id)
                                     <form action="{{ route('produitAdmin.relaunch', $produit) }}" method="post"
                                         class="form-action dropdown-item">
                                         @csrf
@@ -101,7 +106,7 @@
                                         </button>
                                     </form>
                                 @endif
-                                @if ($produit->isDraft())
+                                @if ($produit->isDraft() and auth()->user()->id == $article->author_id)
                                     <form action="{{ route('produitAdmin.publish', $produit) }}" method="post"
                                         class="form-action dropdown-item">
                                         @csrf
@@ -288,38 +293,9 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('admin/dist/js/modalScript.js') }}"></script>
     <script>
         $(function() {
-            $('.action-btn').on('click', function() {
-                var form = $(this).closest('.form-action');
-
-                $('#confirmDestroy').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-
-                $('#confirmApprouvation').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-
-                $('#confirmRelaunch').on('click', function() {
-                    // Soumettre le formulaire
-                    form.submit();
-                });
-            });
-
-            $('#modal-declined').on('show.bs.modal', function(event) {
-
-                $('#confirmRefus').on('click', function() {
-                    let motif = $('#motifModal').val();
-
-                    $('#motifHidden').val(motif);
-
-                    $('#declinedForm').submit();
-                });
-            });
-
             @if ($errors->has('motif'))
                 $('#modal-declined').modal('show')
             @endif

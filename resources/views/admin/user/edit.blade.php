@@ -60,7 +60,6 @@
                             @enderror
                         </div>
                     </div>
-
                 </div>
                 <button type="button" class="btn btn-primary w-100 " data-toggle="modal" data-target="#modal-default">
                     Modifer

@@ -16,7 +16,7 @@
                     alt="User Image">
             </div>
             <div class="info">
-                <a href="" class="d-block">{{ auth()->user()->nom . ' ' . auth()->user()->prenom }}</a>
+                <a href="{{ route('user.show', auth()->user()) }}" class="d-block">{{ auth()->user()->nom . ' ' . auth()->user()->prenom }}</a>
                 <small class="d-block text-light">Rôle : {{ auth()->user()->role }}</small>
             </div>
         </div>
@@ -151,7 +151,7 @@
                                 @if (Request::routeIs('user.edit'))
                                     <i class=" fa-solid fa-pen"></i>
                                 @endif
-                                @if (Request::routeIs('user.show'))
+                                @if (Request::routeIs('user.show') or Request::routeIs('partenaireAdmin.show'))
                                     <i class=" fa-solid fa-eye"></i>
                                 @endif
                                 <i class="right fas fa-angle-left"></i>

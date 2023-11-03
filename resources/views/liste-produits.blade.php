@@ -48,26 +48,25 @@
                         <!-- Posts -->
                         <div class="row">
                             @foreach ($produits as $produit)
-                            {{ $produit->imgInit() }}
+                                {{ $produit->imgInit() }}
                                 <div class="col-md-6">
                                     <div class="single-post" data-delay=".1">
                                         <div class="image-hover-wrap">
-                                            <img src="{{ $produit->image}}">
+                                            <img src="{{ $produit->image }}">
                                             <div
                                                 class="image-hover-content d-flex justify-content-center align-items-center text-center">
                                                 <ul class="list-inline">
-                                                    <li><a href="{{ route('detail') }}"><i class="fas fa-eye"></i></a></li>
+                                                    <li><a href="{{ route('produit.show', $produit) }}"><i class="fas fa-eye"></i></a></li>
                                                 </ul>
                                             </div>
                                         </div>
-                                        <span class="text-dark">Publié le <a class="text-dark"
-                                                href="#">19/09/2017</a></span>
+                                        <span class="text-dark">{{ $produit->getActionDate() }}</span>
 
-                                        <a href="{{ route('detail') }}" class="text-primary">Droit administratif</a>
+                                        <a href="{{ route('produit.show', $produit) }}" class="text-primary">Droit administratif</a>
                                         <h4 class="text-warning">
-                                            5.000 fcfa
+                                            {{ $produit->prix }} fcfa
                                         </h4>
-                                        <h4> stock : <a href="#">554545</a> </h4>
+                                        <h4> stock : {{ $produit->stock }} </h4>
                                         <div>
                                             <div class="btn btn-primary btn-flat"> <a
                                                     href="{{ route('paiement.create') }}">Payer</a>

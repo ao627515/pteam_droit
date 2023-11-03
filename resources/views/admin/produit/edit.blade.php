@@ -30,7 +30,7 @@
                 </div>
             </form>
 
-            <form action="{{ route('produitAdmin.update',$produit) }}" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+            <form action="{{ route('produitAdmin.update',$produit) }}" method="post" enctype="multipart/form-data" accept-charset="UTF-8" id="form-update">
                 @csrf
                 @method('put')
                 <div class="row row-cols-1">
@@ -52,6 +52,18 @@
                             <input type="number" class="form-control @error('stock') is-invalid @enderror"
                                 id="stock" name="stock" value="{{ old('stock', $produit->stock) }}" required>
                             @error('stock')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col mb-3">
+                        <div class="form-group">
+                            <label for="prix">Prix</label>
+                            <input type="number" class="form-control @error('prix') is-invalid @enderror"
+                                id="prix" name="prix" value="{{ old('prix', $produit->prix) }}" required>
+                            @error('prix')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -123,7 +135,7 @@
 
             $('#confirmUpdate').on('click', function() {
                 // Soumettre le formulaire
-                $('form').submit();
+                $('#form-update').submit();
             });
         })
     </script>
