@@ -13,7 +13,7 @@ class OrganisationPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class OrganisationPolicy
      */
     public function view(User $user, Organisation $organisation): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -29,7 +29,7 @@ class OrganisationPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -37,13 +37,13 @@ class OrganisationPolicy
      */
     public function update(User $user, Organisation $organisation): bool
     {
-        //
+        return $user->id == $organisation->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Organisation $organisation): bool
+    public function delete(User $user, Organisation $organisation)
     {
         //
     }
@@ -51,7 +51,7 @@ class OrganisationPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Organisation $organisation): bool
+    public function restore(User $user, Organisation $organisation)
     {
         //
     }
@@ -59,7 +59,7 @@ class OrganisationPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Organisation $organisation): bool
+    public function forceDelete(User $user, Organisation $organisation)
     {
         //
     }

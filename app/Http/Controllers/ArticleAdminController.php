@@ -7,19 +7,25 @@ use App\Models\Article;
 use App\Models\Categorie;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\ArticleStatusNotification;
+use Illuminate\Support\Facades\Gate;
 
 class ArticleAdminController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
+
+        if (Gate::denies('viewAny', Article::class)) {
+            return back()->with("error", Gate::inspect('viewAny', Article::class)->message());
+        }
+
         $articles = $this->filter($request);
 
         return view(
@@ -34,83 +40,51 @@ class ArticleAdminController extends Controller
     private function filter(Request $request)
     {
         $filter = $request['filter'];
-
         $search = $request['search'];
-
         /** @var $user App\Model\User */
         $user = auth()->user();
-        $isPartenaire = $user->isPartenaire() ? true : false;
+        $isPartenaire = $user->isPartenaire();
+
+        $query = Article::where('active', true)
+            ->when($isPartenaire, function ($query) use ($user) {
+                return $query->where('author_id', $user->id);
+            })
+            ->when($search, function ($query) use ($search) {
+                return $query->where('titre', 'LIKE', "%$search%");
+            })
+            ->orderBy('created_at', 'desc');
 
         switch ($filter) {
             case 'approuved':
-                $articles = Article::where('active', true)
-                    ->when($isPartenaire, function ($query) use ($user) {
-                        return $query->where('author_id', $user->id);
-                    })
-                    ->where('status', 2)
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('titre', 'LIKE', "%$search%");
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('status', 2);
                 break;
             case 'declined':
-                $articles = Article::where('active', true)
-                    ->when($isPartenaire, function ($query) use ($user) {
-                        return $query->where('author_id', $user->id);
-                    })
-                    ->where('status', 3)
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('titre', 'LIKE', "%$search%");
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('status', 3);
                 break;
             case 'draft':
-                $articles = Article::where('active', true)
-                    ->when($isPartenaire, function ($query) use ($user) {
-                        return $query->where('author_id', $user->id);
-                    })
-                    ->where('status', 5)
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('titre', 'LIKE', "%$search%");
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('status', 5);
                 break;
             case 'delete':
-                $articles = Article::where('active', false)
-                    ->when($isPartenaire, function ($query) use ($user) {
-                        return $query->where('author_id', $user->id);
-                    })
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('titre', 'LIKE', "%$search%");
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('active', false);
                 break;
             default:
-                $articles = Article::where('active', true)
-                    ->when($isPartenaire, function ($query) use ($user) {
-                        return $query->where('author_id', $user->id);
-                    })
-                    ->where('status', 1)
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('titre', 'LIKE', "%$search%");
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('status', 1);
                 break;
         }
 
-        return $articles;
+        return $query->paginate(25);
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
+        if (Gate::denies('create', Article::class)) {
+            return back()->with("error", Gate::inspect('create', Article::class)->message());
+        }
+
         return view('admin.article.create', [
             'categories' => Categorie::all()
         ]);
@@ -121,6 +95,7 @@ class ArticleAdminController extends Controller
      */
     public function store(Request $request)
     {
+
         // dd($request->all());
         // Validation des données reçues
         $dataValidated = $request->validate([
@@ -186,14 +161,18 @@ class ArticleAdminController extends Controller
      */
     public function show(string $articleAdmin)
     {
+        if (Gate::denies('view', $articleAdmin)) {
+            return back()->with("error", Gate::inspect('view', $articleAdmin)->message());
+        }
+
         /** @var $user App\Model\User  */
         $user = auth()->user();
 
         $articleAdmin = Article::where('slug', $articleAdmin)->first();
 
         $notifications = $user->notifications()
-        ->whereJsonContains('data->article_id', $articleAdmin->id)
-        ->get();
+            ->whereJsonContains('data->article_id', $articleAdmin->id)
+            ->get();
 
 
         return view('admin.article.show', [
@@ -208,7 +187,9 @@ class ArticleAdminController extends Controller
      */
     public function edit(Article $articleAdmin)
     {
-
+        if (Gate::denies('update', $articleAdmin)) {
+            return back()->with("error", Gate::inspect('update', $articleAdmin)->message());
+        }
         return view('admin.article.edit', [
             'article' => $articleAdmin,
             'categories' => Categorie::all()
@@ -284,6 +265,10 @@ class ArticleAdminController extends Controller
      */
     public function destroy(Article $articleAdmin)
     {
+        if (Gate::denies('delete', $articleAdmin)) {
+            return back()->with("error", Gate::inspect('delete', $articleAdmin)->message());
+        }
+
         $parentDirectory = dirname($articleAdmin->image);
 
         Storage::disk('public')->deleteDirectory($parentDirectory);
@@ -313,6 +298,10 @@ class ArticleAdminController extends Controller
     public function approuved(Article $article)
     {
 
+        if (Gate::denies('approuved', $article)) {
+            return back()->with("error", Gate::inspect('approuved', $article)->message());
+        }
+
         $approuveBy = auth()->user()->id;
 
         // article en publié
@@ -328,6 +317,10 @@ class ArticleAdminController extends Controller
 
     public function declined(Request $request, Article $article)
     {
+
+        if (Gate::denies('declined', $article)) {
+            return back()->with("error", Gate::inspect('declined', $article)->message());
+        }
 
         $data = $request->validate([
             'motif' => ['required', 'string']
@@ -349,6 +342,10 @@ class ArticleAdminController extends Controller
 
     public function relaunch(Article $article)
     {
+        if (Gate::denies('relaunch', $article)) {
+            return back()->with("error", Gate::inspect('relaunch', $article)->message());
+        }
+
         // article en attente
         $article->update([
             'status' => 1,
@@ -365,6 +362,9 @@ class ArticleAdminController extends Controller
 
     public function publish(Article $article)
     {
+        if (Gate::denies('publish', $article)) {
+            return back()->with("error", Gate::inspect('publish', $article)->message());
+        }
         // article en attente
         $article->update([
             'status' => 1

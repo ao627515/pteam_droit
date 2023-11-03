@@ -317,7 +317,8 @@ class UserController extends Controller
             'type_compte' => 'physique',
             // 'password' => Hash::make('#monDroit2023'),
             'password' => Hash::make($data['password']),
-            'role' => 'administrateur'
+            'role' => 'administrateur',
+            'status' => 2
         ]));
 
         return to_route('user.index');

@@ -77,8 +77,6 @@ class User extends Authenticatable
         return $this->role === "utilisateur";
     }
 
-
-
     public static function date($date)
     {
 

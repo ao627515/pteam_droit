@@ -32,7 +32,7 @@
                 <li class="list-group-item px-3 py-1">
                     <div class="d-flex justify-content-end">
                         <div class="">
-                            <small class="d-block">Aprouvé par</small>
+                            <small class="d-block">Aprouver par</small>
                             <small>{{ $article->approuvedBy->nom . ' ' . $article->approuvedBy->prenom }}</small>
                         </div>
                         <div class="pt-1 ml-3">
@@ -45,7 +45,7 @@
                 <li class="list-group-item px-3 py-1">
                     <div class="d-flex justify-content-end">
                         <div class="">
-                            <small class="d-block">Décliné par</small>
+                            <small class="d-block">Décliner par</small>
                             <small>{{ $article->declinedBy->nom . ' ' . $article->declinedBy->prenom }}</small>
                         </div>
                         <div class="pt-1 ml-3">

@@ -15,15 +15,13 @@ class ApproveMiddleware
      */
     public function handle($request, Closure $next)
     {
-        // // Vérifie si l'utilisateur est connecté
-        // if (auth()->check()) {
-        //     // Vérifie si l'utilisateur est un partenaire et est approuvé
-        //     if (auth()->user()->isPartenaire() && auth()->user()->isApproved()) {
-        //         return $next($request); // L'utilisateur est approuvé, poursuit la requête
-        //     }
-        // }
+        /** @var App\Model\User $user */
+        $user = auth()->user();
 
-        // return to_route('user.show', auth()->user())->with('error', 'Vous n\'êtes pas encore approuvé par les administrateurs.');
+        if (!$user->isApprove() and  $request->route()->getName() != 'user.show') {
+            return to_route('user.show', $user)->with('error', 'Vous n\'êtes pas encore approuvé par les administrateurs.');
+        }
+
+        return $next($request);
     }
-
 }

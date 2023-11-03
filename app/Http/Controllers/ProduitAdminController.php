@@ -35,69 +35,35 @@ class ProduitAdminController extends Controller
         $user = auth()->user();
         $isPartenaire = $user->isPartenaire() ? true : false;
 
+        $query = Produit::where('active', true)
+            ->when($isPartenaire, function ($query) use ($user) {
+                return $query->where('author_id', $user->id);
+            })
+            ->when($search, function ($query) use ($search) {
+                return $query->where('nom', 'LIKE', "%$search%");
+            })
+            ->orderBy('created_at', 'desc');
+
         switch ($filter) {
             case 'approuved':
-                $produits = Produit::where('active', true)
-                    ->when($isPartenaire, function ($query) use ($user) {
-                        return $query->where('author_id', $user->id);
-                    })
-                    ->where('status', 2)
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('nom', 'LIKE', "%$search%");
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('status', 2);
                 break;
             case 'declined':
-                $produits = Produit::where('active', true)
-                    ->when($isPartenaire, function ($query) use ($user) {
-                        return $query->where('author_id', $user->id);
-                    })
-                    ->where('status', 3)
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('nom', 'LIKE', "%$search%");
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('status', 3);
+
                 break;
             case 'draft':
-                $produits = Produit::where('active', true)
-                    ->when($isPartenaire, function ($query) use ($user) {
-                        return $query->where('author_id', $user->id);
-                    })
-                    ->where('status', 5)
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('nom', 'LIKE', "%$search%");
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('status', 5);
                 break;
             case 'delete':
-                $produits = Produit::where('active', false)
-                    ->when($isPartenaire, function ($query) use ($user) {
-                        return $query->where('author_id', $user->id);
-                    })
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('nom', 'LIKE', "%$search%");
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query = Produit::where('active', false);
                 break;
             default:
-                $produits = Produit::where('active', true)
-                    ->when($isPartenaire, function ($query) use ($user) {
-                        return $query->where('author_id', $user->id);
-                    })
-                    ->where('status', 1)
-                    ->when($search, function ($query) use ($search) {
-                        return $query->where('nom', 'LIKE', "%$search%");
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('status', 1);
                 break;
         }
 
-        return $produits;
+        return $query->paginate(25);
     }
 
     /**

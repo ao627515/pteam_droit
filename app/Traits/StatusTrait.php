@@ -49,12 +49,13 @@ trait StatusTrait
 
     public function getArticleStatus()
     {
-        if (auth()->user()->role == 'administrateur') {
+        if (auth()->user()->isAdmin()) {
             return $this->adminArticleStatus();
         } else {
             return $this->partenaireArticleStatus();
         }
     }
+
     public function adminProduitStatus()
     {
         // Si ce n'est pas approuvé mais décliné
@@ -95,10 +96,10 @@ trait StatusTrait
 
     public function getProduitStatus()
     {
-        if (auth()->user()->role == 'administrateur') {
+        if (auth()->user()->isAdmin()) {
             return $this->adminProduitStatus();
         } else {
-            return $this->getProduitStatus();
+            return $this->partenaireProduitStatus();
         }
     }
 

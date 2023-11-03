@@ -44,23 +44,24 @@ Route::resource('partenaire', PartenaireController::class)->only('index');
 Route::resource('categorieArticle', CategorieArticleController::class)->only('show')->parameter('categorieArticle', 'categorie');
 
 // Routes for authenticated users
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'approve'])->group(function () {
     // Resource routes
-    Route::resources([
-        'partenaireAdmin' => PartenaireAdminController::class,
-        'article' => ArticleController::class,
-        'articleAdmin' => ArticleAdminController::class,
-        'categorie' => CategorieController::class,
-        'ticket' => TicketController::class,
-        'paiement' => PaiementController::class,
-        // 'organisation' => OrganisationController::class,
-        'user' => UserController::class,
-        'produitAdmin' => ProduitAdminController::class,
-        'commande' => CommandeController::class,
-        'prestation' => PrestationController::class,
-        'typeCompte' => TypeCompteController::class,
-        'domaine' => DomaineController::class,
-    ]);
+    Route::resource('partenaireAdmin', PartenaireAdminController::class);
+    Route::resource('articleAdmin', ArticleAdminController::class);
+    Route::resource('categorie', CategorieController::class);
+    Route::resource('ticket', TicketController::class);
+    Route::resource('paiement', PaiementController::class);
+    // Route::resource('organisation', OrganisationController::class); // Cette route est actuellement commentée
+    Route::resource('user', UserController::class);
+    Route::resource('produitAdmin', ProduitAdminController::class);
+    Route::resource('commande', CommandeController::class);
+    Route::resource('prestation', PrestationController::class);
+    Route::resource('typeCompte', TypeCompteController::class);
+    Route::resource('domaine', DomaineController::class);
+
+    Route::prefix('user')->group(function () {
+        Route::resource('article', ArticleController::class);
+    });
 
     // Custom routes
     Route::resource('organisation', OrganisationController::class)->except('show');
@@ -82,6 +83,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('disconnect', [UserController::class, 'disconnect'])->name('disconnect');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('notification', [NotificationController::class, 'index'])->name('notifications');
+    Route::post('article/{article}/relaunch', [ArticleAdminController::class, 'relaunch'])->name('articleAdmin.relaunch');
+    Route::post('produit/{produit}/relaunch', [ProduitAdminController::class, 'relaunch'])->name('produitAdmin.relaunch');
 });
 
 // Routes for guests (not authenticated users)
