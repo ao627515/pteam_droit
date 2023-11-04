@@ -2,7 +2,7 @@
 
 @section('title', 'LIste des produits')
 
-@section('content')
+@section('css')
     <style>
         .produit-card .produit-author {
             display: none;
@@ -14,6 +14,11 @@
             transition: display 1s ease;
         }
     </style>
+@endsection
+
+@section('content')
+
+    <x-message-flash/>
 
     <div class="card">
         <div class="card-header bg-secondary">
@@ -79,7 +84,7 @@
                                     stock : {{ $produit->stock }}
                                 </h6>
                                 <h6 class="card-subtitle mt-2" style="font-size: 13.5px">
-                                    Prix : {{ $produit->prix.' Franc cfa' }}
+                                    Prix : {{ $produit->prix . ' Franc cfa' }}
                                 </h6>
                                 <p class="card-text mt-1" style="font-size: 13px">
                                     {{ $produit->short_desc }}
@@ -137,7 +142,7 @@
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu" role="menu">
-                                        @if ($produit->isDeclined())
+                                        @if ($produit->isDeclined() and ($produit->author_id === auth()->user()->id))
                                             <form action="{{ route('produitAdmin.relaunch', $produit) }}" method="post"
                                                 class="form-action dropdown-item">
                                                 @csrf

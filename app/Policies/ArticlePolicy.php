@@ -81,14 +81,14 @@ class ArticlePolicy
 
     public function relaunch(User $user, Article $article)
     {
-        return $user->id == $article->user_id
+        return $user->id == $article->author_id
             ? Response::allow()
             : Response::deny("Vous n'avez pas le droit de faire une demande publication pour cet article");
     }
 
     public function publish(User $user, Article $article)
     {
-        return $user->id == $article->user_id
+        return $user->id == $article->author_id
             ? Response::allow()
             : Response::deny("Vous n'avez pas le droit de publié cet article");
     }

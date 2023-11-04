@@ -13,15 +13,13 @@ class ProduitPolicy
      */
     public function viewAny(User $user)
     {
-        return  true
-            ? Response::allow()
-            : Response::deny('You must be an administrator.');
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Produit $produit)
+    public function view(User $user,  $produit)
     {
         return true;
     }
@@ -31,7 +29,9 @@ class ProduitPolicy
      */
     public function create(User $user)
     {
-        return $user->isAdmin() or $user->isPartenaire();
+        return $user->isAdmin() or $user->isPartenaire()
+            ? Response::allow()
+            : Response::deny("Vous n'avez pas le droit de créé un produit");
     }
 
     /**
@@ -39,7 +39,9 @@ class ProduitPolicy
      */
     public function update(User $user, Produit $produit)
     {
-        return $user->id == $produit->author_id;
+        return $user->id == $produit->author_id
+            ? Response::allow()
+            : Response::deny("Vous n'avez pas le droit de modifié cet produit");
     }
 
     /**
@@ -47,7 +49,9 @@ class ProduitPolicy
      */
     public function delete(User $user, Produit $produit)
     {
-        return $user->isAdmin() or $user->isPartenaire();
+        return $user->isAdmin() or $user->isPartenaire()
+            ? Response::allow()
+            : Response::deny("Vous n'avez pas le droit de supprimé cet produit");
     }
 
     /**
@@ -61,8 +65,31 @@ class ProduitPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Produit $produit)
+    public function approuved(User $user, Produit $produit)
     {
-        return $user->isAdmin();
+        return $user->isAdmin()
+            ? Response::allow()
+            : Response::deny("Vous n'ête pas authorisé à approuvé un produit");
+    }
+
+    public function declined(User $user, Produit $produit)
+    {
+        return $user->isAdmin()
+            ? Response::allow()
+            : Response::deny("Vous n'ête pas authorisé à decliné un produit");
+    }
+
+    public function relaunch(User $user, Produit $produit)
+    {
+        return $user->id == $produit->author_id
+            ? Response::allow()
+            : Response::deny("Vous n'avez pas le droit de faire une demande publication pour cet produit");
+    }
+
+    public function publish(User $user, Produit $produit)
+    {
+        return $user->id == $produit->author_id
+            ? Response::allow()
+            : Response::deny("Vous n'avez pas le droit de publié cet produit");
     }
 }

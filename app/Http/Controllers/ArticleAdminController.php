@@ -190,6 +190,7 @@ class ArticleAdminController extends Controller
         if (Gate::denies('update', $articleAdmin)) {
             return back()->with("error", Gate::inspect('update', $articleAdmin)->message());
         }
+
         return view('admin.article.edit', [
             'article' => $articleAdmin,
             'categories' => Categorie::all()
@@ -277,7 +278,7 @@ class ArticleAdminController extends Controller
             'active' => false
         ]);
 
-        return to_route('articleAdmin.index')->with('sucess', 'Articles publié');
+        return to_route('articleAdmin.index')->with('success', 'Articles publié');
     }
 
     public function featured_image(Request $request, Article $article)

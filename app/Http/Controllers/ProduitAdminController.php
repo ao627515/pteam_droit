@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produit;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\ProduitStatusNotification;
-use App\Notifications\MonitoringStatusNotification;
 
 class ProduitAdminController extends Controller
 {
@@ -17,6 +16,9 @@ class ProduitAdminController extends Controller
      */
     public function index(Request $request)
     {
+        if (Gate::denies('viewAny', Produit::class)) {
+            return back()->with("error", Gate::inspect('viewAny', Produit::class)->message());
+        }
 
         $produits = $this->filter($request);
 
@@ -50,7 +52,6 @@ class ProduitAdminController extends Controller
                 break;
             case 'declined':
                 $query->where('status', 3);
-
                 break;
             case 'draft':
                 $query->where('status', 5);
@@ -71,6 +72,10 @@ class ProduitAdminController extends Controller
      */
     public function create()
     {
+        if (Gate::denies('create', Produit::class)) {
+            return back()->with("error", Gate::inspect('create', Produit::class)->message());
+        }
+
         return view('admin.produit.create');
     }
 
@@ -112,6 +117,9 @@ class ProduitAdminController extends Controller
      */
     public function show(Produit $produitAdmin)
     {
+        if (Gate::denies('view', $produitAdmin)) {
+            return back()->with("error", Gate::inspect('view', $produitAdmin)->message());
+        }
 
         /** @var $user App\Model\User  */
         $user = auth()->user();
@@ -131,6 +139,10 @@ class ProduitAdminController extends Controller
      */
     public function edit(Produit $produitAdmin)
     {
+        if (Gate::denies('update', $produitAdmin)) {
+            return back()->with("error", Gate::inspect('update', $produitAdmin)->message());
+        }
+
         return view('admin.produit.edit', [
             'produit' => $produitAdmin
         ]);
@@ -159,6 +171,10 @@ class ProduitAdminController extends Controller
      */
     public function destroy(Produit $produitAdmin)
     {
+        if (Gate::denies('delete', $produitAdmin)) {
+            return back()->with("error", Gate::inspect('delete', $produitAdmin)->message());
+        }
+
         $parentDirectory = dirname($produitAdmin->image);
 
         // dd($parentDirectory);
@@ -169,7 +185,7 @@ class ProduitAdminController extends Controller
             'active' => false
         ]);
 
-        return to_route('produitAdmin.index')->with('sucess', 'Produits publié');
+        return to_route('produitAdmin.index')->with('success', 'Produits publié');
     }
 
     public function featured_image(Request $request, Produit $produit)
@@ -189,6 +205,9 @@ class ProduitAdminController extends Controller
 
     public function approuved(Produit $produit)
     {
+        if (Gate::denies('approuved', $produit)) {
+            return back()->with("error", Gate::inspect('approuved', $produit)->message());
+        }
 
         $approuveBy = auth()->user()->id;
 
@@ -207,6 +226,9 @@ class ProduitAdminController extends Controller
     public function declined(Request $request, Produit $produit)
     {
 
+        if (Gate::denies('declined', $produit)) {
+            return back()->with("error", Gate::inspect('declined', $produit)->message());
+        }
 
         $data = $request->validate([
             'motif' => ['required', 'string']
@@ -227,6 +249,10 @@ class ProduitAdminController extends Controller
 
     public function relaunch(Produit $produit)
     {
+        if (Gate::denies('relaunch', $produit)) {
+            return back()->with("error", Gate::inspect('relaunch', $produit)->message());
+        }
+
         // produit en attente
         $produit->update([
             'status' => 1,
@@ -237,17 +263,17 @@ class ProduitAdminController extends Controller
         return to_route('produitAdmin.index')->with('Produit relancé !');
     }
 
-    // private function drafts (Produit $produit) {
-    //     $produit;
-    // }
-
     public function publish(Produit $produit)
     {
+        if (Gate::denies('publish', $produit)) {
+            return back()->with("error", Gate::inspect('publish', $produit)->message());
+        }
+
         // produit en attente
         $produit->update([
             'status' => 1
         ]);
 
-        return to_route('articleAdmin.index')->with('Produit publié !, En attente de validation par les administrateurs');
+        return to_route('produitAdmin.index')->with('Produit publié !, En attente de validation par les administrateurs');
     }
 }
