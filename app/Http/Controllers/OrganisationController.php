@@ -68,9 +68,6 @@ class OrganisationController extends Controller
         $destination_path = 'uploads/docs/';
         $img_destination_path = 'uploads/images/';
 
-        /** @var $publicDisk  Filesystem */
-        $publicDisk = Storage::disk('public');
-
         // Mettez les noms de fichiers actuels dans des variables
         $doc_name = $organisation->val_doc_1;
         $doc_2name = $organisation->val_doc_2;
