@@ -24,7 +24,8 @@
                                 utilisateur
                             </div>
 
-                            <h3 class="profile-username text-center">{{ $ticket->user->nom . ' ' . $ticket->user->prenom }}</h3>
+                            <h3 class="profile-username text-center">{{ $ticket->user->nom . ' ' . $ticket->user->prenom }}
+                            </h3>
 
                             <p class="text-muted text-center">ticket {{ $ticket->id }}</p>
 
@@ -58,10 +59,9 @@
                                     <!-- Post -->
                                     <div class="post clearfix">
                                         <div class="user-block">
-                                            <img class="img-circle img-bordered-sm" src="../../dist/img/user7-128x128.jpg"
-                                                alt="User Image">
+                                            <img class="img-circle img-bordered-sm"
+                                                src="{{ asset('admin/dist/img/user7-128x128.jpg') }}" alt="User Image">
                                             <span class="username">
-                                                <a href="#"></a>
                                                 <a href="#" class="float-right btn-tool"><i
                                                         class="fas fa-times"></i></a>
                                             </span>
@@ -76,9 +76,9 @@
                                             <div class="post clearfix">
                                                 <div class="user-block">
                                                     <img class="img-circle img-bordered-sm"
-                                                        src="../../dist/img/user7-128x128.jpg" alt="User Image">
+                                                        src="{{ asset('admin/dist/img/user7-128x128.jpg') }}"
+                                                        alt="User Image">
                                                     <span class="username">
-                                                        <a href="#"></a>
                                                         <a href="#" class="float-right btn-tool"><i
                                                                 class="fas fa-times"></i></a>
                                                     </span>
@@ -100,16 +100,8 @@
                                         </form>
 
                                     </div>
-                                    <!-- /.post -->
-
-
-                                    <!-- /.post -->
-
-
-                                    <!-- /.tab-pane -->
                                 </div>
                                 <!-- /.tab-content -->
-
                             </div><!-- /.card-body -->
                         </div>
                         <!-- /.card -->

@@ -20,7 +20,7 @@ class PartenaireAdminController extends Controller
         if(auth()->user()->isUser()){
             return abort(404);
         }
-        
+
         $partenaires = $this->filter($request);
 
         return view(
@@ -70,74 +70,6 @@ class PartenaireAdminController extends Controller
 
         return $partenaires;
     }
-
-
-    // private function filter(Request $request)
-    // {
-    //     $filter = $request['filter'];
-
-    //     $search = $request['search'];
-
-    //     switch ($filter) {
-    //         case 'approuved':
-    //             $partenaires = User::where('active', true)
-    //                 ->where('role', 'partenaire')
-    //                 ->where('status', 2)
-    //                 ->when($search, function ($query) use ($search) {
-    //                     $query->where('nom', 'LIKE', "%$search%")
-    //                         ->orWhere('prenom', 'LIKE', "%$search%")
-    //                         ->orWhere('phone', 'LIKE', "%$search%")
-    //                         ->orWhere('email', 'LIKE', "%$search%");
-    //                     return $query;
-    //                 })
-    //                 ->orderBy('created_at', 'desc')
-    //                 ->paginate(25);
-    //             break;
-    //         case 'declined':
-    //             $partenaires = User::where('active', true)
-    //                 ->where('role', 'partenaire')
-    //                 ->where('status', 3)
-    //                 ->when($search, function ($query) use ($search) {
-    //                     $query->where('nom', 'LIKE', "%$search%")
-    //                         ->orWhere('prenom', 'LIKE', "%$search%")
-    //                         ->orWhere('phone', 'LIKE', "%$search%")
-    //                         ->orWhere('email', 'LIKE', "%$search%");
-    //                     return $query;
-    //                 })
-    //                 ->orderBy('created_at', 'desc')
-    //                 ->paginate(25);
-    //             break;
-    //         case 'delete':
-    //             $partenaires = User::where('active', false)
-    //                 ->where('role', 'partenaire')
-    //                 ->when($search, function ($query) use ($search) {
-    //                     $query->where('nom', 'LIKE', "%$search%")
-    //                         ->orWhere('prenom', 'LIKE', "%$search%")
-    //                         ->orWhere('phone', 'LIKE', "%$search%")
-    //                         ->orWhere('email', 'LIKE', "%$search%");
-    //                     return $query;
-    //                 })
-    //                 ->orderBy('created_at', 'desc')
-    //                 ->paginate(25);
-    //             break;
-    //         default:
-    //             $partenaires = User::where('active', true)
-    //                 ->where('role', 'partenaire')
-    //                 ->where('status', 1)
-    //                 ->when($search, function ($query) use ($search) {
-    //                     $query->where('nom', 'LIKE', "%$search%")
-    //                         ->orWhere('prenom', 'LIKE', "%$search%")
-    //                         ->orWhere('phone', 'LIKE', "%$search%")
-    //                         ->orWhere('email', 'LIKE', "%$search%");
-    //                     return $query;
-    //                 })
-    //                 ->orderBy('created_at', 'desc')
-    //                 ->paginate(25);
-    //             break;
-    //     }
-
-    //     return $partenaires;
-    // }
 
     /**
      * Show the form for creating a new resource.

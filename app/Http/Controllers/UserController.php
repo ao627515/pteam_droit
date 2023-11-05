@@ -211,7 +211,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if(auth()->user()->isUser()){
+        if (auth()->user()->isUser()) {
             return abort(404);
         }
 
@@ -305,10 +305,17 @@ class UserController extends Controller
         } elseif ($user->isPartenaire()) {
             return  to_route('partenaireAdmin.show', $user);
         } else {
-            $user = auth()->user();
-            $tickets = Ticket::where('user_id', $user->id)->get();
-            // dd($tickets);
-            return view('includes.profile', compact('user', 'tickets'));
+            // $organisation = $user->organisation;
+            if ($user->type_compte === "morale") {
+                $organisation = Organisation::inRandomOrder()->first();
+                $domaines = Domaine::all();
+                $tickets = Ticket::where('user_id', $user->id)->get();
+                return view('includes.profile', compact('user', 'tickets', 'organisation', 'domaines'));
+            } else {
+                $user = auth()->user();
+                $tickets = Ticket::where('user_id', $user->id)->get();
+                return view('includes.profile', compact('user', 'tickets'));
+            }
         }
     }
 

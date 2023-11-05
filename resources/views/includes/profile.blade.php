@@ -17,7 +17,7 @@
                         <div class="img-circle text-center mb-3">
                             <img src="{{ asset('assets/profile/img/user2.jpg') }}" alt="Image" class="shadow">
                         </div>
-                        <h4 class="text-center">Kiran Acharya</h4>
+                        <h4 class="text-center">{{ $user->nom . ' ' . $user->prenom }}</h4>
                     </div>
                     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical"
                         style="width: 16rem">
@@ -119,6 +119,123 @@
                         <div>
                             <button class="btn btn-primary">Modifier</button>
                         </div>
+                        @if ($user->type_compte === 'morale')
+                            <div class="card-body">
+                                <form action="{{ route('organisation.update', $organisation) }}" method="post"
+                                    class="form-action" enctype="multipart/form-data">
+                                    @method('put')
+                                    @csrf
+                                    <fieldset class="border p-3 mt-5 mb-4">
+                                        <legend>Informations de l'entreprise</legend>
+                                        {{ $organisation->imgInit() }}
+                                        <div class="row">
+                                            <div class="form-group p-1 my-2 border col-8 mb-3">
+                                                <label for="logo" class="form-label">Logo
+                                                </label>
+                                                <input type="file" id="logo" name="logo"
+                                                    value="{{ old('logo') }}">
+                                                {{-- <input type="file" name="photograph" id="photo" required="true" /> --}}
+                                                @error('logo')
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                            <div class="col-4 text-center">
+                                                {{-- <img src="#" alt="pic" /> --}}
+                                                {{ $organisation->imgInit() }}
+                                                <img src="{{ $organisation->logo }}" id="imgPreview" alt="Logo"
+                                                    height="100" />
+                                                {{-- <img src="{{ asset('assets/img/550x550.jpg') }}"
+                                                id="imgPreview" alt="Logo" height="100" /> --}}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="nom_pro"> Nom</label>
+                                            <input type="text"
+                                                class="form-control @error('nom_pro') is-invalid @enderror" name="nom_pro"
+                                                id="nom_pro" placeholder="Raison sociale"
+                                                value="{{ old('nom_pro', $organisation->nom) }}" />
+                                            @error('nom_pro')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="phone_pro">Numéro</label>
+                                            <input type="tel"
+                                                class="form-control @error('phone_pro') is-invalid @enderror"
+                                                name="phone_pro" id="phone_pro" placeholder="Téléphone entrepise"
+                                                value="{{ old('phone_pro', $organisation->phone) }}" />
+                                            @error('phone_pro')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="email_pro">E-mail</label>
+                                            <input type="email"
+                                                class="form-control @error('email_pro') is-invalid @enderror"
+                                                name="email_pro" id="email_pro" placeholder="E-mail entreprise"
+                                                value="{{ old('email_pro', $organisation->email) }}">
+                                            @error('email_pro')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group  mb-3">
+                                            <label for="domaine">Domaine d'activité</label>
+                                            <select class="form-control p-2 @error('domaine') is-invalid @enderror"
+                                                name="domaine" id="domaine" placeholder="Choisir"
+                                                @foreach ($domaines as $item)
+                                            value="{{ old('domaine', $item->id) }}">
+                                                <option value="{{ $item->id }}">
+                                                    {{ $item->nom }}</option> @endforeach
+                                                </select>
+                                                @error('domaine')
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                @enderror
+                                        </div>
+
+                                        <div class="form-group  mb-3">
+                                            <label for="description">Description</label>
+                                            <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="description"
+                                                placeholder="Decrivez brievement les services de votre entreprise" cols="30" rows="3">{{ old('description', $organisation->description) }}</textarea>
+                                            @error('description')
+                                                <p class="text-danger text-center">{{ $message }}
+                                                </p>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group p-1 my-2 border">
+                                            <label for="val_doc_1" class="form-label">RCCM:
+                                            </label>
+                                            <input type="file" id="val_doc_1" name="val_doc_1"
+                                                value="{{ old('val_doc_1') }}">
+                                            @error('val_doc_1')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <a href="{{ asset('storage/' . $organisation->val_doc_1) }}">Ouvrir
+                                                le PDF</a>
+                                        </div>
+                                        <div class="form-group p-1 my-2 border">
+                                            <label for="val_doc_2" class="form-label">DOC2:
+                                            </label>
+                                            <input type="file" id="val_doc_2" name="val_doc_2"
+                                                value="{{ old('val_doc_2') }}">
+                                            @error('val_doc_2')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <a href="{{ asset('storage/' . $organisation->val_doc_2) }}">Ouvrir
+                                                le PDF</a>
+                                        </div>
+                                    </fieldset>
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-primary float-right action-btn"
+                                            data-toggle="modal" data-target="#modal-update">
+                                            Modifié
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        @endif
                     </div>
                     <div class="tab-pane fade  container" id="password" role="tabpanel" aria-labelledby="password-tab">
                         {{-- <h3 class="mb-4 mt-2 text-center">Changer de mot de passe</h3> --}}
@@ -156,97 +273,29 @@
         </div>
         </div>
     </section>
-    {{-- <div class="container light-style flex-grow-1 container-p-y">
-        <div class="card overflow-hidden mt-5 mb-5">
-            <div class="row no-gutters row-bordered row-border-light">
-                <div class="col-md-3 pt-0">
-                    <div class="list-group list-group-flush account-settings-links">
-                        <a class="list-group-item list-group-item-action active" data-toggle="list"
-                            href="#account-requetes">Mes
-                            requetes/Demandes </a>
-                        <a class="list-group-item list-group-item-action" data-toggle="list" href="#commandes">Mes
-                            commandes</a>
-                        <a class="list-group-item list-group-item-action" data-toggle="list" href="#favorit">Favorit</a>
-                        <a class="list-group-item list-group-item-action " data-toggle="list" href="#info-connection">Mes
-                            infos de connections</a>
-                        <a class="list-group-item list-group-item-action" data-toggle="list"
-                            href="#account-change-password">Changer de mot de passe</a>
-                    </div>
+    <div class="modal fade" id="modal-update">
+        <div class="modal-dialog">
+            <div class="modal-content bg-default">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmation</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="col-md-9">
-                    <div class="tab-content">
-                        <div class="tab-pane fade  " id="info-connection">
-                            <hr class="border-light m-0">
-                            <div class="card-body">
-                                <form action="{{ route('user.update', ['user' => $user->id]) }}" method="POST">
-                                    @csrf
-                                    @method('put')
-                                    <div class="form-group">
-                                        <label class="form-label">Nom</label>
-                                        <input type="text" name="nom" class="form-control mb-1"
-                                            value="{{ $user->nom }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Prenom (s)</label>
-                                        <input type="text" name="prenom" class="form-control"
-                                            value="{{ $user->prenom }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Téléphone</label>
-                                        <input type="number" name="phone" class="form-control mb-1"
-                                            value="{{ $user->phone }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">E-mail</label>
-                                        <input type="email" name="email" class="form-control"
-                                            value="{{ $user->email }}">
-                                    </div>
-                                    <div class="text-start mt-3">
-                                        <button type="submit" class="btn btn-primary">Mettre à jour</button>
-                                    </div>
-                            </div>
-                            </form>
-                        </div>
-                        <div class="tab-pane fade" id="account-change-password">
-                            <div class="card-body pb-2">
-                                <form action="{{route('user.update_password')}}" method="POST">
-                                    @csrf
-                                    <div class="form-group">
-                                        <label class="form-label">Ancien mot de passe</label>
-                                        <input type="password" name="old_password" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Nouveau mot de passe</label>
-                                        <input type="password" name="new_password" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Confirmer le mot de passe</label>
-                                        <input type="password" name="new_password_confirmation" class="form-control">
-                                    </div>
-                                    <div class="text-start mt-3">
-                                        <button type="submit" class="btn btn-primary">Mettre à jour</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade active show" id="account-requetes">
-                            <div class="card-body pb-2">
-                                <div class="text-center">
-                                    <h2>Aucune Requetes disponibles...</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="favorit">
-                            <div class="card-body pb-2">
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="commandes">
-                            <div class="card-body pb-2">
-                            </div>
-                        </div>
-                    </div>
+                <div class="modal-body">
+                    <p>Voullez vous modifié ces données ?</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-outline-primary" id="confirmUpdate">Oui</button>
                 </div>
             </div>
+            <!-- /.modal-content -->
         </div>
-    </div> --}}
+        <!-- /.modal-dialog -->
+    </div>
+@endsection
+
+@section('custom_script')
+    <script src="{{ asset('admin/dist/js/modalScript.js') }}"></script>
 @endsection

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\User;
+use App\Models\Domaine;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -35,6 +37,6 @@ class Organisation extends Model
     }
 
     public function owner(){
-        return $this->belongsTo(Domaine::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
