@@ -65,12 +65,14 @@
         </form>
         <div class="card-body">
             <div class="row row-cols-1 row-cols-sm-2  row-cols-md-2 row-cols-lg-2  row-cols-xl-4 row-cols-xll-6">
-                @foreach ($articles as $article)
+                @forelse ($articles as $article)
                     {{ $article->imgInit() }}
                     <div class="col">
                         <x-admin.article-admin-card :article="$article" />
                     </div>
-                @endforeach
+                @empty
+                    <p class="w-100 lead text-center offset-xl-4 offset-sm-3">Aucun article trouvé</p>
+                @endforelse
             </div>
         </div>
         <div class="card-footer px-3 py-0">

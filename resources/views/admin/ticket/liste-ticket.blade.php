@@ -63,7 +63,7 @@
                     <th>Actions</th>
                 </thead>
                 <tbody>
-                    @foreach ($tickets as $ticket)
+                    @forelse ($tickets as $ticket)
                         <tr>
                             <td>
                                 {{ $ticket->objet }}
@@ -84,7 +84,9 @@
                                 </ul>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                     <tr><td colspan="3"><p class="lead text-center">Aucune requête trouvé</p></td></tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

@@ -3,11 +3,7 @@
 @section('title', 'Gestion des catégories')
 
 @section('content')
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+    <x-message-flash/>
     <div class="card">
         <div class="card-header bg-secondary">
             <h1 class="w-100 text-center text-light">Gestion des prestations</h1>
@@ -71,7 +67,7 @@
                     <th>Actions</th>
                 </thead>
                 <tbody>
-                    @foreach ($prestations as $prestation)
+                    @forelse ($prestations as $prestation)
                         <tr>
                             <td class="w-25">
                                 {{ $prestation->nom }}
@@ -131,7 +127,13 @@
                                 </td>
                             </form>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="3">
+                                <p class="lead text-center">Aucune prestation trouvé</p>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

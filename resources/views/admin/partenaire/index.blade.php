@@ -3,6 +3,7 @@
 @section('title', 'Gestion des administrateur')
 
 @section('content')
+    <x-message-flash/>
     <div class="card">
         <div class="card-header bg-secondary">
             <h1 class="w-100 text-center text-light">Gestion des utilisateurs</h1>
@@ -52,7 +53,7 @@
                     <th>Actions</th>
                 </thead>
                 <tbody>
-                    @foreach ($partenaires as $partenaire)
+                    @forelse ($partenaires as $partenaire)
                         <tr>
                             <td>
                                 <div class="d-flex">
@@ -84,7 +85,11 @@
                                 </ul>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="5"><p class="lead text-center">Aucun partenaire trouvé</p></td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

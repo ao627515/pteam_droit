@@ -3,11 +3,7 @@
 @section('title', 'Gestion des catégories')
 
 @section('content')
-    @if (session('success'))
-        <div class="alert alert-success text-center">
-            {{ session('success') }}
-        </div>
-    @endif
+    <x-message-flash />
     <div class="card">
         <div class="card-header bg-secondary">
             <h1 class="w-100 text-center text-light">Gestion des categories</h1>
@@ -64,7 +60,7 @@
                     <th>Actions</th>
                 </thead>
                 <tbody>
-                    @foreach ($categories as $categorie)
+                    @forelse ($categories as $categorie)
                         <tr>
                             <td>
                                 <form action="{{ route('categorie.update', $categorie) }}" method="post">
@@ -101,7 +97,13 @@
                                 </ul>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="2">
+                                <p class="text-center lead">Aucune catégorie trouvé</p>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

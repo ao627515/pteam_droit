@@ -68,7 +68,7 @@
         </form>
         <div class="card-body">
             <div class="row row-cols-1 row-cols-sm-2  row-cols-md-2 row-cols-lg-2  row-cols-xl-4 row-cols-xll-6">
-                @foreach ($produits as $produit)
+                @forelse ($produits as $produit)
                     {{ $produit->imgInit() }}
                     <div class="col">
                         <div class="card produit-card">
@@ -216,7 +216,9 @@
                             </div>
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <p class="w-100 lead text-center offset-xl-4 offset-sm-3">Aucun produit trouvé</p>
+                @endforelse
             </div>
         </div>
         <div class="card-footer px-3 py-0">

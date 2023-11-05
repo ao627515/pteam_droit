@@ -3,11 +3,7 @@
 @section('title', 'Gestion des catégories')
 
 @section('content')
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+    <x-message-flash/>
     <div class="card">
         <div class="card-header bg-secondary">
             <h1 class="w-100 text-center text-light">Gestion des type de comptes</h1>
@@ -28,7 +24,7 @@
                     <th>Actions</th>
                 </thead>
                 <tbody>
-                    @foreach ($typeComptes as $typeCompte)
+                    @forelse ($typeComptes as $typeCompte)
                         <tr>
                             <td>
                                 {{ $typeCompte->nom }}
@@ -73,7 +69,9 @@
                                 </ul>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                    <tr><td colspan="4"><p class="lead text-center">Aucun type de compte trouvé</p></td></tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
