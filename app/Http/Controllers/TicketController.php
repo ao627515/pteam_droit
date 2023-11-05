@@ -3,21 +3,83 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Models\Commentaire;
 use App\Models\Organisation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\SendrequeteRequest;
-use App\Notifications\EnvoieRequteNotification;
 
 class TicketController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    public function mettreAjourStatutTicket($ticketId)
     {
-        //
+        // Vérifiez si le ticket a au moins un commentaire
+        $ticket = Ticket::find($ticketId);
+        if ($ticket) {
+            $commentCount = Commentaire::where('ticket_id', $ticket->id)->count();
+            if ($commentCount > 0 && $ticket->status == 0) {
+                $ticket->status = 2; // Mettre à jour le statut en cours
+                $ticket->save();
+            }
+        }
+    }
+    public function index(Request $request)
+    {
+        $tickets = $this->filter($request);
+
+        return view(
+            'admin.ticket.liste-ticket',
+            [
+                'tickets' => $tickets,
+                'query' => ['search' => $request['search'], 'filter' => $request['filter']],
+            ]
+        );
+    }
+
+    private function filter(Request $request)
+    {
+        $filter = $request['filter'];
+
+        $search = $request['search'];
+
+        switch ($filter) {
+            case '2':
+                $tickets = Ticket::where('active', true)
+                    ->where('status', '2')
+                    ->when($search, function ($query) use ($search) {
+                        $query->where('type', 'LIKE', "%$search%");
+                        return $query;
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(15);
+                break;
+            case '3':
+                $tickets = Ticket::where('active', true)
+                    ->where('status', '3')
+                    ->when($search, function ($query) use ($search) {
+                        $query->where('type', 'LIKE', "%$search%");
+                        return $query;
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(15);
+                break;
+            default:
+                $tickets = Ticket::where('active', true)
+                    ->where('status', '1')
+                    ->when($search, function ($query) use ($search) {
+                        $query->where('type', 'LIKE', "%$search%");
+
+                        return $query;
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(15);
+                break;
+        }
+
+        return $tickets;
     }
 
     /**
@@ -37,55 +99,44 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(SendrequeteRequest $request)
+    public function store(Request $request)
     {
-        try {
-            // Obtenir l'utilisateur connecté
-            /** @var $user App\Model\User */
-            $user = Auth::user();
+        $request->validate([
+            'objet' => 'required',
+            'msg' => 'required',
+        ]);
 
-            // Valider les données de la requête
-            $data = $request->validated();
+        $ticket = Ticket::create([
+            'objet' => $request->input('objet'),
+            'message' => $request->input('msg'),
+            'type' => $request->input('type'),
+            'ticket_id' => Auth::ticket()->id,
+            'status' => 0,
+            'target_ticket_id' => $request->input('target_ticket_id'),
+        ]);
+        $ticket->save();
+        // $ticket = new Ticket([
+        //     'objet' => $request->input('objet'),
+        //     'message' => $request->input('msg'),
+        //     'statut' => 0, // Statut "En attente"
+        //     // Assurez-vous d'ajouter ici d'autres données nécessaires pour le ticket
+        // ]);
 
-            // Ajouter l'ID de l'utilisateur aux données
-            $data['user_id'] = $user->id;
+        // $ticket->save();
 
-            // Récupérer le message du formulaire
-            $data['message'] = $request->input('msg');
+        //   flasher()addSuccess('Votre requête à été prise en compte');
 
-            // Créer un nouveau ticket avec les données
-            $ticket = Ticket::create($data);
-
-            // Vérifier si le ticket est créé avec succès
-            if ($ticket) {
-                $nom = $user->nom;
-                $prenom = $user->prenom;
-                $objet = $ticket->objet;
-                // Envoyer la notification par courriel à l'utilisateur
-                $user->notify(new EnvoieRequteNotification($nom, $prenom, $objet));
-
-                // Rediriger l'utilisateur vers la page d'accueil avec un message de succès
-                return redirect()->route('home.index')->with('success', 'Ticket créé avec succès!');
-            } else {
-                // Rediriger avec un message d'erreur si le ticket n'est pas créé
-                return redirect()->route('home.index')->with('error', 'Erreur lors de la création du ticket.');
-            }
-        } catch (\Exception $e) {
-            // Enregistrez l'erreur dans les journaux de l'application
-            Log::error($e->getMessage());
-
-            // Rediriger avec un message d'erreur en cas d'exception
-            return redirect()->route('home.index')->with('error', 'Erreur lors de la création du ticket.');
-        }
+        return redirect()->route('home.index');
     }
-
 
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show($id)
     {
-        //
+        $ticket = Ticket::find($id);
+        $commentaires = $ticket->commentaire;
+        return view('admin.ticket.voir-ticket', compact('ticket', 'commentaires'));
     }
 
     /**
@@ -111,4 +162,27 @@ class TicketController extends Controller
     {
         //
     }
+
+
+
+    public function changer(Request $request)
+    {
+        $ticketId = $request->input('id');
+        $newStatus = $request->input('status');
+
+        $ticket = Ticket::find($ticketId);
+
+        if (!$ticket) {
+            return redirect()->back()->with('error', 'Ticket non trouvé.');
+        }
+
+        $ticket->status = $newStatus;
+        $ticket->save();
+
+
+        return to_route('ticket.index')->with('success', 'Statut du ticket modifié avec succès.');
+    }
+
+
+    //
 }

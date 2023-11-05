@@ -20,6 +20,7 @@ use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\ProduitAdminController;
 use App\Http\Controllers\PartenaireAdminController;
 use App\Http\Controllers\CategorieArticleController;
+use App\Http\Controllers\CommentaireController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,13 +52,14 @@ Route::middleware(['auth', 'approve'])->group(function () {
     Route::resource('categorie', CategorieController::class);
     Route::resource('ticket', TicketController::class);
     Route::resource('paiement', PaiementController::class);
-    // Route::resource('organisation', OrganisationController::class); // Cette route est actuellement commentée
+    // Route::resource('organisation', OrganisationController::class);
     Route::resource('user', UserController::class);
     Route::resource('produitAdmin', ProduitAdminController::class);
     Route::resource('commande', CommandeController::class);
     Route::resource('prestation', PrestationController::class);
     Route::resource('typeCompte', TypeCompteController::class);
     Route::resource('domaine', DomaineController::class);
+    Route::resource('commentaire', CommentaireController::class);
 
     Route::prefix('user')->group(function () {
         Route::resource('article', ArticleController::class);
@@ -85,6 +87,8 @@ Route::middleware(['auth', 'approve'])->group(function () {
     Route::get('notification', [NotificationController::class, 'index'])->name('notifications');
     Route::post('article/{article}/relaunch', [ArticleAdminController::class, 'relaunch'])->name('articleAdmin.relaunch');
     Route::post('produit/{produit}/relaunch', [ProduitAdminController::class, 'relaunch'])->name('produitAdmin.relaunch');
+    Route::post('ticket/changer', [TicketController::class, 'changer'])->name('ticket.changer');
+
 });
 
 // Routes for guests (not authenticated users)

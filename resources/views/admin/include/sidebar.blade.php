@@ -16,7 +16,8 @@
                     alt="User Image">
             </div>
             <div class="info">
-                <a href="{{ route('user.show', auth()->user()) }}" class="d-block">{{ auth()->user()->nom . ' ' . auth()->user()->prenom }}</a>
+                <a href="{{ route('user.show', auth()->user()) }}"
+                    class="d-block">{{ auth()->user()->nom . ' ' . auth()->user()->prenom }}</a>
                 <small class="d-block text-light">Rôle : {{ auth()->user()->role }}</small>
             </div>
         </div>
@@ -41,13 +42,17 @@
                 @endif
                 {{-- <li class="nav-header">REQUETES UTILISATEUR</li> --}}
                 <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
-                        '')) menu-open @endif">
+                        'ticket.') or Request::routeIs('ticket.show')) menu-open @endif">
                     <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
-                            '')) active @endif">
+                            'ticket.')) active @endif">
                         <i class="nav-icon fas fa-user-cog"></i>
                         <p>
                             Requêtes utilisateur
-                            <i class="right fas fa-angle-left"></i>
+                            @if (Request::routeIs('ticket.show'))
+                                <i class=" fa-solid fa-pen"></i>
+                            @else
+                                <i class="right fas fa-angle-left"></i>
+                            @endif
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
@@ -59,7 +64,8 @@
                                 </a>
                             </li> --}}
                         <li class="nav-item">
-                            <a href="#" class="nav-link  @if (Request::routeIs('')) active @endif">
+                            <a href="{{ route('ticket.index') }}"
+                                class="nav-link  @if (Request::routeIs('ticket.index')) active @endif">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>Listes</p>
                             </a>
