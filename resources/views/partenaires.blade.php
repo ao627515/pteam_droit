@@ -36,7 +36,6 @@
                     <div class="queries-wrap">
                         <div class="row">
                             @foreach ($domaines as $item)
-                                
                             <div class="col-lg-4 col-md-12">
                                 <div class="single-query bg-white d-flex align-items-center" data-animate="fadeInUp" data-delay=".05">
                                     <div class="query-icon w-50">
@@ -54,5 +53,6 @@
                 </div>
             </div>
         </div>
+        {{ $domaines->links() }}
     </section>
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Prestation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,18 +14,19 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $prestations = Prestation::where('active', true)->orderBy('created_at', 'desc')->limit(6)->get();
         $articles = Article::where('active', true)
-        ->whereNotNull('approuved_at')
-        ->whereNotNull('approuved_by')
-        ->orderBy('created_at', 'DESC')
-        ->limit(4)
-        ->get();
+            ->whereNotNull('approuved_at')
+            ->whereNotNull('approuved_by')
+            ->orderBy('created_at', 'DESC')
+            ->limit(4)
+            ->get();
 
         $partenaires = DB::table('domaines')
             ->join('organisations', 'domaines.id', '=', 'organisations.domaine_id')
             ->where('domaines.estPartenaire', 1)->orderBy('organisations.created_at', 'DESC')->limit(8)->get();
         // dd($partenaires);
-        return view('home', compact('articles', 'partenaires'));
+        return view('home', compact('articles', 'partenaires', 'prestations'));
     }
 
     /**

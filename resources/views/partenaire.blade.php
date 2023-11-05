@@ -65,15 +65,7 @@
                     </div>
 
                     <!-- Pagination -->
-                    <ul class="custom-pagination list-inline text-center text-uppercase mt-4" data-animate="fadeInUp" data-delay=".1">
-                        <li class="float-left disabled"><a href="#"><i class="fas fa-caret-left"></i> Precedent</a></li>
-                        <li class="active"><a href="#">01</a></li>
-                        <li><a class="text-secondary" href="#">02</a></li>
-                        <li><a class="text-secondary" href="#">03</a></li>
-                        <li><a class="text-secondary" href="#">04</a></li>
-                        <li><a class="text-secondary" href="#">05</a></li>
-                        <li class="float-right"><a class="text-secondary" href="#">Suivant <i class="fas fa-caret-right"></i></a></li>
-                    </ul>
+                    {{ $partenaires->links() }}
                 </div>
 
                 <!-- Sidebar -->

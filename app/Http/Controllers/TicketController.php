@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Models\Prestation;
 use App\Models\Commentaire;
 use App\Models\Organisation;
 use Illuminate\Http\Request;
@@ -29,10 +30,10 @@ class TicketController extends Controller
     public function index(Request $request)
     {
 
-        if(auth()->user()->isUser()){
+        if (auth()->user()->isUser()) {
             return abort(404);
         }
-        
+
         $tickets = $this->filter($request);
 
         return view(
@@ -92,13 +93,17 @@ class TicketController extends Controller
      */
     public function create(Request $request)
     {
+        $prestations = Prestation::all();
         $partenaire = null;
         $q = $request->input('q');
         $p = $request->input('p');
         if ($p) {
             $partenaire = Organisation::findOrFail($p);
+            if ($partenaire->owner) {
+                $prestations = $partenaire->owner->prestations;
+            }
         }
-        return view('new-ticket', compact('q', 'partenaire'));
+        return view('new-ticket', compact('q', 'partenaire', 'prestations'));
     }
 
     /**

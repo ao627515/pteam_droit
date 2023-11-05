@@ -14,7 +14,7 @@ class PartenaireController extends Controller
      */
     public function index()
     {
-        $domaines = Domaine::where('estPartenaire',true)->get();
+        $domaines = Domaine::where('estPartenaire',true)->paginate(15);
         return view('partenaires',compact('domaines'));
     }
 
@@ -41,7 +41,7 @@ class PartenaireController extends Controller
     {
         $domaine = Domaine::find($id);
         $domaines = Domaine::where('estPartenaire',1)->get();
-        $partenaires = Organisation::where('domaine_id',$id)->get();
+        $partenaires = Organisation::where('domaine_id',$id)->paginate(15);
         return view('partenaire',compact('partenaires','domaine','domaines'));
     }
 

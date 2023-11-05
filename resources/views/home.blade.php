@@ -112,98 +112,24 @@
                     </div>
                     <div class="queries-wrap">
                         <div class="row">
-                            <div class="col-lg-4 col-md-12">
-                                <div class="single-query bg-white d-flex align-items-center" data-animate="fadeInUp"
-                                    data-delay=".05">
-                                    <div class="query-icon">
-                                        <img src="{{ asset('assets/img/icons/general-query.svg') }}" alt=""
-                                            alt="" data-no-retina class="svg">
-                                    </div>
-                                    <div class="query-info">
-                                        <h4>Besoin d'un actes juridiques </h4>
-                                        <span>Assistance pour redaction de contrats, conventions, avis juridiques etc</span>
-                                        <a class="btn btn-primary" href="{{ route('ticket.create', ['q' => 1]) }}">Nous
-                                            contactez</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-12">
-                                <div class="single-query bg-white d-flex align-items-center" data-animate="fadeInUp"
-                                    data-delay=".15">
-                                    <div class="query-icon">
-                                        <img src="{{ asset('assets/img/icons/support-query.svg') }}" alt=""
-                                            alt="" data-no-retina class="svg">
-                                    </div>
-                                    <div class="query-info">
-                                        <h4>Procédure judiciaire</h4>
-                                        <span>Besoin d'information sur la procedure judiciare à suivre</span>
-                                        <a class="btn btn-primary" href="{{ route('ticket.create', ['q' => 2]) }}">Nous
-                                            contactez</a>
+                            @foreach ($prestations as $presta)
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="single-query bg-white d-flex align-items-center" data-animate="fadeInUp"
+                                        data-delay=".05">
+                                        <div class="query-icon">
+                                            <img src="{{ asset('assets/img/icons/general-query.svg') }}" alt=""
+                                                alt="" data-no-retina class="svg">
+                                        </div>
+                                        <div class="query-info">
+                                            <h4>{{ $presta->nom }}</h4>
+                                            <span> {{ $presta->description }} </span>
+                                            <a class="btn btn-primary"
+                                                href="{{ route('ticket.create', ['q' => $presta->id]) }}">Nous
+                                                contactez</a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-4 col-md-12">
-                                <div class="single-query bg-white d-flex align-items-center" data-animate="fadeInUp"
-                                    data-delay=".25">
-                                    <div class="query-icon">
-                                        <img src="{{ asset('assets/img/icons/a-query.svg') }}" alt=""
-                                            alt="" data-no-retina class="svg">
-                                    </div>
-                                    <div class="query-info">
-                                        <h4>Besoin d'un avocat</h4>
-                                        <span>Je souhaite me faire representer par un avocat</span>
-                                        <a class="btn btn-primary" href="{{ route('ticket.create', ['q' => 3]) }}">Nous
-                                            contactez</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-12">
-                                <div class="single-query bg-white d-flex align-items-center" data-animate="fadeInUp"
-                                    data-delay=".35">
-                                    <div class="query-icon">
-                                        <img src="{{ asset('assets/img/icons/business-query.svg') }}" alt=""
-                                            alt="" data-no-retina class="svg">
-                                    </div>
-                                    <div class="query-info">
-                                        <h4>Documents de société</h4>
-                                        <span>Assistance pour la création, fusion et scission de société</span>
-                                        <a class="btn btn-primary" href="{{ route('ticket.create', ['q' => 4]) }}">Nous
-                                            contactez</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-12">
-                                <div class="single-query bg-white d-flex align-items-center" data-animate="fadeInUp"
-                                    data-delay=".55">
-                                    <div class="query-icon">
-                                        <img src="{{ asset('assets/img/icons/press-query.svg') }}" alt=""
-                                            alt="" data-no-retina class="svg">
-                                    </div>
-                                    <div class="query-info">
-                                        <h4>Je souhaite discuter par appel</h4>
-                                        <span>Un conseillé vous contactera directement par appel</span>
-                                        <a class="btn btn-primary" href="{{ route('ticket.create', ['q' => 5]) }}">Faire
-                                            la
-                                            demande</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-4 col-md-12">
-                                <div class="single-query bg-white d-flex align-items-center" data-animate="fadeInUp"
-                                    data-delay=".45">
-                                    <div class="query-icon">
-                                        <img src="{{ asset('assets/img/icons/affiliate-query.svg') }}" alt=""
-                                            alt="" data-no-retina class="svg">
-                                    </div>
-                                    <div class="query-info">
-                                        <h4>Autre type de services</h4>
-                                        <span>J'ai besoin d'un service en particulier</span>
-                                        <a class="btn btn-primary" href="{{ route('ticket.create', ['q' => 6]) }}">Nous
-                                            contactez</a>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
