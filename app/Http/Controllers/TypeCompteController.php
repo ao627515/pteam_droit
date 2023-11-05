@@ -13,6 +13,10 @@ class TypeCompteController extends Controller
      */
     public function index(Request $request)
     {
+        if(auth()->user()->isUser()){
+            return abort(404);
+        }
+        
         $search = $request['search'];
 
         $typeComptes = TypeCompte::when($search, function ($query) use ($search) {

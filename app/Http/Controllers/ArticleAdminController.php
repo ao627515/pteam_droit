@@ -23,7 +23,7 @@ class ArticleAdminController extends Controller
     {
 
         if (Gate::denies('viewAny', Article::class)) {
-            return back()->with("error", Gate::inspect('viewAny', Article::class)->message());
+            return abort(404);
         }
 
         $articles = $this->filter($request);

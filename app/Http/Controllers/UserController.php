@@ -211,6 +211,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        if(auth()->user()->isUser()){
+            return abort(404);
+        }
+
         $users = $this->filter($request);
 
         return view(

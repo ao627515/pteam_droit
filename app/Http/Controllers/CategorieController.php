@@ -13,6 +13,10 @@ class CategorieController extends Controller
      */
     public function index(Request $request)
     {
+        if(auth()->user()->isUser()){
+            return abort(404);
+        }
+
         $search = $request['search'];
 
         $categories = Categorie::when($search, function ($query) use ($search) {

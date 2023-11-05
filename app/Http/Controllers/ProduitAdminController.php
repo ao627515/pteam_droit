@@ -17,7 +17,7 @@ class ProduitAdminController extends Controller
     public function index(Request $request)
     {
         if (Gate::denies('viewAny', Produit::class)) {
-            return back()->with("error", Gate::inspect('viewAny', Produit::class)->message());
+            return abort(404);
         }
 
         $produits = $this->filter($request);

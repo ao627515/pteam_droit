@@ -15,6 +15,10 @@ class PrestationController extends Controller
     {
         $user = auth()->user();
 
+        if($user->isUser()){
+            return abort(404);
+        }
+        
         $search = $request['search'];
 
         if ($user->role == 'administrateur') {

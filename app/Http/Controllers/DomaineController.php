@@ -14,6 +14,10 @@ class DomaineController extends Controller
      */
     public function index(Request $request)
     {
+        if(auth()->user()->isUser()){
+            return abort(404);
+        }
+        
         $user = auth()->user();
         if ($user->role === "administrateur") {
             $search = $request['search'];

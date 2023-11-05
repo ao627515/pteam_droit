@@ -17,6 +17,10 @@ class PartenaireAdminController extends Controller
      */
     public function index(Request $request)
     {
+        if(auth()->user()->isUser()){
+            return abort(404);
+        }
+        
         $partenaires = $this->filter($request);
 
         return view(

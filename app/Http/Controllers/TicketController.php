@@ -28,6 +28,11 @@ class TicketController extends Controller
     }
     public function index(Request $request)
     {
+
+        if(auth()->user()->isUser()){
+            return abort(404);
+        }
+        
         $tickets = $this->filter($request);
 
         return view(
