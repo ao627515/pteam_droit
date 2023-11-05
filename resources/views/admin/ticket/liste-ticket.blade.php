@@ -60,7 +60,6 @@
                 <thead>
                     <th>objet</th>
                     <th>message</th>
-                    <th>type</th>
                     <th>Actions</th>
                 </thead>
                 <tbody>
@@ -72,9 +71,6 @@
                             </td>
                             <td>
                                 {{ $ticket->message }}
-                            </td>
-                            <td>
-                                {{ $ticket->type }}
                             </td>
                             <td>
                                 <ul class="nav nav-fill">

@@ -225,72 +225,39 @@ class UserController extends Controller
     private function filter(Request $request)
     {
         $filter = $request['filter'];
-
         $search = $request['search'];
+
+        $query = User::where('active', true)
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('nom', 'LIKE', "%$search%")
+                        ->orWhere('prenom', 'LIKE', "%$search%")
+                        ->orWhere('phone', 'LIKE', "%$search%")
+                        ->orWhere('email', 'LIKE', "%$search%");
+                });
+            })
+            ->orderBy('created_at', 'desc')
+
+            ->where('status', 2);
 
         switch ($filter) {
             case 'followers_moral':
-                $users = User::where('active', true)
-                    ->where('type_compte', 'morale')
-                    ->where('role', 'utilisateur')
-                    ->when($search, function ($query) use ($search) {
-                        $query->where('nom', 'LIKE', "%$search%")
-                            ->orWhere('prenom', 'LIKE', "%$search%")
-                            ->orWhere('phone', 'LIKE', "%$search%")
-                            ->orWhere('email', 'LIKE', "%$search%");
-
-                        return $query;
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('type_compte', 'morale')->where('role', 'utilisateur');
                 break;
             case 'followers_physical':
-                $users = User::where('active', true)
-                    ->where('type_compte', 'physique')
-                    ->where('role', 'utilisateur')
-                    ->when($search, function ($query) use ($search) {
-                        $query->where('nom', 'LIKE', "%$search%")
-                            ->orWhere('prenom', 'LIKE', "%$search%")
-                            ->orWhere('phone', 'LIKE', "%$search%")
-                            ->orWhere('email', 'LIKE', "%$search%");
-
-                        return $query;
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('type_compte', 'physique')->where('role', 'utilisateur');
                 break;
             case 'partenaires':
-                $users = User::where('active', true)
-                    ->where('role', 'partenaire')
-                    ->when($search, function ($query) use ($search) {
-                        $query->where('nom', 'LIKE', "%$search%")
-                            ->orWhere('prenom', 'LIKE', "%$search%")
-                            ->orWhere('phone', 'LIKE', "%$search%")
-                            ->orWhere('email', 'LIKE', "%$search%");
-
-                        return $query;
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('role', 'partenaire');
                 break;
             default:
-                $users = User::where('active', true)
-                    ->where('role', 'administrateur')
-                    ->when($search, function ($query) use ($search) {
-                        $query->where('nom', 'LIKE', "%$search%")
-                            ->orWhere('prenom', 'LIKE', "%$search%")
-                            ->orWhere('phone', 'LIKE', "%$search%")
-                            ->orWhere('email', 'LIKE', "%$search%");
-
-                        return $query;
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
+                $query->where('role', 'administrateur');
                 break;
         }
 
-        return $users;
+        return $query->paginate(25);
     }
+
 
     /**
      * Show the form for creating a new resource.
