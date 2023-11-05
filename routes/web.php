@@ -51,7 +51,7 @@ Route::middleware(['auth', 'approve'])->group(function () {
     Route::resource('categorie', CategorieController::class);
     Route::resource('ticket', TicketController::class);
     Route::resource('paiement', PaiementController::class);
-    // Route::resource('organisation', OrganisationController::class); // Cette route est actuellement commentée
+    // Route::resource('organisation', OrganisationController::class);
     Route::resource('user', UserController::class);
     Route::resource('produitAdmin', ProduitAdminController::class);
     Route::resource('commande', CommandeController::class);

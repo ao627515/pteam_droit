@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Domaine;
 use App\Models\Organisation;
 use Illuminate\Http\Request;
@@ -39,7 +40,11 @@ class OrganisationController extends Controller
     public function show(Organisation $organisation)
     {
         $domaine = Domaine::find($organisation->domaine_id);
-        return view('partenaire-detail', compact('organisation', 'domaine'));
+        $user = User::find($organisation->user_id);
+        $produits = $user->produits()->where('status', 2)->get();
+        $prestations = $user->prestations;
+
+        return view('partenaire-detail',compact('organisation','domaine','produits','prestations'));
     }
 
     /**
