@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Domaine;
 use App\Models\User;
+use App\Models\Domaine;
 use App\Models\Organisation;
-use App\Notifications\PartnershipRequestNotification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
+use App\Notifications\PartnershipRequestNotification;
 
 class PartenaireAdminController extends Controller
 {
@@ -17,6 +18,10 @@ class PartenaireAdminController extends Controller
      */
     public function index(Request $request)
     {
+        if (Gate::denies('viewAny', User::class)) {
+            return abort(404);
+        }
+
         if(auth()->user()->isUser()){
             return abort(404);
         }
@@ -92,7 +97,9 @@ class PartenaireAdminController extends Controller
      */
     public function show(User $partenaireAdmin)
     {
-
+        if (Gate::denies('view', $partenaireAdmin)) {
+            return abort(404);
+        }
         $organisation = Organisation::where('user_id', $partenaireAdmin->id)->get();
 
         $domaines = Domaine::where('estPartenaire', 1)->get();
@@ -123,6 +130,9 @@ class PartenaireAdminController extends Controller
      */
     public function update(Request $request, User $partenaireAdmin)
     {
+        if (Gate::denies('update', $partenaireAdmin)) {
+            return back()->with("error", Gate::inspect('update', $partenaireAdmin)->message());
+        }
         // dump($request->all());
         $data = $request->validate([
             'nom' => 'required',

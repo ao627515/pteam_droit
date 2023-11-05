@@ -35,9 +35,11 @@ class OrganisationPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Organisation $organisation): bool
+    public function update(User $user, Organisation $organisation)
     {
-        return $user->id == $organisation->user_id;
+        return $user->id == $organisation->user_id
+        ? Response::allow()
+        : Response::deny("Vous n'avez pas le droit de modifié les données de cette entreprise");
     }
 
     /**

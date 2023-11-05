@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Domaine;
 use App\Models\Organisation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class OrganisationController extends Controller
@@ -60,6 +61,10 @@ class OrganisationController extends Controller
      */
     public function update(Request $request, Organisation $organisation)
     {
+        if (Gate::denies('update', $organisation)) {
+            return back()->with("error", Gate::inspect('update', $organisation)->message());
+        }
+
         $request->validate([
             'nom_pro' => 'required',
             'phone_pro' => 'required',

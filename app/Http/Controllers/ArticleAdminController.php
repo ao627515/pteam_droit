@@ -82,7 +82,7 @@ class ArticleAdminController extends Controller
     public function create()
     {
         if (Gate::denies('create', Article::class)) {
-            return back()->with("error", Gate::inspect('create', Article::class)->message());
+            return abort(404);
         }
 
         return view('admin.article.create', [
@@ -95,6 +95,9 @@ class ArticleAdminController extends Controller
      */
     public function store(Request $request)
     {
+        if (Gate::denies('create', Article::class)) {
+            return back()->with("error", Gate::inspect('create', Article::class)->message());
+        }
 
         // dd($request->all());
         // Validation des données reçues
@@ -161,9 +164,6 @@ class ArticleAdminController extends Controller
      */
     public function show(string $articleAdmin)
     {
-        if (Gate::denies('view', $articleAdmin)) {
-            return back()->with("error", Gate::inspect('view', $articleAdmin)->message());
-        }
 
         /** @var $user App\Model\User  */
         $user = auth()->user();
@@ -188,7 +188,7 @@ class ArticleAdminController extends Controller
     public function edit(Article $articleAdmin)
     {
         if (Gate::denies('update', $articleAdmin)) {
-            return back()->with("error", Gate::inspect('update', $articleAdmin)->message());
+            return abort(404);
         }
 
         return view('admin.article.edit', [
@@ -202,6 +202,10 @@ class ArticleAdminController extends Controller
      */
     public function update(Request $request, Article $articleAdmin)
     {
+        if (Gate::denies('update', $articleAdmin)) {
+            return back()->with("error", Gate::inspect('update', $articleAdmin)->message());
+        }
+
         $dataValidated = $request->validate([
             'titre' => ['required', 'string'],
             'description' => ['required', 'string', 'max:255'],
@@ -266,13 +270,9 @@ class ArticleAdminController extends Controller
      */
     public function destroy(Article $articleAdmin)
     {
-        if (Gate::denies('delete', $articleAdmin)) {
-            return back()->with("error", Gate::inspect('delete', $articleAdmin)->message());
-        }
+        // $parentDirectory = dirname($articleAdmin->image);
 
-        $parentDirectory = dirname($articleAdmin->image);
-
-        Storage::disk('public')->deleteDirectory($parentDirectory);
+        // Storage::disk('public')->deleteDirectory($parentDirectory);
 
         $articleAdmin->update([
             'active' => false

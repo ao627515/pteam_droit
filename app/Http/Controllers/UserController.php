@@ -11,6 +11,7 @@ use App\Models\Organisation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -89,36 +90,6 @@ class UserController extends Controller
             'type_compte' => $request->type,
             'password' => Hash::make($request->password),
         ]);
-
-        // $destination_path = 'uploads/docs/';
-        // $img_destination_path = 'uploads/images/';
-
-        // if ($request->hasFile('val_doc_1')) {
-        //     $fileExt = $request->file('val_doc_1')->getClientOriginalExtension();
-        //     $fileName = uniqid('u_' . $user->id . 'rccm_') . '.' . $fileExt;
-
-        //     if ($request->file('val_doc_1')->move($destination_path, $fileName)) {
-        //         $doc_name = $destination_path . $fileName;
-        //     }
-        // }
-        // if ($request->hasFile('val_doc_2')) {
-        //     $fileExt = $request->file('val_doc_2')->getClientOriginalExtension();
-        //     $fileName = uniqid('u_' . $user->id . 'doc_') . '.' . $fileExt;
-
-        //     if ($request->file('val_doc_2')->move($destination_path, $fileName)) {
-        //         $doc_2name = $destination_path . $fileName;
-        //     }
-        // }
-        // if ($request->hasFile('logo')) {
-        //     $fileExt = $request->file('logo')->getClientOriginalExtension();
-        //     $fileName = uniqid('u_' . $user->id . '_logo') . '.' . $fileExt;
-
-        //     if ($request->file('logo')->move($img_destination_path, $fileName)) {
-        //         $logo = $img_destination_path . $fileName;
-        //     }
-        // }
-
-
 
         $destination_path = 'uploads/docs/';
         $img_destination_path = 'uploads/images/';
@@ -211,7 +182,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if (auth()->user()->isUser()) {
+        if (Gate::denies('viewAny', User::class)) {
             return abort(404);
         }
 
@@ -268,6 +239,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        if (Gate::denies('view', User::class)) {
+            return abort(404);
+        }
         return view('admin.user.create');
     }
 
@@ -276,6 +250,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if (Gate::denies('create', User::class)) {
+            return back()->with("error", Gate::inspect('create', User::class)->message());
+        }
         $data = $request->validate([
             'nom' => 'required',
             'prenom' => 'required',
@@ -300,6 +277,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        if (Gate::denies('view', $user)) {
+            return abort(404);
+        }
+
         if ($user->role == "administrateur") {
             return view('admin.user.show', compact('user'));
         } elseif ($user->isPartenaire()) {
@@ -343,6 +324,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        if (Gate::denies('update', $user)) {
+            return abort(404);
+        }
+
         return view('admin.user.edit', [
             'user' => $user
         ]);
@@ -353,6 +338,10 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        if (Gate::denies('update', $user)) {
+            return back()->with("error", Gate::inspect('update', $user)->message());
+        }
+
         $data = $request->validate([
             'nom' => 'required',
             'prenom' => 'required',
@@ -370,6 +359,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if (Gate::denies('delete', $user)) {
+            return back()->with("error", Gate::inspect('delete', $user)->message());
+        }
+
         $user->active = false;
         $user->save();
         return to_route('user.index');

@@ -9,6 +9,7 @@
     {{-- <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script> --}}
 @endsection
 @section('content')
+    <x-message-flash/>
     <section class="py-5 my-5">
         <div class="container">
             <div class="bg-white shadow rounded d-block d-sm-flex">

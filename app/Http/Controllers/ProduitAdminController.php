@@ -73,7 +73,7 @@ class ProduitAdminController extends Controller
     public function create()
     {
         if (Gate::denies('create', Produit::class)) {
-            return back()->with("error", Gate::inspect('create', Produit::class)->message());
+            return abort(404);
         }
 
         return view('admin.produit.create');
@@ -84,6 +84,10 @@ class ProduitAdminController extends Controller
      */
     public function store(Request $request)
     {
+        if (Gate::denies('create', Produit::class)) {
+            return back()->with("error", Gate::inspect('create', Produit::class)->message());
+        }
+
         $data = $request->validate([
             'nom' => ['required', 'string', 'max:245'],
             'short_desc' => ['required', 'string'],
@@ -118,7 +122,7 @@ class ProduitAdminController extends Controller
     public function show(Produit $produitAdmin)
     {
         if (Gate::denies('view', $produitAdmin)) {
-            return back()->with("error", Gate::inspect('view', $produitAdmin)->message());
+            return abort(404);
         }
 
         /** @var $user App\Model\User  */
@@ -140,7 +144,7 @@ class ProduitAdminController extends Controller
     public function edit(Produit $produitAdmin)
     {
         if (Gate::denies('update', $produitAdmin)) {
-            return back()->with("error", Gate::inspect('update', $produitAdmin)->message());
+            return abort(404);
         }
 
         return view('admin.produit.edit', [
@@ -153,6 +157,10 @@ class ProduitAdminController extends Controller
      */
     public function update(Request $request, Produit $produitAdmin)
     {
+        if (Gate::denies('update', $produitAdmin)) {
+            return back()->with("error", Gate::inspect('update', $produitAdmin)->message());
+        }
+
         $data = $request->validate([
             'nom' => ['required', 'string', 'max:245'],
             'short_desc' => ['required', 'string'],
@@ -175,11 +183,11 @@ class ProduitAdminController extends Controller
             return back()->with("error", Gate::inspect('delete', $produitAdmin)->message());
         }
 
-        $parentDirectory = dirname($produitAdmin->image);
+        // $parentDirectory = dirname($produitAdmin->image);
 
-        // dd($parentDirectory);
+        // // dd($parentDirectory);
 
-        Storage::disk('public')->deleteDirectory($parentDirectory);
+        // Storage::disk('public')->deleteDirectory($parentDirectory);
 
         $produitAdmin->update([
             'active' => false
