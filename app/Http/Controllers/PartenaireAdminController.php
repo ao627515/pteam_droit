@@ -22,7 +22,7 @@ class PartenaireAdminController extends Controller
             return abort(404);
         }
 
-        if(auth()->user()->isUser()){
+        if (auth()->user()->isUser()) {
             return abort(404);
         }
 
@@ -112,6 +112,7 @@ class PartenaireAdminController extends Controller
                 'domaines' => $domaines,
                 'notifications' => $partenaireAdmin->notifications()
                     ->whereJsonContains('data->partenaire_id', $partenaireAdmin->id)
+                    ->whereJsonContains('data', 'motif')
                     ->get()
             ]
         );

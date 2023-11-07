@@ -130,6 +130,7 @@ class ProduitAdminController extends Controller
 
         $notifications = $user->notifications()
             ->whereJsonContains('data->produit_id', $produitAdmin->id)
+            ->whereJsonContains('data', 'motif')
             ->get();
 
         return view('admin.produit.show', [

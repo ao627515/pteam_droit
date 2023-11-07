@@ -172,6 +172,7 @@ class ArticleAdminController extends Controller
 
         $notifications = $user->notifications()
             ->whereJsonContains('data->article_id', $articleAdmin->id)
+            ->whereJsonContains('data', 'motif')
             ->get();
 
 

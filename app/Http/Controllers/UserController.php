@@ -52,6 +52,7 @@ class UserController extends Controller
     function register(Request $request)
     {
 
+        dd($request->all());
         $request->validate([
             'nom' => 'required',
             'prenom' => 'required',

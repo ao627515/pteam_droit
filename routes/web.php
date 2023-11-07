@@ -70,10 +70,10 @@ Route::middleware(['auth', 'approve'])->group(function () {
     Route::get('partenaire/{partenaire}', [PartenaireController::class, 'show'])->name('partenaire.show');
     Route::get('produit/{produit}', [ProduitController::class, 'show'])->name('produit.show');
     Route::post('article/{article}/featured_image', [ArticleController::class, 'featured_image'])->name('articleAdmin.featured_image');
-    Route::post('produit/{produit}/featured_image', [ArticleController::class, 'featured_image'])->name('produitAdmin.featured_image');
+    Route::post('produit/{produit}/featured_image', [ProduitAdminController::class, 'featured_image'])->name('produitAdmin.featured_image');
     Route::post('article/{article}/admin/approuved', [ArticleAdminController::class, 'approuved'])->name('articleAdmin.approuved');
     Route::post('produit/{produit}/admin/approuved', [ProduitAdminController::class, 'approuved'])->name('produitAdmin.approuved');
-    Route::post('partenaire/{partenaire}/admin/approuved', [ProduitAdminController::class, 'approuved'])->name('partenaireAdmin.approuved');
+    Route::post('partenaire/{partenaire}/admin/approuved', [PartenaireAdminController::class, 'approuved'])->name('partenaireAdmin.approuved');
     Route::post('produit/{produit}/admin/declined', [ProduitAdminController::class, 'declined'])->name('produitAdmin.declined');
     Route::post('article/{article}/admin/declined', [ArticleAdminController::class, 'declined'])->name('articleAdmin.declined');
     Route::post('partenaire/{partenaire}/admin/declined', [PartenaireAdminController::class, 'declined'])->name('partenaireAdmin.declined');
@@ -82,15 +82,16 @@ Route::middleware(['auth', 'approve'])->group(function () {
     Route::post('article/{article}/publish', [ArticleAdminController::class, 'publish'])->name('articleAdmin.publish');
     Route::post('produit/{produit}/publish', [ProduitAdminController::class, 'publish'])->name('produitAdmin.publish');
     Route::get('user/change/password', [UserController::class, 'update_password'])->name('user.update_password');
-    Route::get('disconnect', [UserController::class, 'disconnect'])->name('disconnect');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('notification', [NotificationController::class, 'index'])->name('notifications');
     Route::post('article/{article}/relaunch', [ArticleAdminController::class, 'relaunch'])->name('articleAdmin.relaunch');
     Route::post('produit/{produit}/relaunch', [ProduitAdminController::class, 'relaunch'])->name('produitAdmin.relaunch');
     Route::post('ticket/changer', [TicketController::class, 'changer'])->name('ticket.changer');
-
 });
 
+
+
+Route::middleware('auth')->get('disconnect', [UserController::class, 'disconnect'])->name('disconnect');
 // Routes for guests (not authenticated users)
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [UserController::class, 'loginForm'])->name('auth.loginform');
