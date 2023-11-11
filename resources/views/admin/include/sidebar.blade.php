@@ -41,36 +41,16 @@
                     </li>
                 @endif
                 {{-- <li class="nav-header">REQUETES UTILISATEUR</li> --}}
-                <li class="nav-item @if (Str::startsWith(request()->route()->getName(),
-                        'ticket.') or Request::routeIs('ticket.show')) menu-open @endif">
-                    <a href="#" class="nav-link @if (Str::startsWith(request()->route()->getName(),
-                            'ticket.')) active @endif">
+                <li class="nav-item">
+                    <a href="{{ route('ticket.index') }}" class="nav-link @if (Request::routeIs('ticket.index') or Request::routeIs('ticket.show')) active @endif">
                         <i class="nav-icon fas fa-user-cog"></i>
                         <p>
                             Requêtes utilisateur
                             @if (Request::routeIs('ticket.show'))
                                 <i class=" fa-solid fa-pen"></i>
-                            @else
-                                <i class="right fas fa-angle-left"></i>
                             @endif
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">
-                        {{-- <li class="nav-item">
-                                <a href="{{ route('user.create') }}"
-                                    class="nav-link @if (Request::routeIs('user.create')) active @endif">
-                                    <i class="fa-solid fa-user-plus nav-icon"></i>
-                                    <p>Créer</p>
-                                </a>
-                            </li> --}}
-                        <li class="nav-item">
-                            <a href="{{ route('ticket.index') }}"
-                                class="nav-link  @if (Request::routeIs('ticket.index')) active @endif">
-                                <i class="nav-icon fas fa-users"></i>
-                                <p>Listes</p>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
                 {{-- <li class="nav-header">ARTICLES</li> --}}
                 <li class="nav-item @if (Str::startsWith(request()->route()->getName(),

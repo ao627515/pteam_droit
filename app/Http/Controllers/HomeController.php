@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Prestation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -13,7 +14,7 @@ class HomeController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
+    {   $user = Auth::user();
         $prestations = Prestation::where('active', true)->orderBy('created_at', 'desc')->limit(6)->get();
         $articles = Article::where('active', true)
             ->whereNotNull('approuved_at')
@@ -26,7 +27,7 @@ class HomeController extends Controller
             ->join('organisations', 'domaines.id', '=', 'organisations.domaine_id')
             ->where('domaines.estPartenaire', 1)->orderBy('organisations.created_at', 'DESC')->limit(8)->get();
         // dd($partenaires);
-        return view('home', compact('articles', 'partenaires', 'prestations'));
+        return view('home', compact('articles', 'partenaires', 'prestations','user'));
     }
 
     /**

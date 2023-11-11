@@ -91,21 +91,6 @@
                             </form>
                         </div>
 
-                        <div class="single-widget" data-animate="fadeInUp" data-delay=".1">
-                            <h3 data-animate="fadeInUp" data-delay=".2">Categories</h3>
-                            <ul class="widget-categories list-unstyled mb-0">
-                                <li data-animate="fadeInUp" data-delay=".25"><a href="#"><span>Droit du
-                                            travail</span><span class="count">55</span></a></li>
-                                <li data-animate="fadeInUp" data-delay=".3"><a href="#"><span>Droit du
-                                            commerce</span><span class="count">10</span></a></li>
-                                <li data-animate="fadeInUp" data-delay=".35"><a href="#"><span>Droit
-                                            civil</span><span class="count">23</span></a></li>
-                                <li data-animate="fadeInUp" data-delay=".4"><a href="#"><span>Droit
-                                            penal</span><span class="count">46</span></a></li>
-
-                            </ul>
-                        </div>
-
                         {{-- <div class="single-widget" data-animate="fadeInUp" data-delay=".1">
                                     <h3 data-animate="fadeInUp" data-delay=".2">Publications Récentes</h3>
                                     <ul class="recent-posts list-unstyled mb-0">

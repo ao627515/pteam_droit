@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Categorie;
 use App\Models\CategorieArticle;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,6 @@ class CategorieArticleController extends Controller
      */
     public function index()
     {
-
     }
 
     /**
@@ -35,12 +35,16 @@ class CategorieArticleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($categorieArticle)
+    public function show($categorie)
     {
+        $articles = Article::where("categorie_article_id", $categorie)
+            ->where("active", true)
+            ->where("status", 2)
+            ->paginate(15);
 
-        $articles = Article::articlesAprouved(paginate: 14);
+        $categories = Categorie::all();
 
-        return view('blog', compact('articles'));
+        return view('blog', compact('articles', 'categories'));
     }
 
     /**

@@ -58,6 +58,8 @@
         <div class="card-body">
             <table class="table table-striped responsive">
                 <thead>
+                    <th>Nom</th>
+                    <th>Prenom</th>
                     <th>objet</th>
                     <th>message</th>
                     <th>Actions</th>
@@ -65,6 +67,8 @@
                 <tbody>
                     @forelse ($tickets as $ticket)
                         <tr>
+                            <td>{{ $ticket->user->nom }}</td>
+                            <td>{{ $ticket->user->prenom }}</td>
                             <td>
                                 {{ $ticket->objet }}
 

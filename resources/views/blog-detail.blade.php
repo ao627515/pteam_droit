@@ -1,4 +1,8 @@
+@php
+    use App\Models\Article;
+@endphp
 @extends('layout')
+
 @section('content')
     <section class="page-title-wrap position-relative bg-light">
         <div id="particles_js"></div>
@@ -33,7 +37,11 @@
                                 {{-- <span>publie le {{ $article->created_at }}</span> --}}
                                 <h5 class="text-center my-3">{{ $article->titre }}</h5>
                                 <span class="text-success text-center">Publie le {{ $article->created_at }}</span><br>
-                                {{ $article->contenu }}
+                                @if ($article->isFActory())
+                                    {{ $article->contenu }} <!-- Affiche le contenu Summernote sans échappement -->
+                                @else
+                                    {!! $article->contenu !!}
+                                @endif
                             </div>
                         </div>
 
@@ -58,39 +66,37 @@
                         <div class="single-widget mt-3" data-animate="fadeInUp" data-delay=".1">
                             <h3 data-animate="fadeInUp" data-delay=".1">Articles recents</h3>
 
-                        @foreach ($relatedArticles as $relatedArticle )
-                        {{ $relatedArticle->imgInit() }}
-                        <div class="card mt-3">
-                            <div class="row">
-                                <div class="col ">
-                                    <a href="{{ route('article.show', $relatedArticle)}}"><img src="{{ $article->image }}"  alt=""></a>
+                            @foreach ($relatedArticles as $relatedArticle)
+                                {{ $relatedArticle->imgInit() }}
+                                <div class="card mt-3">
+                                    <div class="row">
+                                        <div class="col ">
+                                            <a href="{{ route('article.show', $relatedArticle) }}"><img
+                                                    src="{{ $article->image }}" alt=""></a>
+                                        </div>
+                                        <div class="col">
+                                            <a
+                                                href="{{ route('article.show', $relatedArticle) }}"></a>{{ $relatedArticle->titre }}
+                                            <br>
+                                            <a href="{{ route('article.show', $relatedArticle) }}" class="text-primary">lire
+                                                la
+                                                suite</a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col">
-                                    <a href="{{ route('article.show', $relatedArticle) }}"></a>{{ $relatedArticle->titre }} <br>
-                                    <a href="{{ route('article.show', $relatedArticle) }}" class="text-primary">lire la
-                                        suite</a>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
-                         @endforeach
-                         </div>
 
 
                         <div class="single-widget mt-3" data-animate="fadeInUp" data-delay=".1">
                             <h3 data-animate="fadeInUp" data-delay=".2">Categories</h3>
                             <ul class="widget-categories list-unstyled mb-0">
-                                <li data-animate="fadeInUp" data-delay=".25"><a
-                                        href="{{ route('categorieArticle.show', ['categorie' => 1]) }}"><span>Droit du
-                                            travail</span><span class="count">15</span></a></li>
-                                <li data-animate="fadeInUp" data-delay=".3"><a
-                                        href="{{ route('categorieArticle.show', ['categorie' => 2]) }}"><span>Droit du
-                                            commerce</span><span class="count">15</span></a></li>
-                                <li data-animate="fadeInUp" data-delay=".35"><a
-                                        href="{{ route('categorieArticle.show', ['categorie' => 3]) }}"><span>droit
-                                            civil</span><span class="count">15</span></a></li>
-                                <li data-animate="fadeInUp" data-delay=".4"><a
-                                        href="{{ route('categorieArticle.show', ['categorie' => 4]) }}"><span>Autre</span><span
-                                            class="count">20</span></a></li>
+                                @foreach ($categories as $categorie)
+                                    <li data-animate="fadeInUp" data-delay=".25"><a
+                                            href="{{ route('categorieArticle.show', $categorie->id) }}"><span>{{ $categorie->nom }}</span><span
+                                                class="count">{{ Article::where('active', true)->where('status', 2)->where('categorie_article_id', $categorie->id)->get()->count() }}</span></a>
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
                         <div class="single-widget text-center" data-animate="fadeInUp" data-delay=".1">

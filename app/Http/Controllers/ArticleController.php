@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DOMDocument;
 use App\Models\Article;
+use App\Models\Categorie;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -46,7 +47,10 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        $relatedArticles = Article::where('categorie_article_id', $article->categorie_article_id)
+        $relatedArticles = Article::where('active', true)
+        ->whereNotNull('approuved_at')
+        ->whereNotNull('approuved_by')
+        ->where('categorie_article_id', $article->categorie_article_id)
         ->where('id', '!=', $article->id) // Excluez l'article actuel
         ->orderBy('created_at', 'desc')
         ->limit(3)
@@ -54,7 +58,10 @@ class ArticleController extends Controller
 
         $article->imgInit();
 
-        return view('blog-detail',compact('article','relatedArticles'));
+        $categories = Categorie::all();
+
+
+        return view('blog-detail',compact('article','relatedArticles', 'categories'));
     }
 
     /**

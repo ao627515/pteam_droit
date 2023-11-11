@@ -61,9 +61,7 @@ Route::middleware(['auth', 'approve'])->group(function () {
     Route::resource('domaine', DomaineController::class);
     Route::resource('commentaire', CommentaireController::class);
 
-    Route::prefix('user')->group(function () {
         Route::resource('article', ArticleController::class);
-    });
 
     // Custom routes
     Route::resource('organisation', OrganisationController::class)->except('show');

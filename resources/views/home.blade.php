@@ -311,7 +311,7 @@
                                 <div
                                     class="image-hover-content d-flex justify-content-center align-items-center text-center">
                                     <ul class="list-inline">
-                                        <li><a href="#"><i class="fas fa-eye"></i></a></li>
+                                        <li><a href="{{ route('article.show', $article) }}"><i class="fas fa-eye"></i></a></li>
                                     </ul>
                                 </div>
                             </div>
